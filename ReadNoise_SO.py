@@ -12,6 +12,10 @@ def dBmToWatts(dBm):
     return 10.0**((dBm - 30.0 ) / 10.0)
 
 
+def resonantFrequency(inductance, capacitance):
+    return 1.0 / np.sqrt(inductance * capacitance)
+
+
 def calcPhotonShotNoiseTES(frequency, totalRadPower, photonOccupationNumber, opticalEfficiency):
     return np.sqrt(2.0 * h * frequency * totalRadPower * (1.0 + (photonOccupationNumber * opticalEfficiency)))
 
@@ -30,6 +34,11 @@ def calcNEC_TES(NEP_TES, NEP_phonon, currentPowerDerivative):
 
 def calcNEC_TESandSQUID(NEC_TES, NEC_SQUID):
     return np.sqrt(NEC_SQUID**2.0 + NEC_SQUID**2.0)
+
+
+def calcS_21ResonantFrequencyDerivative(resonatorQ, resonatorFrequency):
+    return 4.0 * resonatorQ / resonatorFrequency
+
 
 
 def calcNEV_total(NEC_TESandSQUID, squidInductanceCurrentDerivative, resonantFrequencySquidCurrentDerivative,
@@ -66,13 +75,21 @@ def calcReadNoise(verbose=False):
     From the top of Phillip Mauskopf's head:
     readoutVoltageS_21Derivative = -70 dBm / V
     
+    
+    Things Caleb has assumed:
+    photonOccupationNumber = 0
+    readoutResonatorFrequency = 6 GHz
+    
     """
 
     totalRadPower = 10.04E-12  # Watts
     # inBandPhotonFraction = 1.0 # no units, between 0 and 1
     frequency = 150.0E9 # Hertz
 
-    photonOccupationNumber = 1
+
+    photonOccupationNumber = 0
+    readoutResonatorFrequency = 6.0E9 # in Hz
+
 
     opticalEfficiency = 1.0 # no units, represents number of photons
     baseTemperature = 150.0E-3 # Kelvin
@@ -91,13 +108,14 @@ def calcReadNoise(verbose=False):
 
 
     squidInductanceCurrentDerivative = 1.0 ###################
-    S_21ResonantFrequencyDerivative = 1.0 # W / Hz ###############
-    readoutVoltageS_21Derivative_dBm = -70.0 # dBm
-    readoutVoltageS_21Derivative_W = dBmToWatts(readoutVoltageS_21Derivative_dBm) # Watts
+    resonatorQ = 1.0 ###############
+    S_21ResonantFrequencyDerivative = calcS_21ResonantFrequencyDerivative(resonatorQ, readoutResonatorFrequency) # dBc / Hz
+    readoutVoltageS_21Derivative_dBm = 1.0 / -70.0 # V / dBm
+    readoutVoltageS_21Derivative_W = 1.0 / dBmToWatts(readoutVoltageS_21Derivative_dBm) # V / W
 
 
     NEV = calcNEV_total(NEC_TESandSQUID, squidInductanceCurrentDerivative, resonantFrequencySquidCurrentDerivative,
-                        S_21ResonantFrequencyDerivative, readoutVoltageS_21Derivative_W)
+                        S_21ResonantFrequencyDerivative, readoutVoltageS_21Derivative_dBm)
 
     if verbose:
         print(totalRadPower * 1.0E12, "pW  is the Total Absorbed Radiative Power.")
@@ -122,14 +140,15 @@ def calcReadNoise(verbose=False):
         print(' ')
         print("%1.3E" % squidInductanceCurrentDerivative, "H / A is the SQUID Inductance to Current derivative.")
         print("%1.3E" % resonantFrequencySquidCurrentDerivative,
-              "Hz / H Resonant Frequency Shift to SQUID Inductance derivative.")
+              "Hz / H is the Resonant Frequency Shift to SQUID Inductance derivative.")
+        print("%1.3E" % resonatorQ, "is the Quality factor of the resonator. (no units)")
         print("%1.3E" % S_21ResonantFrequencyDerivative,
-              "W / Hz is the Change in Resonator Power at the Carrier Frequency to the change in Resonant Frequency derivative.")
+              "dBc / Hz is the calculated Change in Resonator Power at the Carrier Frequency to the change in Resonant Frequency derivative.")
 
         print("%1.3f" % readoutVoltageS_21Derivative_dBm,
-              "V / dBm is the Voltage Resister to Change in Resonator Power at the Carrier Frequency conversion.")
-        print("%1.3E" % readoutVoltageS_21Derivative_W,
-              "V / W is the Voltage Resister to Change in Resonator Power at the Carrier Frequency conversion.")
+              "V / dBc is the Voltage Resister to Change in Resonator Power at the Carrier Frequency conversion.")
+        # print("%1.3E" % readoutVoltageS_21Derivative_W,
+        #       "V / W is the Voltage Resister to Change in Resonator Power at the Carrier Frequency conversion.")
 
         print(" ")
         print("%1.3E" % NEV, "V / Hz^(1/2) is the Noise Equivalent Voltage at the Readout")
