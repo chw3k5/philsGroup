@@ -40,6 +40,9 @@ def calcS_21ResonantFrequencyDerivative(resonatorQ, resonatorFrequency):
     return 4.0 * resonatorQ / resonatorFrequency
 
 
+def calcDeltaS_21(resonatorQ, couplingQ, resonatorFrequency, shiftInResonatorFrequency, i):
+    return 1.0 - (resonatorQ / couplingQ) * (1.0 / (4.0 * i * shiftInResonatorFrequency / resonatorFrequency))
+
 
 def calcNEV_total(NEC_TESandSQUID, squidInductanceCurrentDerivative, resonantFrequencySquidCurrentDerivative,
                   S_21ResonantFrequencyDerivative, readoutVoltageS_21Derivative):
