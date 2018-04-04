@@ -108,7 +108,7 @@ from quickPlots import quickPlotter, rescale
 from operator import itemgetter
 
 
-def mariscotti(y, **kwargs):
+def mariscotti(y, findMin=True, **kwargs):
 
     keys = kwargs.keys()
     y = numpy.array(y)
@@ -231,7 +231,10 @@ def mariscotti(y, **kwargs):
         if icrossStart != icrossStop:
             gsd_subSample = gsd[icrossStart:icrossStop]
             # Determine is the subset is a peak of a vally
-            gsd_subSample_lessThenZero = gsd_subSample[gsd_subSample < 0.0]
+            if findMin:
+                gsd_subSample_lessThenZero = gsd_subSample[gsd_subSample > 0.0]
+            else:
+                gsd_subSample_lessThenZero = gsd_subSample[gsd_subSample < 0.0]
             count_gsd_subSample_lessThenZero = len(gsd_subSample_lessThenZero)
             # this is true if the subsection is a peak
             if count_gsd_subSample_lessThenZero == 0:
