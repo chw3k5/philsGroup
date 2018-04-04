@@ -78,13 +78,13 @@ class AgilentData():
 
     def readData(self):
         if self.S11_fileName is not None:
-            self.S11_dataDict = readAgilentData(self.parentFolder + self.S11_fileName)
+            self.S11_dataDict = readAgilentData(os.path.join(self.parentFolder, self.S11_fileName))
         if self.S12_fileName is not None:
-            self.S12_dataDict = readAgilentData(self.parentFolder + self.S12_fileName)
+            self.S12_dataDict = readAgilentData(os.path.join(self.parentFolder, self.S12_fileName))
         if self.S21_fileName is not None:
-            self.S21_dataDict = readAgilentData(self.parentFolder + self.S21_fileName)
+            self.S21_dataDict = readAgilentData(os.path.join(self.parentFolder, self.S21_fileName))
         if self.S22_fileName is not None:
-            self.S22_dataDict = readAgilentData(self.parentFolder + self.S22_fileName)
+            self.S22_dataDict = readAgilentData(os.path.join(self.parentFolder, self.S22_fileName))
 
     def plotSparams(self, showPlots=True, savePlots=False, useGHz=True):
         # make the plot folder if there is not one already
@@ -128,7 +128,7 @@ class AgilentData():
 
 
 if getuser() == "chw3k5":
-    parentFolder = "/Users/chw3k5/Documents/ASUpostdoc/BabyBeluga/Sparams/"
+    parentFolder = os.path.join("/Users", "chw3k5", "Documents", "ASUpostdoc", "BabyBeluga", "Sparams")
 
     setsOfFileNames =[
         ["A3_S11_300K_2.10V.csv",
@@ -154,6 +154,17 @@ if getuser() == "chw3k5":
         paramGroup.plotSparams(showPlots=False, savePlots=True)
 
 
+
+
+if getuser() == "Heriberto":
+    parentFolder = os.path.join("C:\\", "Users", "Heriberto", "Downloads")
+    setsOfFileNames =[
+        ["test_s21_SuperSpec.csv"]
+    ]
+    for setOfFileNames in setsOfFileNames:
+        paramGroup = AgilentData(setOfFileNames, parentFolder)
+        paramGroup.readData()
+        paramGroup.plotSparams(showPlots=True, savePlots=False)
 else:
     print("Your username is:", getuser())
     print("This program takes different actions based on the user.")
