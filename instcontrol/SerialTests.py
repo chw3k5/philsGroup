@@ -1,10 +1,16 @@
 import os, sys, serial
 
 
-def testSerialPortHasDeviceWindows(serialPortName, deviceID, baudrate, bytesize, stopbits, timeout=2):
-    st = serial.Serial(port=serialPortName, baudrate=baudrate, bytesize=bytesize, stopbits=stopbits, timeout=timeout)
-
-    return True
+def testSerialPortHasDeviceWindows(serialPortName, baudrate, bytesize, stopbits, timeout=2):
+    try:
+        device = serial.Serial(port=serialPortName, baudrate=baudrate, bytesize=bytesize, stopbits=stopbits, timeout=timeout)
+        if device.is_open:
+            device.close()
+            return True
+        else:
+            return False
+    except:
+        return False
 
 
 # This is no yet working
@@ -46,3 +52,7 @@ def findSerialPort(deviceID, baudrate, bytesize, stopbits, timeout=2):
 
 
     return serialPort
+
+
+if __name__ == "__main__":
+    print(testSerialPortHasDeviceWindows('COM5', 9600, 8, 1, 2))
