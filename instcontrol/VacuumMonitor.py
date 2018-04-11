@@ -26,29 +26,41 @@ if testSerialPortHasDeviceWindows(portName, baudrate, bytesize, stopbits, timeou
     vacGauge = serial.Serial(port=portName, baudrate=baudrate, bytesize=bytesize, stopbits=stopbits, timeout=timeout)
 
 def getPressure(verbose=False):
-    byteOrder = "little"
-    lenOfDataString = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    pageNumber = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    status = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    error = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    highByte = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    lowByte = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    solfwareVersion = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    sensorType = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    checkSum = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
-    measSum = pageNumber + status + error + highByte + lowByte + solfwareVersion + sensorType
-    if verbose:
-        print(lenOfDataString, "is the length of data string byte, should be 7")
-        print(pageNumber, "is the page number byte, should be 5")
-        print(status, "is the status byte")
-        print(error, "is the error byte")
-        print(highByte, "is the high measurement byte need to calculate the pressure")
-        print(lowByte, "is the low measurement byte need to calculate the pressure")
-        print(solfwareVersion, "is the software version byte,", float(solfwareVersion) / 20.0, "is the software version")
-        print(sensorType, "is the sensor type byte, should be 10 for BPG400 vacuum gauge")
-        print(checkSum, "is the check sum byte, used for syncronization ")
-        print(measSum, "is the measured sum and should be equal to the check sum")
+    for sleepTime in [0.0, 0.1, 0.2, 1]:
+        byteOrder = "little"
+        lenOfDataString = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        pageNumber = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        status = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        error = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        highByte = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        lowByte = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        solfwareVersion = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        sensorType = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        time.sleep(sleepTime)
+        checkSum = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+        measSum = (pageNumber + status + error + highByte + lowByte + solfwareVersion + sensorType) % 256
 
+        if verbose:
+            print(lenOfDataString, "is the length of data string byte, should be 7")
+            print(pageNumber, "is the page number byte, should be 5")
+            print(status, "is the status byte")
+            print(error, "is the error byte")
+            print(highByte, "is the high measurement byte need to calculate the pressure")
+            print(lowByte, "is the low measurement byte need to calculate the pressure")
+            print(solfwareVersion, "is the software version byte,", float(solfwareVersion) / 20.0, "is the software version")
+            print(sensorType, "is the sensor type byte, should be 10 for BPG400 vacuum gauge")
+            print(checkSum, "is the check sum byte, used for synchronization ")
+            print(measSum, "is the measured sum and should be equal to the check sum")
+            print()
+        if measSum == checkSum:
+            break
 
     pressureTorr =  10.0**(((float(highByte) * 256.0 + float(lowByte)) / 4000.0) - 12.625)
     return pressureTorr
