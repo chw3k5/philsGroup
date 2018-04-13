@@ -2,7 +2,7 @@
 This is for the Keithley 2400-LV source meter, this work in window but the packages that are used at platform
 independent.
 """
-import time, serial
+import time, serial, os, sys
 
 
 portName = "COM4"
@@ -11,6 +11,27 @@ bytesize = 8
 stopbits = 1
 parity = "N"
 timeout = 2
+
+
+# this is the folder where you can keep the data
+dataLogFolder = os.path.join("LED_sweep")
+dataFileName = "April_12_2018.csv"
+
+# This an attempt at writing platform independent code.
+if sys.platform == "win32":
+    rootName = "C:\\"
+else:
+    rootName = "/"
+
+# if the directory does not exist you can make it
+
+if not os.path.exists(rootName + dataLogFolder):
+    os.mkdir(rootName + dataLogFolder)
+
+# the base file name
+fullDataPath = os.path.join(rootName + dataLogFolder, dataFileName)
+
+
 
 def openKeithley2400LV():
     keithley2400LV = serial.Serial(port=portName, baudrate=baudrate, bytesize=bytesize,
@@ -115,11 +136,16 @@ if __name__ == "__main__":
 
 
     init_Keithley2400LV(currentRange=1.05E-4)
-
-    setKeithley2400LV_current(20.E-6, verbose=verbose)
-
     turnOutput_ON_keithley2400LV(verbose=verbose)
-    print(str(getKeithley2400LV_voltage(verbose=verbose)))
+
+    for microAmps in [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]:
+        setKeithley2400LV_current(microAmps * 1.0E-6, verbose=verbose)
+        if microAmps == 0:
+            f = open(fullDataPath, 'w')
+        else:
+            f = open(fullDataPath, 'a')
+        f.write(str(getKeithley2400LV_voltage(verbose=verbose)))
+        f.close()
 
     #turnOutput_OFF_keithley2400LV(verbose=verbose)
 
