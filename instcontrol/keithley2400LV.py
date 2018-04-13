@@ -1,7 +1,7 @@
 """
 This is for the Keithley 2400-LV source meter.
 
-This is designed to be platform independant and work for python 2 and 3
+This is designed to be platform independent and work for python 2 and 3
 """
 import time, serial, os, sys
 
@@ -69,18 +69,6 @@ class Keithley2400LV():
 
     def turnOutput_OFF(self):
         self.serialDevice.write(b"OUTPUT OFF\n")
-        if self.verbose:
-            print("The output for the Keithley 2400-LV at " + self.portName + " has been set to OFF")
-
-
-    def turnOutput_ON_P2(self):
-        self.serialDevice.write("OUTPUT ON\n")
-        if self.verbose:
-            print("The output for the Keithley 2400-LV at " + self.portName + " has been set to ON")
-
-
-    def turnOutput_OFF_P2(self):
-        self.serialDevice.write("OUTPUT OFF\n")
         if self.verbose:
             print("The output for the Keithley 2400-LV at " + self.portName + " has been set to OFF")
 
