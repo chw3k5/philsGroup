@@ -74,12 +74,13 @@ def logCryoData(verbose=False, logInterval=5.0, logTime=float("inf")):
         diffTime = nowTime - startTime
         if verbose:
             print("data log loop count:", loopCount)
-        while diffTime / float(loopCount) < float(logInterval):
+        while diffTime < (float(logInterval) * float(loopCount)):
             time.sleep(0.1)
             nowTime = time.time()
             diffTime = nowTime - startTime
         if verbose:
-            print("log interval in seconds:", logInterval, " log trigger in seconds:", diffTime / float(loopCount), "\n")
+            print("  diff time in seconds:" + str("%6.1f" % diffTime) + "\n" +
+                  "log trigger in seconds:" + str("%6.1f" % (logInterval * float(loopCount))) + "\n")
 
     return
 
