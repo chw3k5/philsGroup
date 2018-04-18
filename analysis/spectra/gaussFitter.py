@@ -1,7 +1,7 @@
 __author__ = 'chw3k5'
-import numpy, copy
+import numpy, copy, scipy
 from scipy.optimize import curve_fit
-from mariscotti import peakFinder
+from analysis.spectra.mariscotti import peakFinder
 from analysis.plotting.quickPlots import quickPlotter
 from analysis.dataGetter import getTableData
 
@@ -17,7 +17,7 @@ def gaussian(x, a, b, c):
 
 def singleGaussFitter(spectrum, x, guessParameters, peakName='', showPlot=False, plotDict=None):
     if plotDict is None and showPlot:
-        print "Cannot show plot, no plotDict was passed. Setting showPlot to False."
+        print("Cannot show plot, no plotDict was passed. Setting showPlot to False.")
         showPlot = False
 
     (guessAplitude, guessMean, guessSigma) = guessParameters
@@ -106,19 +106,19 @@ def listGaussFitter(spectrum, x,
         spectrumForFitter -= gaussian(x, *modelParams)
         modelInfo.append((modelParams, paramsError))
         if verbose:
-            print "fitting for the found peak", fitNum + 1, "of", numOfFitsInList
-            print "in amplitude (guess, fitted, error) = (" + \
-                  str(formatStr % guessParameters[0]) + ", " +\
-                  str(formatStr % modelParams[0]) + ", " +\
-                  str(formatStr % paramsError[0]) + ")"
-            print "in mean (guess, fitted, error) = (" + \
-                  str(formatStr % guessParameters[1]) + ", " +\
-                  str(formatStr % modelParams[1]) + ", " +\
-                  str(formatStr % paramsError[1]) + ")"
-            print "in sigma (guess, fitted, error) = (" + \
-                  str(formatStr % guessParameters[2]) + ", " +\
-                  str(formatStr % modelParams[2]) + ", " +\
-                  str(formatStr % paramsError[2]) + ")\n"
+            print("fitting for the found peak", fitNum + 1, "of", numOfFitsInList)
+            print("in amplitude (guess, fitted, error) = (" +
+                  str(formatStr % guessParameters[0]) + ", " +
+                  str(formatStr % modelParams[0]) + ", " +
+                  str(formatStr % paramsError[0]) + ")")
+            print("in mean (guess, fitted, error) = (" +
+                  str(formatStr % guessParameters[1]) + ", " +
+                  str(formatStr % modelParams[1]) + ", " +
+                  str(formatStr % paramsError[1]) + ")")
+            print("in sigma (guess, fitted, error) = (" +
+                  str(formatStr % guessParameters[2]) + ", " +
+                  str(formatStr % modelParams[2]) + ", " +
+                  str(formatStr % paramsError[2]) + ")\n")
 
 
     if showPlot_gaussFitters:
@@ -127,29 +127,26 @@ def listGaussFitter(spectrum, x,
     return modelInfo
 
 
-def deconvolveGaussFitter():
-    # loop through and see if it is worth trying to fit to the other local maxima
-    gg_init=models.Gaussian1D(modelParamsList[0])
-    len_maximaList = len(maximaList)
-    if 1 < len_maximaList:
-        for loopIndex in range(1,len_maximaList):
-            R_last = R_val_current
-            (x_mean,x_apml) = maximaList[loopIndex]
-            gg_init=current_models+models.Gaussian1D(x_apml, x_mean, 5)
-            gg_Fit = fitter(gg_init,x,counts)
-            fit_info = fitter.fit_info
-            R_val_current = fit_info['final_func_val']
-            if showFitterPlots: testSpecPlotting(counts,x,gg_Fit,gg_init, showPlot=True)
-            if R_val_current <= R_last*(1.-fractionalRimprovment):
-                modelParamsList.append((gg_Fit.parameters[0], gg_Fit.parameters[1], gg_Fit.parameters[2]))
-                current_models += models.Gaussian1D(modelParamsList[loopIndex])
-            else:
-                break
-
-    return
-
-
-
+# def deconvolveGaussFitter():
+#     # loop through and see if it is worth trying to fit to the other local maxima
+#     gg_init=models.Gaussian1D(modelParamsList[0])
+#     len_maximaList = len(maximaList)
+#     if 1 < len_maximaList:
+#         for loopIndex in range(1,len_maximaList):
+#             R_last = R_val_current
+#             (x_mean,x_apml) = maximaList[loopIndex]
+#             gg_init=current_models+models.Gaussian1D(x_apml, x_mean, 5)
+#             gg_Fit = fitter(gg_init,x,counts)
+#             fit_info = fitter.fit_info
+#             R_val_current = fit_info['final_func_val']
+#             if showFitterPlots: testSpecPlotting(counts,x,gg_Fit,gg_init, showPlot=True)
+#             if R_val_current <= R_last*(1.-fractionalRimprovment):
+#                 modelParamsList.append((gg_Fit.parameters[0], gg_Fit.parameters[1], gg_Fit.parameters[2]))
+#                 current_models += models.Gaussian1D(modelParamsList[loopIndex])
+#             else:
+#                 break
+#
+#     return
 
 
 if __name__ == '__main__':
@@ -161,15 +158,13 @@ if __name__ == '__main__':
     showPlot_peakFinder = False
     showPlot_gaussFitters = True
 
-
     # Get the test data
     testDataFile = "/Users/jmo/Desktop/Data/Cs137_10uCi_32cm_PMT.TKA"
     if verbose:
-        print "Getting the test data in the file.", testDataFile
+        print("Getting the test data in the file.", testDataFile)
     testData = getTableData(testDataFile)
     chan = testData['chan'][:endIndex]
     spectrum = testData['data'][:endIndex]
-
 
     modelInfo = listGaussFitter(spectrum, chan,
                                 errFactor=errFactor,

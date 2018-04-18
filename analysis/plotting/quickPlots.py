@@ -53,6 +53,7 @@ default_plotDict['doLegend'] = False
 default_plotDict['legendLoc'] = 0
 default_plotDict['legendNumPoints'] = 3
 default_plotDict['legendHandleLength'] = 5
+default_plotDict['legendFontSize'] = 'small'
 
 default_plotDict['savePlot'] = False
 default_plotDict['plotFileName'] = 'plot'
@@ -182,8 +183,11 @@ def quickPlotter(plotDict):
         legendLoc = extractPlotVal(plotDict, 'legendLoc', keys=keys)
         legendNumPoints = extractPlotVal(plotDict, 'legendNumPoints', keys=keys)
         legendHandleLength = extractPlotVal(plotDict, 'legendHandleLength', keys=keys)
+        legendFontSize = extractPlotVal(plotDict, 'legendFontSize', keys=keys)
         # call the legend command
-        plt.legend(leglines, leglabels, loc=legendLoc, numpoints=legendNumPoints, handlelength=legendHandleLength)
+        plt.legend(leglines, leglabels, loc=legendLoc,
+                   numpoints=legendNumPoints, handlelength=legendHandleLength,
+                   fontsize=legendFontSize)
 
     # here the plot can be saved
     if extractPlotVal(plotDict, 'savePlot', keys=keys):
