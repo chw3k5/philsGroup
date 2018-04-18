@@ -130,8 +130,11 @@ if __name__ == "__main__":
     dataDictonary = read_csv_file(filename=filename)
     # make a simple test plot
     plt.plot(dataDictonary["ctime_s"], dataDictonary["UltraHead_K"])
+    #
+    plt.xlabel("Computer time (s)")
     # show the plot
     plt.show()
+
 
 
 
