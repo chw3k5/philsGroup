@@ -237,10 +237,7 @@ if __name__ == "__main__":
     # write the final file names, windows has trouble with eps plots
     basename = "April_12_2018"
     logfilename = os.path.join(logFolder, basename + ".csv")
-    if sys.platform == "win32":
-        plotfilename = os.path.join(plotFolder, basename + ".png")
-    else:
-        plotfilename = os.path.join(plotFolder, basename + ".eps")
+    plotfilename = os.path.join(plotFolder, basename)
 
     # read the file using the definition in this file
     logData = read_csv_file(filename=logfilename)
