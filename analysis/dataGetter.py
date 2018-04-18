@@ -121,6 +121,8 @@ if __name__ == "__main__":
     # looking for file on my own computer
     if username == "meganmoore":
         filename = os.path.join(rootfolder, "Downloads", "April_12_2018.csv")
+    elif username == "Rebop":
+        filename = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff", "April_12_2018.csv")
         # platform independent way of joining folders together with the filename
     else:
         filename = os.path.join(rootfolder, "cryolog",  "April_12_2018.csv")
