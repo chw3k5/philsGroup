@@ -1,5 +1,6 @@
-import string
-import numpy
+import numpy, os, sys, getpass
+from matplotlib import pyplot as plt
+
 
 def isNum(testNum):
     try:
@@ -8,14 +9,11 @@ def isNum(testNum):
         return testNum
 
 
-
-
 def getTableData(filename, skiprows=1, delimiter=',', senseUnits=True):
     f = open(filename, 'r')
     # the first line is the header information naming the columns of data
     firstLine = f.readline()
     columnNames = firstLine.strip().split(delimiter)
-
 
     if senseUnits:
         unitFactorsList = []
@@ -63,4 +61,70 @@ def getTableRowData(filename, delimiter=','):
             tableDict[rowHeader] = None
     f.close()
     return tableDict
+
+
+def read_csv_file(filename, verbose=False):
+    """
+    This is made to read in comma separated value (csv) files with a simple header,
+    and return them in a dictionary that uses the headers (column names) as keys.
+    """
+    # tell the user what file is being read
+    if verbose:
+        print("Opening the file", filename, " to read in.")
+    # open the file to be read
+    f = open(filename, 'r')
+    # get the header from the first line
+    headerLine = f.readline()
+    # strip the newline charater and split the header names that are seporated by a comma
+    headerNames = headerLine.replace("\n", "").split(",")
+    ## initalize the dictionary that the file data will be read into
+    # make a empty dictionary
+    dataDictonary = {}
+    # iterate over the the header names
+    for key in headerNames:
+        # each "key" is assigned an empty list
+        dataDictonary[key] = []
+    # append data in the file's lines to dataDictionary
+    while True:
+        # read one line of data
+        dataline = f.readline()
+        # when you get to end of the data file you break from the infinite loop
+        if dataline == "":
+            # this is the exit the loop command
+            break
+        # taking the data line, removing the newline ("\n") character, then separating the terms
+        list_of_data = dataline.replace("\n", "").split(",")
+        # tying the data to the correct header key
+        for (index, key) in enumerate(headerNames):
+            # check it the data is a number, if so turning it into a float
+            datum = isNum(list_of_data[index])
+            # add the datum to the end of the dictionary
+            dataDictonary[key].append(datum)
+    # close the file that was being read
+    f.close()
+    return dataDictonary
+
+# The code below only executes if the this is the top level program that is called as "python dataGetter.py"
+if __name__ == "__main__":
+    # get the current users username
+    username = getpass.getuser()
+    # prints the current user's user name
+    print("Your username is", username)
+    # determine the current operating system
+    if sys.platform == "win32":
+        # root folder in windows
+        rootfolder = "C:\\"
+    else:
+        # root folder in mac and unix
+        rootfolder = "/home/" + username + "/"
+    # platform independent way of joining folders together with the filename
+    filename = os.path.join(rootfolder, "cryolog",  "April_12_2018.csv")
+    # read the file using the definition in this file
+    dataDictonary = read_csv_file(filename=filename)
+    # make a simple test plot
+    plt.plot(dataDictonary["ctime_s"], dataDictonary["UltraHead_K"])
+    # show the plot
+    plt.show()
+
+
 
