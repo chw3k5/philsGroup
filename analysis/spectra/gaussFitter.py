@@ -1,10 +1,9 @@
 __author__ = 'chw3k5'
 import numpy, copy
-from operator import itemgetter
 from scipy.optimize import curve_fit
-from mariscotti import mariscotti, peakFinder
-from quickPlots import quickPlotter
-from dataGetter import getTableData
+from mariscotti import peakFinder
+from analysis.plotting.quickPlots import quickPlotter
+from analysis.dataGetter import getTableData
 
 
 

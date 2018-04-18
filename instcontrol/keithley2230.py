@@ -3,7 +3,8 @@ This is for the Keithley 2230-30-1 triple channel power supply.
 
 This is designed to be platform independent and work for python 2 and 3
 """
-import time, serial, os, sys, usb.core, usb.util
+import time, serial, os, sys, usb.core, usb.util, visa
+import usb.backend.libusb1 as libusb1
 
 """
 These are definitions that are used by many methods in the Keithley2400LV class below.
@@ -86,8 +87,29 @@ class Keithley2230():
 
 
 if __name__ == "__main__":
-    # get_backend_libusb10()
-    dev = usb.core.find(idVendor=0xfffe, idProduct=0x0001)
+    # find our device
+    dev = usb.core.find(idVendor=0x05e6, idProduct=0x2230, port_number=8)
 
+    # was it found?
+    if dev is None:
+        raise ValueError('Device not found')
+
+    msg = 'test'
+    assert len(dev.write(1, msg, 100)) == len(msg)
+    ret = dev.read(0x81, len(msg), 100)
+    sret = ''.join([chr(x) for x in ret])
+    assert sret == msg
+    print()
+
+    rm = visa.ResourceManager()
+    ps1 = rm.open_resource('USB0::0x05E6::0x2230::9030255::INSTR')
+
+    ps1.write('instrument:nselect 3')
+    ps1.write('Voltage 6')
+    ps1.write('Current 0.1')
+    ps1.write('CHANNEL:OUTPUT on')
+    time.sleep(10)
+    ps1.write("CHANNEL:OUTPUT off")
+    ps1.close()
 
 
