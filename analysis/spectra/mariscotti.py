@@ -103,8 +103,8 @@
 # Caleb Wheeler for the Fisk Cube sat program.
 #
 import numpy
-from smoothing import boxCar
-from quickPlots import quickPlotter, rescale
+from analysis.spectra.smoothing import boxCar
+from analysis.plotting.quickPlots import quickPlotter, rescale
 from operator import itemgetter
 
 
@@ -393,7 +393,7 @@ def peakFinder(spectrum,
 
 
 if __name__ == '__main__':
-    from dataGetter import getTableData
+    from analysis.dataGetter import getTableData
     # A few options for this data
     endIndex = 100
     verbose = True

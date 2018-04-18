@@ -7,7 +7,7 @@ import visa, time
 
 start_with_heating_switches = True
 
-print ('Connecting to Instruments ...')
+print('Connecting to Instruments ...')
 
 rm = visa.ResourceManager()
 ps1= rm.open_resource('USB0::0x05E6::0x2230::9030255::INSTR')
