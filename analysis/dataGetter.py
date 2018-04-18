@@ -110,15 +110,20 @@ if __name__ == "__main__":
     username = getpass.getuser()
     # prints the current user's user name
     print("Your username is", username)
+
     # determine the current operating system
     if sys.platform == "win32":
         # root folder in windows
         rootfolder = "C:\\"
     else:
         # root folder in mac and unix
-        rootfolder = "/home/" + username + "/"
-    # platform independent way of joining folders together with the filename
-    filename = os.path.join(rootfolder, "cryolog",  "April_12_2018.csv")
+        rootfolder = "/Users/" + username + "/"
+    # looking for file on my own computer
+    if username == "meganmoore":
+        filename = os.path.join(rootfolder, "Downloads", "April_12_2018.csv")
+        # platform independent way of joining folders together with the filename
+    else:
+        filename = os.path.join(rootfolder, "cryolog",  "April_12_2018.csv")
     # read the file using the definition in this file
     dataDictonary = read_csv_file(filename=filename)
     # make a simple test plot
