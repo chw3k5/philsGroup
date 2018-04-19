@@ -87,22 +87,22 @@ class Keithley2230():
 
 
 if __name__ == "__main__":
-    # find our device
-    dev = usb.core.find(idVendor=0x05e6, idProduct=0x2230, port_number=8)
-
-    # was it found?
-    if dev is None:
-        raise ValueError('Device not found')
-
-    msg = 'test'
-    assert len(dev.write(1, msg, 100)) == len(msg)
-    ret = dev.read(0x81, len(msg), 100)
-    sret = ''.join([chr(x) for x in ret])
-    assert sret == msg
-    print()
+    # # find our device
+    # dev = usb.core.find(idVendor=0x05e6, idProduct=0x2230, port_number=8)
+    #
+    # # was it found?
+    # if dev is None:
+    #     raise ValueError('Device not found')
+    #
+    # msg = 'test'
+    # assert len(dev.write(1, msg, 100)) == len(msg)
+    # ret = dev.read(0x81, len(msg), 100)
+    # sret = ''.join([chr(x) for x in ret])
+    # assert sret == msg
+    # print()
 
     rm = visa.ResourceManager()
-    ps1 = rm.open_resource('USB0::0x05E6::0x2230::9030255::INSTR')
+    ps1 = rm.open_resource('USB0::0x05E6::0x2230::9103990::INSTR')
 
     ps1.write('instrument:nselect 3')
     ps1.write('Voltage 6')

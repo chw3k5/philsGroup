@@ -26,7 +26,10 @@ import numpy as np
 
 class PID:
     def __init__(self, goal_output, zone1_difference, zone1_pid, zone2_pid,
-                 time_difference_integral, time_difference_derivative):
+                 time_difference_for_integral, time_difference_for_derivative,
+                 time_difference_for_input_units,
+                 max_array_length=1000,
+                 verbose=False):
         """
         :param goal_output (float): The value you want the PID function to reach.
         :param zone1_difference (float): Once the difference between the goal and the measured value
@@ -45,8 +48,11 @@ class PID:
         self.zone1_difference = np.abs(float(zone1_difference))
         self.zone1_pid = (float(zone1_pid[0]), float(zone1_pid[1]), float(zone1_pid[2]))
         self.zone2_pid = (float(zone2_pid[0]), float(zone2_pid[1]), float(zone2_pid[2]))
-        self.time_difference_integral = float(time_difference_integral)
-        self.time_difference_derivative = float(time_difference_derivative)
+        self.time_difference_for_integral = float(time_difference_for_integral)
+        self.time_difference_for_derivative = float(time_difference_for_derivative)
+        self.time_difference_for_input_units = float(time_difference_for_input_units)
+        self.max_array_length = int(max_array_length)
+        self.verbose = bool(verbose)
 
         self.time_measurements = []
         self.input_measurements = []
@@ -55,40 +61,48 @@ class PID:
         self.running_sum = 0.0
         self.start_time = None
 
-    def re_init(self):
-        pass
+        self.running_derivative = 0.0
+        self.derivative_counter = 0
 
-    def record_measured_data(self, input, output, max_length=1000):
+        self.data_length = 0
+
+    def record_measured_data(self, input, output):
         self.time_measurements.append(time.time())
-        self.input_measurements.append(float(input))
-        self.output_measurements.append(float(output))
+        self.input_measurements.append(input)
+        self.output_measurements.append(output)
         data_length = len(self.time_measurements)
-        if max_length < data_length:
-            self.time_measurements = self.time_measurements[-max_length:]
-            self.input_measurements = self.input_measurements[-max_length:]
-            self.output_measurements = self.output_measurements[-max_length:]
-            self.data_length = max_length
+        if self.max_array_length < data_length:
+            self.time_measurements = self.time_measurements[-1 * self.max_array_length:]
+            self.input_measurements = self.input_measurements[-1 * self.max_array_length:]
+            self.output_measurements = self.output_measurements[-1 * self.max_array_length:]
+            self.data_length = self.max_array_length
         else:
             self.data_length = data_length
-
         if self.start_time is None:
             self.start_time = self.time_measurements[0]
+        if self.verbose:
+            print("Input:", input, " Output:", output)
 
-    def get_new_set_point(self, y_current, y_last, x_last, x_current, error_sum, error_last, Ki, Kp, Kd):
-        time_of_latest_measurement = self.time_measurements[-1]
-        output_of_latest_measurement = self.output_measurements[-1]
-        input_of_latest_measurement = self.input_measurements[-1]
+    def get_new_set_point(self):
+        input_measurements = np.array(self.input_measurements, dtype="float")
+        output_measurements = np.array(self.output_measurements, dtype="float")
+        input_of_latest_measurement = input_measurements[-1]
         time_array = np.array(self.time_measurements)
-        time_difference_array = time_array[1:] - time_array[:-2]
-        input_array = np.array(self.input_measurements)
-        output_difference_array = np.array(self.output_measurements) - self.goal_output
 
+        time_of_latest_measurement = time_array[-1]
+        # The arrays below need to all be the same length, N - 1, where N is the length of the time_array
+        time_difference_array = time_array[1:] - time_array[:-1]
+        output_difference_array = self.goal_output - np.array(output_measurements[1:])
+        input_change_array = np.array(input_measurements[1:]) - np.array(input_measurements[:-1])
+        output_change_array = np.array(output_measurements[1:]) - np.array(output_measurements[:-1])
         if self.data_length < 2:
             raise Exception("The record_measured_data method must be call twice before " +
                             "using the method getNewSetPoint.")
 
-        # Calculate proportional term
-        output_difference = self.goal_output - output_of_latest_measurement
+        """
+        Calculate proportional term
+        """
+        output_difference = output_difference_array[-1]
 
         # select the PID constants
         if np.abs(output_difference) <= self.zone1_difference:
@@ -103,62 +117,240 @@ class PID:
         # in units of output
         proportional_term = proportional_constant * output_difference
 
-        # Calculate integral terms
+        """
+        Calculate integral terms
+        """
         self.running_sum += output_difference * time_difference_array[-1]
-        if self.time_difference_integral == float("inf"):
-            # in output units, this
-            integral_term = integral_constant * self.running_sum / (time_of_latest_measurement - self.start_time)
+        if self.time_difference_for_integral == float("inf"):
+            running_sum_in_output_units = self.running_sum / (time_of_latest_measurement - self.start_time)
+            # in output units
+            integral_term = integral_constant * running_sum_in_output_units
         else:
-            for start_integral_index in range(self.data_length - 1, 0, -1):
-                time_difference = time_of_latest_measurement - self.time_measurements[start_integral_index]
-                if self.time_difference_integral < time_difference:
-                    start_integral_index -= 1
+            # start with the M - 1 index where M is the length of the output_difference_array
+            integral_time_sum = 0.0
+            for index_for_integral_calculation in reversed(range(len(time_difference_array))):
+                # count the time backwards from the last measurement
+                # until self.time_difference_for_integral is less than integral_time_sum
+                integral_time_sum += time_difference_array[index_for_integral_calculation]
+                if self.time_difference_for_integral < integral_time_sum:
+                    # this stops the loop and saves the index where
+                    # self.time_difference_for_integral is less than integral_time_sum
                     break
-            output_differences_to_use_for_integral_term = output_difference_array[start_integral_index + 1:]
+            output_differences_to_use_for_integral_term = output_difference_array[index_for_integral_calculation:]
+            time_differences_to_use_for_integral_term = time_difference_array[index_for_integral_calculation:]
+            # calculate the integral array
+            integral_in_output_and_time_units = np.sum(output_differences_to_use_for_integral_term
+                                                       * time_differences_to_use_for_integral_term)
+            # normalize the integral to be comparable to the proportional terms
+            # (this is a mean instead of a sum on N points)
+            norm_integral_in_output_and_time_units = integral_in_output_and_time_units \
+                                                     / float(len(output_differences_to_use_for_integral_term))
 
 
+
+            # convert out of output times time units
+            norm_integral_in_output_units = norm_integral_in_output_and_time_units / np.mean(time_differences_to_use_for_integral_term)
             # in output units, and should be comparable to the output_difference / integral_constant
             # due to the mean. This is not a true integral, but rather a running average of the output_difference
-            integral_term = integral_constant * np.mean(output_differences_to_use_for_integral_term
-                                                        * time_difference_array[start_integral_index])
+            integral_term = integral_constant * norm_integral_in_output_units
 
-        # Calculate derivative term
-        if self.time_difference_derivative == float("inf"):
-            start_derivative_index = 0
+        """
+        Calculate derivative term
+        """
+        # used when self.time_difference_derivative == float("inf")
+        self.running_derivative += output_difference_array[-1] / time_difference_array[-1]
+        self.derivative_counter += 1
+        if self.time_difference_for_derivative == float("inf"):
+            average_derivative = self.running_derivative / float(self.derivative_counter)
+            average_time_difference = (time_of_latest_measurement - self.start_time) / float(self.derivative_counter)
+            average_derivative_in_output_units = average_derivative * average_time_difference
+            # in output units
+            derivative_term = derivative_constant * average_derivative_in_output_units
         else:
-            for start_derivative_index in range(self.data_length - 1, 0, -1):
-                time_difference = time_of_latest_measurement - self.time_measurements[start_derivative_index]
-                if self.time_difference_integral < time_difference:
-                    start_derivative_index -= 1
+            derivative_time_sum = 0.0
+            for index_for_derivative_calculation in reversed(range(len(time_difference_array))):
+                # count the time backwards from the last measurement
+                # until self.time_difference_for_derivative is less than derivative_time_sum
+                derivative_time_sum += time_difference_array[index_for_derivative_calculation]
+                if self.time_difference_for_derivative < derivative_time_sum:
+                    # this stops the loop and saves the index where
+                    # self.time_difference_for_derivative is less than integral_time_sum
                     break
-        output_differences_to_use_for_derivative_term = np.array(self.output_measurements[start_derivative_index:])
+            output_differences_to_use_for_derivative_term = output_difference_array[index_for_derivative_calculation:]
+            time_differences_to_use_for_derivative_term = time_difference_array[index_for_derivative_calculation:]
+            # calculate the derivative
+            mean_derivative_in_output_divided_by_time_units = np.sum(output_differences_to_use_for_derivative_term) \
+                                                                / np.sum(time_differences_to_use_for_derivative_term)
+            # convert to output units
+            derivative_in_output_units = mean_derivative_in_output_divided_by_time_units \
+                                         * np.mean(time_differences_to_use_for_derivative_term)
+            derivative_term = derivative_constant * derivative_in_output_units
+
+        set_term_change_in_output_units = proportional_term + integral_term + derivative_term
+
+        """
+        Convert to input units
+        """
+        input_time_sum = 0.0
+        for index_for_input_calculation in reversed(range(len(time_difference_array))):
+            # count the time backwards from the last measurement
+            # until self.time_difference_for_input is less than input_time_sum
+            input_time_sum += time_difference_array[index_for_input_calculation]
+            if self.time_difference_for_input_units < input_time_sum:
+                # this stops the loop and saves the index where
+                # self.time_difference_for_input_units is less than integral_time_sum
+                break
+        dinput_by_doutput = np.sum(input_measurements[index_for_input_calculation:]) \
+                            / np.sum(output_measurements[index_for_input_calculation:])
+        # dinput_by_doutput = 1000.
+        # convert the set_term_change to the input units
+        set_term_change_in_input_units = set_term_change_in_output_units * dinput_by_doutput
+        # get the new set term
+        set_term = set_term_change_in_input_units + input_of_latest_measurement
+        if self.verbose:
+            print("set_term:", set_term,
+                  "\nchange in set_term input units:", set_term_change_in_input_units,
+                  "\nchange in set_term output units:", set_term_change_in_output_units,
+                  "\n input to output conversion:", dinput_by_doutput)
+            print("(constant_P, constant_I, constant_D) (" +
+                  str(proportional_constant) + ", " +
+                  str(integral_constant) + ", " +
+                  str(derivative_constant) + ")")
+            print("(preconstant_P, preconstant_I, preconstant_D) output units (" +
+                  str(output_difference) + ", " +
+                  str(norm_integral_in_output_units) + ", " +
+                  str(derivative_in_output_units) + ")")
+            print("(P_term, I_term, D_term) output units (" +
+                  str(proportional_term) + ", " +
+                  str(integral_term) + ", " +
+                  str(derivative_term) + ")")
+            print("(P_term, I_term, D_term) input units (" +
+                  str(proportional_term * dinput_by_doutput) + ", " +
+                  str(integral_term * dinput_by_doutput) + ", " +
+                  str(derivative_term * dinput_by_doutput) + ")\n")
+        return set_term
 
 
-
-
-
-
-
-        x_diff = float(x_current-x_last)
-        # only needed for moving setpoints, mA_set
-        der_error = (output_difference-error_last)/x_diff
-        # below is ideal derivative term for a fixed set point, mA_set
-        der_error_simple = y_last - y_current
-
-        # the function
-        pterm =  * output_difference
-        iterm = error_sum
-        dterm = Kd*der_error_simple
-        # print "pterm:",pterm,'   iterm:',iterm,'   dterm:',dterm
-        pid_function_y = pterm + iterm + dterm
-        pid_function_x = pid_function_y/der_error
-        return pid_function_x, pid_function_y, output_difference, error_sum
-
-# This only runs if executing pid.py directionly and not when importing this class into another scrips or file
+# This only runs if executing pid.py directly and not when importing this class into another scripts or file
 if __name__ == "__main__":
-    # Example PID code #
-    goal_output = 20.0
-    zone1_difference = 1.0
-    zone1_pid = (0.0 , 1.0, 1.0)
-    zone2_pid = (1.0, 0.0, 0.0)
-    my_pid =  PID(goal_output, zone1_difference, zone1_pid, zone2_pid)
+    import random
+    from matplotlib import pyplot as plt
+    """
+    Example PID code
+    """
+    # set parameters for the PID function
+    goal_output = 17.0
+    zone1_difference = 1.2
+    zone1_pid = (0.0, 0.2, 0.03)
+    zone2_pid = (0.2, 0.0, 0.0)
+    # averaging times
+    time_difference_for_integral = 1.0  # in seconds
+    time_difference_for_derivative = 1.  # in seconds
+    time_difference_for_input_units = 1.0  # in seconds
+    # initialize the class that holds the pid function
+    my_pid =  PID(goal_output, zone1_difference, zone1_pid, zone2_pid,
+                  time_difference_for_integral,
+                  time_difference_for_derivative,
+                  time_difference_for_input_units, verbose=True)
+    # time between measurements
+    meas_time = 0.1  # in seconds
+    """
+    Make some fake test data
+    """
+    # This something that changes the system output that you cannot control
+    # like heating from the sun or mass water in a lake from evaporation and rain.
+    sine_wave = 10.0 * np.sin(np.arange(0.0, 100.0, 0.01))
+    noise = (np.array([random.random() for n in range(len(sine_wave))]) - 0.5)
+    externalFunction = sine_wave + noise
+
+    # this is the thing you can control, like the voltage on a resistor or valve on a pipe
+    the_device = 10.0 * np.arange(-1.0, 3.0, 0.0001)
+    device_max_input = len(the_device) - 1
+    device_min_input = 0
+
+    # this is used a lot so I make definition here
+    def measurement_loop(counter, my_pid, inputVal):
+        externalVal = externalFunction[counter]
+        counter += 1
+        # wait a some time for the input to take effect
+        time.sleep(meas_time)
+        """
+        This of where a real device will need to be controlled
+        """
+        # my "device" requires a discrete input value
+        discrete_inputVal = int(np.round(inputVal))
+        # some error checking to keep the device in the bounds of it's operation
+        if discrete_inputVal < 0:
+            discrete_inputVal = device_min_input
+        elif device_max_input < discrete_inputVal:
+            discrete_inputVal = device_max_input
+        # In this example the output is a simple function of the inputVal and externalVal
+        # but this could be a much more complex relationship.
+        outputVal = the_device[discrete_inputVal] + externalVal
+        my_pid.record_measured_data(input=discrete_inputVal, output=outputVal)
+        return counter, my_pid
+
+    # make a guess at the initial input
+    # Example: how much voltage to use, how far to turn a knob
+    inputVal = len(the_device) / 2
+
+    # get the first value from the external forcing function
+    # Example: how much it rained, how much heat was absorbed
+    counter = 0
+    # the first measurement loop
+    counter, my_pid = measurement_loop(counter, my_pid, inputVal)
+
+    # Change the inputVal by some amount to train the the PID function
+    # this action can be repeat a few times but has no benefit after time greater than
+    # that of time_difference_for_integral, time_difference_for_derivative, time_difference_for_input_units
+    for n in range(5):
+        inputVal -= 1000
+        counter, my_pid = measurement_loop(counter, my_pid, inputVal)
+
+    # get a new set value from the PID function
+    inputVal = my_pid.get_new_set_point()
+
+    counter, my_pid = measurement_loop(counter, my_pid, inputVal)
+
+    # repeat to let the PID function control your input
+    for n in range(900):
+        # get a new set value from the PID function
+        inputVal = my_pid.get_new_set_point()
+        counter, my_pid = measurement_loop(counter, my_pid, inputVal)
+
+    leglines = []
+    leglabels = []
+    leglines.append(plt.Line2D(range(10), range(10),
+                               color='green'))
+    leglabels.append('Goal')
+    leglines.append(plt.Line2D(range(10), range(10),
+                               color='firebrick'))
+    leglabels.append('External Forces')
+    leglines.append(plt.Line2D(range(10), range(10),
+                               color='dodgerblue'))
+    leglabels.append('Internal Forces')
+    leglines.append(plt.Line2D(range(10), range(10),
+                               color='darkOrchid'))
+    leglabels.append('Total output')
+    legendLoc = 0
+    legendNumPoints = 3
+    legendHandleLength = 4
+
+    plt.plot(my_pid.time_measurements, np.array(my_pid.output_measurements) * 0.0 + goal_output, color='green')
+    plt.plot(my_pid.time_measurements, externalFunction[:counter], color='firebrick')
+    device_output = []
+    for n in my_pid.input_measurements:
+        one_device_output = the_device[n]
+        device_output.append(one_device_output)
+    plt.plot(my_pid.time_measurements, device_output, color='dodgerblue')
+    plt.plot(my_pid.time_measurements, my_pid.output_measurements, color='darkOrchid')
+
+    plt.legend(leglines, leglabels, loc=legendLoc, numpoints=legendNumPoints, handlelength=legendHandleLength)
+
+    plt.show()
+
+
+
+
+
+
