@@ -225,8 +225,8 @@ if __name__ == "__main__":
         logFolder = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff")
         plotFolder = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff", "plots")
     elif username == "Kanishka":
-        logFolder = os.path.join(rootfolder, "Downloads")
-        plotFolder = os.path.join(rootfolder,"Downloads", "plots")
+        logFolder = os.path.join(rootfolder, "Desktop/CryoStat")
+        plotFolder = os.path.join(rootfolder,"Desktop/CryoStat", "plots")
     else:
         logFolder = os.path.join(rootfolder, "cryolog")
         plotFolder = os.path.join(rootfolder, "cryolog", "plots")
