@@ -28,7 +28,8 @@ class monitorPlots():
         """
         self.verbose = None
         self.time_type = None
-        self.plotDict = None
+        self.temperaturePlotDict = None
+        self.pressurePlotDict = None
         self.pressure = None
         self.ultrahead_temp = None
         self.interhead_temp = None
@@ -115,89 +116,157 @@ class monitorPlots():
 
 
 
-    def creatPlotDict(self, doShow=True, doSave=False, plotFileName='plot', title=None):
+    def createTemperaturePlotDict(self, doShow=True, doSave=False, plotFileName='temperaturePlot', title=None):
         # initialize the plotting dictionary an the options you want to select
-        self.plotDict = {}
-        self.plotDict['verbose'] = self.verbose
+        self.temperaturePlotDict = {}
+        self.temperaturePlotDict['verbose'] = self.verbose
         # These must be a single value
         if title is None:
-            self.plotDict['title'] = ""
+            self.temperaturePlotDict['title'] = ""
         else:
-            self.plotDict['title'] = title
+            self.temperaturePlotDict['title'] = title
         if self.time_type == "weeks":
-            self.plotDict['xlabel'] = 'Relative time (weeks)'
+            self.temperaturePlotDict['xlabel'] = 'Relative time (weeks)'
         elif self.time_type == "days":
-            self.plotDict['xlabel'] = 'Relative time (days)'
+            self.temperaturePlotDict['xlabel'] = 'Relative time (days)'
         elif self.time_type == "hours":
-            self.plotDict['xlabel'] = 'Relative time (hours)'
+            self.temperaturePlotDict['xlabel'] = 'Relative time (hours)'
         elif self.time_type == "minutes":
-            self.plotDict['xlabel'] = 'Relative time (minutes)'
+            self.temperaturePlotDict['xlabel'] = 'Relative time (minutes)'
         elif self.time_type == "seconds":
-            self.plotDict['xlabel'] = 'Relative time (s)'
+            self.temperaturePlotDict['xlabel'] = 'Relative time (s)'
         else:
-            self.plotDict['xlabel'] = 'Absolute Computer Time (s)'
-        self.plotDict['ylabel'] = 'Temperature (Kelvin)'
-        self.plotDict['legendAutoLabel'] = False
-        self.plotDict['doLegend'] = True
-        self.plotDict['legendLoc'] = 0
-        self.plotDict['legendNumPoints'] = 3
-        self.plotDict['legendHandleLength'] = 3
-        self.plotDict['legendFontSize'] = 'x-small' # xx-small, x-small, small, medium, large, x-large, xx-large
-        self.plotDict['yLog'] = True
-        self.plotDict['doShow'] = doShow
+            self.temperaturePlotDict['xlabel'] = 'Absolute Computer Time (s)'
+        self.temperaturePlotDict['ylabel'] = 'Temperature (Kelvin)'
+        self.temperaturePlotDict['legendAutoLabel'] = False
+        self.temperaturePlotDict['doLegend'] = True
+        self.temperaturePlotDict['legendLoc'] = 0
+        self.temperaturePlotDict['legendNumPoints'] = 3
+        self.temperaturePlotDict['legendHandleLength'] = 3
+        self.temperaturePlotDict['legendFontSize'] = 'x-small' # xx-small, x-small, small, medium, large, x-large, xx-large
+        self.temperaturePlotDict['yLog'] = True
+        self.temperaturePlotDict['doShow'] = doShow
 
         # These can be a list or a single value
-        self.plotDict['yData'] = []
-        self.plotDict['xData'] = []
-        self.plotDict["colors"] = []
-        self.plotDict['ls'] = []
-        self.plotDict['legendLabel'] = []
-        self.plotDict['fmt'] = "None"
+        self.temperaturePlotDict['yData'] = []
+        self.temperaturePlotDict['xData'] = []
+        self.temperaturePlotDict["colors"] = []
+        self.temperaturePlotDict['ls'] = []
+        self.temperaturePlotDict['legendLabel'] = []
+        self.temperaturePlotDict['fmt'] = "None"
 
         if doSave:
-            self.plotDict['savePlot'] = True
-            self.plotDict['plotFileName'] = plotFileName
+            self.temperaturePlotDict['savePlot'] = True
+            self.temperaturePlotDict['plotFileName'] = plotFileName
         else:
-            self.plotDict['savePlot'] = False
-            self.plotDict['plotFileName'] = ''
+            self.temperaturePlotDict['savePlot'] = False
+            self.temperaturePlotDict['plotFileName'] = ''
 
 
-    def appendMonitorDataToPlotDict(self, monitor_data):
-        self.plotDict['xData'].append(monitor_data.xdata)
-        self.plotDict['yData'].append(monitor_data.ydata)
-        self.plotDict['colors'].append(monitor_data.plotColor)
-        self.plotDict['ls'].append(monitor_data.plotls)
-        self.plotDict['legendLabel'].append(monitor_data.dataName + " (" + monitor_data.units + ")")
+    def createPressurePlotDict(self, doShow=True, doSave=False, plotFileName='pressurePlot', title=None):
+        # initialize the plotting dictionary an the options you want to select
+        self.pressurePlotDict = {}
+        self.pressurePlotDict['verbose'] = self.verbose
+        # These must be a single value
+        if title is None:
+            self.pressurePlotDict['title'] = ""
+        else:
+            self.pressurePlotDict['title'] = title
+        if self.time_type == "weeks":
+            self.pressurePlotDict['xlabel'] = 'Relative time (weeks)'
+        elif self.time_type == "days":
+            self.pressurePlotDict['xlabel'] = 'Relative time (days)'
+        elif self.time_type == "hours":
+            self.pressurePlotDict['xlabel'] = 'Relative time (hours)'
+        elif self.time_type == "minutes":
+            self.pressurePlotDict['xlabel'] = 'Relative time (minutes)'
+        elif self.time_type == "seconds":
+            self.pressurePlotDict['xlabel'] = 'Relative time (s)'
+        else:
+            self.pressurePlotDict['xlabel'] = 'Absolute Computer Time (s)'
+        self.pressurePlotDict['ylabel'] = 'pressure (Torr)'
+        self.pressurePlotDict['legendAutoLabel'] = False
+        self.pressurePlotDict['doLegend'] = True
+        self.pressurePlotDict['legendLoc'] = 0
+        self.pressurePlotDict['legendNumPoints'] = 3
+        self.pressurePlotDict['legendHandleLength'] = 3
+        self.pressurePlotDict['legendFontSize'] = 'small' # xx-small, x-small, small, medium, large, x-large, xx-large
+        self.pressurePlotDict['yLog'] = True
+        self.pressurePlotDict['doShow'] = doShow
+
+        # These can be a list or a single value
+        self.pressurePlotDict['yData'] = []
+        self.pressurePlotDict['xData'] = []
+        self.pressurePlotDict["colors"] = []
+        self.pressurePlotDict['ls'] = []
+        self.pressurePlotDict['legendLabel'] = []
+        self.pressurePlotDict['fmt'] = "None"
+
+        if doSave:
+            self.pressurePlotDict['savePlot'] = True
+            self.pressurePlotDict['plotFileName'] = plotFileName
+        else:
+            self.pressurePlotDict['savePlot'] = False
+            self.pressurePlotDict['plotFileName'] = ''
+
+
+    def appendMonitorDataToTemperaturePlotDict(self, monitor_data):
+        self.temperaturePlotDict['xData'].append(monitor_data.xdata)
+        self.temperaturePlotDict['yData'].append(monitor_data.ydata)
+        self.temperaturePlotDict['colors'].append(monitor_data.plotColor)
+        self.temperaturePlotDict['ls'].append(monitor_data.plotls)
+        self.temperaturePlotDict['legendLabel'].append(monitor_data.dataName + " (" + monitor_data.units + ")")
+
+
+    def appendMonitorDataToPressurePlotDict(self, monitor_data):
+        self.pressurePlotDict['xData'].append(monitor_data.xdata)
+        self.pressurePlotDict['yData'].append(monitor_data.ydata)
+        self.pressurePlotDict['colors'].append(monitor_data.plotColor)
+        self.pressurePlotDict['ls'].append(monitor_data.plotls)
+        self.pressurePlotDict['legendLabel'].append(monitor_data.dataName + " (" + monitor_data.units + ")")
+
 
     def appendAllTempData(self):
-        if self.plotDict is None:
-            self.creatPlotDict()
+        if self.temperaturePlotDict is None:
+            self.createTemperaturePlotDict()
 
         if self.ultrahead_temp is not None:
-            self.appendMonitorDataToPlotDict(self.ultrahead_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.ultrahead_temp)
         if self.interhead_temp is not None:
-            self.appendMonitorDataToPlotDict(self.interhead_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.interhead_temp)
 
         if self.he4Switch_temp is not None:
-            self.appendMonitorDataToPlotDict(self.he4Switch_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.he4Switch_temp)
         if self.interSwitch_temp is not None:
-            self.appendMonitorDataToPlotDict(self.interSwitch_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.interSwitch_temp)
         if self.ultraSwitch_temp is not None:
-            self.appendMonitorDataToPlotDict(self.ultraSwitch_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.ultraSwitch_temp)
 
         if self.he4Pump_temp is not None:
-            self.appendMonitorDataToPlotDict(self.he4Pump_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.he4Pump_temp)
         if self.interPump_temp is not None:
-            self.appendMonitorDataToPlotDict(self.interPump_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.interPump_temp)
         if self.ultraPump_temp is not None:
-            self.appendMonitorDataToPlotDict(self.ultraPump_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.ultraPump_temp)
 
         if self.fortyKplate_temp is not None:
-            self.appendMonitorDataToPlotDict(self.fortyKplate_temp)
+            self.appendMonitorDataToTemperaturePlotDict(self.fortyKplate_temp)
 
 
-    def make_plots(self):
-        quickPlotter(self.plotDict)
+    def appendPressureData(self):
+        if self.pressurePlotDict is None:
+            self.createPressurePlotDict()
+        if self.pressure is not None:
+            self.appendMonitorDataToPressurePlotDict(self.pressure)
+
+
+
+    def make_temperature_plot(self):
+        quickPlotter(self.temperaturePlotDict)
+
+
+    def make_pressure_plot(self):
+        quickPlotter(self.pressurePlotDict)
 
 
 if __name__ == "__main__":
@@ -251,9 +320,25 @@ if __name__ == "__main__":
     Edit the plot options in the definition "initializeTestPlots"
     Only a few options are available in the input of this definition
     """
+    verbose = True
+    time_type = "days"
+    show_plots = True
+    save_plots = True
+
 
     monitor = monitorPlots()
-    monitor.loadData(logData=logData, verbose=True, time_type="days")
-    monitor.creatPlotDict(doShow=True, doSave=True, plotFileName=plotfilename, title="Baby Beluga Monitor")
+    monitor.loadData(logData=logData, verbose=verbose, time_type=time_type)
+
+    monitor.createTemperaturePlotDict(doShow=show_plots, doSave=save_plots,
+                                      plotFileName=plotfilename + "_All_Temperatures",
+                                      title="Baby Beluga Temperature Monitor")
     monitor.appendAllTempData()
-    monitor.make_plots()
+    monitor.make_temperature_plot()
+
+    monitor.createPressurePlotDict(doShow=show_plots, doSave=save_plots,
+                                   plotFileName=plotfilename + "_Pressure",
+                                   title="Baby Beluga Pressure Monitor")
+    monitor.appendPressureData()
+    monitor.make_pressure_plot()
+
+
