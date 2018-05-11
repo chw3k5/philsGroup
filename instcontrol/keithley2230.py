@@ -1,42 +1,12 @@
 """
-This is for the Keithley 2230-30-1 triple channel power supply.
-
-This is designed to be platform independent and work for python 2 and 3
+This is for the Keithley 2230-30-1 triple channel power supply. It uses National instruments Visa.
+This was tested to work on Windows 10
+with the Visa backend of NI-Visa 17.5
+with pyVisa 1.9.0
+in python 3.6
+on May 10, 2018
 """
-import time, serial, os, sys, usb.core, usb.util, visa
-import usb.backend.libusb1 as libusb1
-
-"""
-These are definitions that are used by many methods in the Keithley2400LV class below.
-"""
-
-
-def readKeithley(keithley2400LV):
-    if sys.version_info.major == 3:
-        oneByte = b""
-        byteString = b""
-        while oneByte is not  b'\n':
-            oneByte = keithley2400LV.read()
-            byteString += oneByte
-    else:
-        oneByte = None
-        byteString = ""
-        while oneByte is not "":
-            oneByte = keithley2400LV.read()
-            byteString += oneByte
-    return byteString
-
-
-def numberFormat(number):
-    if sys.version_info.major == 3:
-        formattedString = bytes(str('%1.6e' % number), "UTF-8")
-    else:
-        formattedString = str("%1.6e" % number)
-    return formattedString
-
-
-
-
+import time, visa, sys
 """
 This is the class to control the Keithley 2230-30-1 triple channel power supply.
 """
@@ -45,71 +15,66 @@ class Keithley2230():
         self.serialDevice = None
         self.portName = portName
         self.verbose = verbose
-        self.baudrate = 57600
-        self.bytesize = 8
-        self.stopbits = 1
-        self.parity = "N"
-        self.timeout = 2
-        self.fullDataPath = None
+        self.current_channel = None
+        self.rm = visa.ResourceManager()
+        self.device = self.rm.open_resource(portName)
+        self.device.write("*RST")
+        self.device.write("SYSTEM:REMOTE")
 
-    def openPort(self):
-        pass
+    def channel_select(self, channel_number):
+        if channel_number in [1, 2, 3]:
+            self.device.write("instrument:nselect " + str(channel_number))
+            self.current_channel = channel_number
+            if self.verbose:
+                print("Switched to channel number", channel_number)
+        else:
+            raise ValueError(channel_number, "is the channel, but the channel number must be 1, 2, or 3")
 
-    def closePort(self):
-        self.serialDevice.close()
 
     def turnOutput_ON(self):
-        self.serialDevice.write(b"OUTPUT ON\n")
+        self.device.write("CHANNEL:OUTPUT ON")
         if self.verbose:
-            print("The output for the Keithley 2400-LV at " + self.portName + " has been set to ON")
+            print("Turned channel " + str(self.current_channel) + "'s output to ON")
 
     def turnOutput_OFF(self):
-        self.serialDevice.write(b"OUTPUT OFF\n")
+        self.device.write("CHANNEL:OUTPUT OFF")
         if self.verbose:
-            print("The output for the Keithley 2400-LV at " + self.portName + " has been set to OFF")
+            print("Turned channel " + str(self.current_channel) + "'s output to OFF")
 
-# def get_backend_libusb10():
-#     libusb01_location = os.getcwd()
-#
-#     # load-library (ctypes.util.find_library) workaround: also search the current folder
-#     is_current_folder_in_search_path = True
-#     if None == usb.backend.libusb10.get_backend():
-#         is_current_folder_in_search_path = libusb01_location in os.environ['PATH']
-#         if not is_current_folder_in_search_path:
-#             os.environ['PATH'] += os.pathsep + libusb01_location
-#
-#     backend = usb.backend.libusb10.get_backend()
-#
-#     if not is_current_folder_in_search_path:
-#         os.environ['PATH'] = os.environ['PATH'].replace(os.pathsep + libusb01_location, "")
-#
-#     return backend
+    def turn_off_all_channels(self):
+        for channel_number in [1, 2, 3]:
+            self.channel_select(channel_number=channel_number)
+            self.turnOutput_OFF()
+
+    def set_voltage(self, voltage):
+        self.device.write("Voltage " + str(voltage))
+        if self.verbose:
+            print("Turned channel " + str(self.current_channel) + "'s voltage to "
+                  + str("%1.3e" % voltage) + "Volts")
+
+    def set_current_limit(self, current_limit):
+        self.device.write("Current " + str(current_limit))
+        if self.verbose:
+            print("Turned channel " + str(self.current_channel) + "'s current limit to "
+                  + str("%1.3e" % current_limit) + " Amps")
+
+    def close(self):
+        self.device.close()
+
 
 
 if __name__ == "__main__":
-    # # find our device
-    # dev = usb.core.find(idVendor=0x05e6, idProduct=0x2230, port_number=8)
-    #
-    # # was it found?
-    # if dev is None:
-    #     raise ValueError('Device not found')
-    #
-    # msg = 'test'
-    # assert len(dev.write(1, msg, 100)) == len(msg)
-    # ret = dev.read(0x81, len(msg), 100)
-    # sret = ''.join([chr(x) for x in ret])
-    # assert sret == msg
-    # print()
 
-    rm = visa.ResourceManager()
-    ps1 = rm.open_resource('USB0::0x05E6::0x2230::9103990::INSTR')
-
-    ps1.write('instrument:nselect 3')
-    ps1.write('Voltage 6')
-    ps1.write('Current 0.1')
-    ps1.write('CHANNEL:OUTPUT on')
+    yellowKeithley = Keithley2230(portName='USB0::0x05E6::0x2230::9030255::INSTR', verbose=True)
+    yellowKeithley.channel_select(channel_number=1)
+    yellowKeithley.turnOutput_OFF()
+    yellowKeithley.set_voltage(voltage=1.1)
+    yellowKeithley.set_current_limit(current_limit=0.010)
+    yellowKeithley.turnOutput_ON()
     time.sleep(10)
-    ps1.write("CHANNEL:OUTPUT off")
-    ps1.close()
+    yellowKeithley.turnOutput_OFF()
+    yellowKeithley.close()
+
+
 
 

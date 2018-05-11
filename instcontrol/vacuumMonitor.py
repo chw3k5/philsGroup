@@ -21,8 +21,11 @@ def getPressure(verbose=False):
     for sleepTime in [0.0, 0.1, 0.2, 1.0]:
         byteOrder = "little"
         lenOfDataString = -1
+        start_time = time.time()
         while lenOfDataString != 7:
             lenOfDataString = int.from_bytes(vacGauge.read(), byteorder=byteOrder)
+            if timeout < (time.time() - start_time):
+                break
         time.sleep(sleepTime)
         pageNumber = -1
         while pageNumber != 5:
@@ -57,6 +60,7 @@ def getPressure(verbose=False):
             print(sensorType, "is the sensor type byte, should be 10 for BPG400 vacuum gauge")
             print(checkSum, "is the check sum byte, used for synchronization ")
             print(measSum, "is the measured sum and should be equal to the check sum")
+
             print()
         if measSum == checkSum:
             break
@@ -78,7 +82,7 @@ def getPressure(verbose=False):
         print(measSum, "is the measured sum and should be equal to the check sum")
         print("Setting pressure to -1.0 to flag as an error for later!\n")
         pressureTorr = -1.0
-
+    print(str("%2.2e" % pressureTorr), " Torr\n")
     return pressureTorr
 
 def getFormattedPressure(verbose=False):

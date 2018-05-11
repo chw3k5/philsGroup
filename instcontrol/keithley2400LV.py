@@ -153,7 +153,7 @@ def ledSweep():
     keithley2400LV.turnOutput_ON()
     keithley2400LV.initLEDsweep()
 
-    for microAmps in range(0, 61, 5):
+    for microAmps in range(60, 61, 10):
         keithley2400LV.setSourceCurrent(microAmps * 1.0E-6)
         if microAmps == 0:
             f = open(fullDataPath, 'w')
@@ -161,7 +161,7 @@ def ledSweep():
             f = open(fullDataPath, 'a')
         f.write(str(keithley2400LV.getMeasermentVoltage()))
         f.close()
-        time.sleep(5)
+        time.sleep(200)
 
     keithley2400LV.turnOutput_OFF()
     keithley2400LV.closePort()

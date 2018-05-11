@@ -15,9 +15,9 @@ timeout = 2
 channelToName = {"A" :"UltraHead",
                  "B" :"InterHead",
                  "C1":"He4Buffer",
-                 "C2":"He4Switch",
+                 "C4":"He4Switch",
                  "C3":"He3InterSwitch",
-                 "C4":"He3UltraSwitch",
+                 "C2":"He3UltraSwitch",
                  "D2":"He3InterPump",
                  "D3":"He4Pump",
                  "C5":"UltraPump"}

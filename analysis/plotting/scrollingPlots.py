@@ -306,7 +306,7 @@ if __name__ == "__main__":
             os.mkdir(plotFolder)
 
     # write the final file names, windows has trouble with eps plots
-    basename = "April_12_2018"
+    basename = "April_28"
     logfilename = os.path.join(logFolder, basename + ".csv")
     plotfilename = os.path.join(plotFolder, basename)
 
@@ -320,7 +320,7 @@ if __name__ == "__main__":
     Only a few options are available in the input of this definition
     """
 
-    monitor = MonitorPlots(doShow=True, doSave=True, time_type="days", verbose=True)
+    monitor = MonitorPlots(doShow=True, doSave=True, time_type="seconds", verbose=True)
     monitor.loadData(logData=logData)
 
     monitor.temperaturePlotDictSpecifics(plotFileName=plotfilename + "_All_Temperatures",

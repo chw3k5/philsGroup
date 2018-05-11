@@ -5,7 +5,7 @@ from instcontrol.lakeshore336 import readLS336
 
 # this is the folder where you can keep the data
 dataLogFolder = os.path.join("cryoLog")
-dataFileName = "April_12_2018.csv"
+dataFileName = "April_28.csv"
 
 # This an attempt at writing platform independent code.
 if sys.platform == "win32":
