@@ -49,6 +49,11 @@ default_plotDict['title'] = ''
 default_plotDict['xlabel'] = ''
 default_plotDict['ylabel'] = ''
 
+default_plotDict['xmax'] = None
+default_plotDict['xmin'] = None
+default_plotDict['ymax'] = None
+default_plotDict['ymin'] = None
+
 default_plotDict['doLegend'] = False
 default_plotDict['legendLoc'] = 0
 default_plotDict['legendNumPoints'] = 3
@@ -189,6 +194,29 @@ def quickPlotter(plotDict):
                    numpoints=legendNumPoints, handlelength=legendHandleLength,
                    fontsize=legendFontSize)
 
+    # now we adjust the x and y limits of the plot
+    current_xmin, current_xmax = plt.xlim()
+    current_ymin, current_ymax = plt.ylim()
+    if extractPlotVal(plotDict, 'xmin', keys=keys) is None:
+        xmin = current_xmin
+    else:
+        xmin = plotDict["xmin"]
+    if extractPlotVal(plotDict, 'xmax', keys=keys) is None:
+        xmax = current_xmax
+    else:
+        xmax = plotDict["xmax"]
+    if extractPlotVal(plotDict, 'ymax', keys=keys) is None:
+        ymin = current_ymin
+    else:
+        ymin = plotDict["ymin"]
+    if extractPlotVal(plotDict, 'ymax', keys=keys) is None:
+        ymax = current_ymax
+    else:
+        ymax = plotDict["ymax"]
+    # set the values
+    plt.xlim((xmin, xmax))
+    plt.ylim((ymin, ymax))
+
     # here the plot can be saved
     if extractPlotVal(plotDict, 'savePlot', keys=keys):
         plotFileName = extractPlotVal(plotDict, 'plotFileName', keys=keys)
@@ -210,7 +238,7 @@ def quickPlotter(plotDict):
         print("Closing all plots.")
     if verbose:
         print('...the quick plotting program has finished.')
-    return
+    return plt
 
 
 def rescale(desired, current, target=None):

@@ -119,7 +119,7 @@ class MonitorPlots:
         self.pressurePlotDict['fmt'] = "None"
 
 
-    def loadData(self, logData):
+    def loadData(self, logData, time_range=None):
         timeString = "ctime_s"
         logTime = np.array(logData[timeString])
         if self.time_type == "weeks":
@@ -137,60 +137,77 @@ class MonitorPlots:
         self.dataKeys = list(logData.keys())
         self.dataKeys.remove(timeString)
 
+        now_time = time[-1]
+        datum_index = 0
+        if time_range is not None:
+            for datum_index, time_datum in reversed(list(enumerate(time))):
+                if time_range < now_time - time_datum:
+                    break
+
         for key in self.dataKeys:
             dataName, units = key.split("_")
             if key == "pressure_torr":
                 color = "seagreen"
                 ls = "solid"
-                self.pressure = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.pressure = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                               units, dataName, color, ls)
 
             elif key == "UltraHead_K":
                 color = "darkorchid"
                 ls = "solid"
-                self.ultrahead_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.ultrahead_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                     units, dataName, color, ls)
             elif key == "InterHead_K":
                 color = "dodgerblue"
                 ls = "solid"
-                self.interhead_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.interhead_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                     units, dataName, color, ls)
 
             elif key == "He4Switch_K":
                 color = "Salmon"
                 ls = "dotted"
-                self.he4Switch_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.he4Switch_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                     units, dataName, color, ls)
             elif key == "He3InterSwitch_K":
                 color = "slateblue"
                 ls = "dotted"
-                self.interSwitch_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.interSwitch_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                       units, dataName, color, ls)
             elif key == "He3UltraSwitch_K":
                 color = "Violet"
                 ls = "dotted"
-                self.ultraSwitch_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.ultraSwitch_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                       units, dataName, color, ls)
 
             elif key == "He4Pump_K":
                 color = "firebrick"
                 ls = "dashed"
-                self.he4Pump_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.he4Pump_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                   units, dataName, color, ls)
             elif key == "He3InterPump_K":
                 color = "CornflowerBlue"
                 ls = "dashed"
-                self.interPump_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.interPump_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                     units, dataName, color, ls)
             elif key == "UltraPump_K":
                 color = "Plum"
                 ls = "dashed"
-                self.ultraPump_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.ultraPump_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                     units, dataName, color, ls)
 
             elif key == "He4Buffer_K":
                 color = "yellow"
                 ls = "solid"
-                self.He4Buffer_K = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.He4Buffer_K = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                  units, dataName, color, ls)
 
             elif (key == "forty_Kplate_K") or (key == "40Kplate_K"):
                 color = "Chartreuse"
                 ls = "dashdot"
-                self.fortyKplate_temp = MonitorDataSet(time, logData[key], units, dataName, color, ls)
+                self.fortyKplate_temp = MonitorDataSet(time[datum_index:], logData[key][datum_index:],
+                                                       units, dataName, color, ls)
             else:
                 print(key, "is not a recognized key.")
-
 
 
     def temperaturePlotDictSpecifics(self, plotFileName=None, title=None, yLog=True):
@@ -261,50 +278,59 @@ class MonitorPlots:
 
 
     def make_temperature_plot(self):
-        quickPlotter(self.temperaturePlotDict)
+        return quickPlotter(self.temperaturePlotDict)
 
 
     def make_pressure_plot(self):
-        quickPlotter(self.pressurePlotDict)
+        return quickPlotter(self.pressurePlotDict)
 
 
-if __name__ == "__main__":
-    """
-    User and operating system specific options
-    """
-    # get the current users username
-    username = getpass.getuser()
-    # prints the current user's user name
-    print("Your username is", username)
+def get_user_and_os_specific_directories(verbose=False):
+    if __name__ == "__main__":
+        """
+        User and operating system specific options
+        """
+        # get the current users username
+        username = getpass.getuser()
+        # prints the current user's user name
+        if verbose:
+            print("Your username is", username)
 
-    # determine the current operating system
-    if sys.platform == "win32":
-        # root folder in windows
-        rootfolder = "C:\\"
-    else:
-        # root folder in mac and unix
-        rootfolder = "/Users/" + username + "/"
-    # looking for file on my own computer
-    # os.path.join is platform independent way of joining folders together with the filename
-    if username == "meganmoore":
-        logFolder = os.path.join(rootfolder, "Downloads")
-        plotFolder = os.path.join(rootfolder, "Downloads", "plots")
-    elif username == "Rebop":
-        logFolder = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff")
-        plotFolder = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff", "plots")
-    elif username == "Kanishka":
-        logFolder = os.path.join(rootfolder, "Desktop/CryoStat")
-        plotFolder = os.path.join(rootfolder,"Desktop/CryoStat", "plots")
-    else:
-        logFolder = os.path.join(rootfolder, "cryolog")
-        plotFolder = os.path.join(rootfolder, "cryolog", "plots")
+        # determine the current operating system
+        if sys.platform == "win32":
+            # root folder in windows
+            rootfolder = "C:\\"
+        else:
+            # root folder in mac and unix
+            rootfolder = "/Users/" + username + "/"
+        # looking for file on my own computer
+        # os.path.join is platform independent way of joining folders together with the filename
+        if username == "meganmoore":
+            logFolder = os.path.join(rootfolder, "Downloads")
+            plotFolder = os.path.join(rootfolder, "Downloads", "plots")
+        elif username == "Rebop":
+            logFolder = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff")
+            plotFolder = os.path.join(rootfolder, "Users", "Rebop", "Documents", "CryoStuff", "plots")
+        elif username == "Kanishka":
+            logFolder = os.path.join(rootfolder, "Desktop/CryoStat")
+            plotFolder = os.path.join(rootfolder, "Desktop/CryoStat", "plots")
+        else:
+            logFolder = os.path.join(rootfolder, "cryolog")
+            plotFolder = os.path.join(rootfolder, "cryolog", "plots")
 
-    # check to see if the log file's folder exists on the current computer
-    if os.path.exists(logFolder):
-        # make the plot folder if it does not already exist, but only if the log file was found first
-        if not os.path.exists(plotFolder):
-            os.mkdir(plotFolder)
+        # check to see if the log file's folder exists on the current computer
+        if os.path.exists(logFolder):
+            # make the plot folder if it does not already exist, but only if the log file was found first
+            if verbose:
+                print("Making the directory:", plotFolder, " to store plot data.")
+            if not os.path.exists(plotFolder):
+                os.mkdir(plotFolder)
 
+    return logFolder, plotFolder
+
+
+def plotAllLogData():
+    logFolder, plotFolder = get_user_and_os_specific_directories(verbose=False)
     # write the final file names, windows has trouble with eps plots
     basename = "April_28"
     logfilename = os.path.join(logFolder, basename + ".csv")
@@ -333,5 +359,39 @@ if __name__ == "__main__":
                                       title="Baby Beluga Pressure Monitor")
     monitor.appendPressureData()
     monitor.make_pressure_plot()
+    return
 
+
+
+def realTimePlotting(refresh_rate=5.0, time_type='hours', time_range=1.0, verbose=False):
+    logFolder, plotFolder = get_user_and_os_specific_directories(verbose=False)
+    # write the final file names, windows has trouble with eps plots
+    basename = "April_12_2018"
+    logfilename = os.path.join(logFolder, basename + ".csv")
+    plotfilename = os.path.join(plotFolder, basename)
+
+    # read the file using the definition in this file
+    logData = read_csv_file(filename=logfilename)
+    # make a simple test plot
+    print(logData.keys(), " are the data types that can be plotted from datDictionary")
+
+    """
+    Edit the plot options in the definition "initializeTestPlots"
+    Only a few options are available in the input of this definition
+    """
+    while True:
+        monitor = MonitorPlots(doShow=False, doSave=False, time_type=time_type, verbose=verbose)
+        monitor.loadData(logData=logData, time_range=time_range)
+        monitor.temperaturePlotDictSpecifics(plotFileName=plotfilename + "_All_Temperatures",
+                                             title="Baby Beluga Temperature Monitor",
+                                             yLog=False)
+        monitor.appendAllTempData()
+        plt = monitor.make_temperature_plot()
+        plt.pause(refresh_rate)
+
+
+
+if __name__ == "__main__":
+    # plotAllLogData()
+    realTimePlotting(refresh_rate=5.0, time_type='hours', time_range=1.0, verbose=True)
 
