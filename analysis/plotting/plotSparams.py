@@ -265,73 +265,122 @@ class AgilentData():
         quickPlotter(plot_dict)
 
 
+
+filesToConvert = [
+        ("June11_2018", "RandS_A3_300K_2.78V_22mA.csv", "A3_300K_2.78V_22mA.csv"),
+        ("June11_2018", "RandS_B3_300K_3.06V_30mA.csv", "B3_300K_3.06V_30mA.csv"),
+        ("June11_2018", "RandS_C2_300K_0.00V_0mA.csv", "C2_300K_0.00V_0mA.csv"),
+        ("June11_2018", "RandS_C3_300K_0.00V_0mA.csv", "C3_300K_0.00V_0mA.csv"),
+        ("June11_2018", "RandS_C1_300K_3.17V_22mA.csv", "C1_300K_3.17V_22mA.csv"),
+        ("June11_2018", "RandS_A2_300K_0.00V_0mA.csv", "A2_300K_0.00V_0mA.csv"),
+        ("June11_2018", "RandS_A1_300K_0.00V_0mA.csv", "A1_300K_0.00V_0mA.csv"),
+        ("June11_2018", "RandS_B1_300K_0.00V_0mA.csv", "B1_300K_0.00V_0mA.csv"),
+    ]
+
+setsOfFileNames =[
+    {"title":"TolTEC1_Port2_A3_300K",
+     "file_names":[os.path.join("March25_2018", "A3_S11_300K_2.10V.csv"),
+                   os.path.join("March25_2018", "A3_S12_300K_2.10V.csv"),
+                   os.path.join("March25_2018", "A3_S21_300K_2.10V.csv"),
+                   os.path.join("March25_2018", "A3_S22_300K_2.10V.csv"),
+                   os.path.join("April27_2018", "A3_S11_300K_2.81V.csv"),
+                   os.path.join("April27_2018", "A3_S12_300K_2.81V.csv"),
+                   os.path.join("April27_2018", "A3_S21_300K_2.81V.csv"),
+                   os.path.join("April27_2018", "A3_S22_300K_2.81V.csv"),
+                   os.path.join("June11_2018", "S11_A3_300K_2.78V_22mA.csv"),
+                   os.path.join("June11_2018", "S12_A3_300K_2.78V_22mA.csv"),
+                   os.path.join("June11_2018", "S21_A3_300K_2.78V_22mA.csv"),
+                   os.path.join("June11_2018", "S22_A3_300K_2.78V_22mA.csv"),
+                   ]},
+    {"title": "TolTEC2_Port2_B3_300K",
+     "file_names":[os.path.join("March25_2018", "B3_S11_300K_1.54V.csv"),
+                   os.path.join("March25_2018", "B3_S12_300K_1.54V.csv"),
+                   os.path.join("March25_2018", "B3_S21_300K_1.54V.csv"),
+                   os.path.join("March25_2018", "B3_S22_300K_1.54V.csv"),
+                   os.path.join("April27_2018", "B3_S11_300K_2.35V.csv"),
+                   os.path.join("April27_2018", "B3_S12_300K_2.35V.csv"),
+                   os.path.join("April27_2018", "B3_S21_300K_2.35V.csv"),
+                   os.path.join("April27_2018", "B3_S22_300K_2.35V.csv"),
+                   os.path.join("June11_2018", "S11_B3_300K_3.06V_30mA.csv"),
+                   os.path.join("June11_2018", "S12_B3_300K_3.06V_30mA.csv"),
+                   os.path.join("June11_2018", "S21_B3_300K_3.06V_30mA.csv"),
+                   os.path.join("June11_2018", "S22_B3_300K_3.06V_30mA.csv"),
+                   ]},
+    {"title": "TolTEC1_Port1_C2_300K",
+     "file_names":[os.path.join("March25_2018", "C2_S11_300K.csv"),
+                   os.path.join("March25_2018", "C2_S12_300K.csv"),
+                   os.path.join("March25_2018", "C2_S21_300K.csv"),
+                   os.path.join("March25_2018", "C2_S22_300K.csv"),
+                   os.path.join("April27_2018", "C2_S11_300K.csv"),
+                   os.path.join("April27_2018", "C2_S12_300K.csv"),
+                   os.path.join("April27_2018", "C2_S21_300K.csv"),
+                   os.path.join("April27_2018", "C2_S22_300K.csv"),
+                   os.path.join("June11_2018", "S11_C2_300K_0.00V_0mA.csv"),
+                   os.path.join("June11_2018", "S12_C2_300K_0.00V_0mA.csv"),
+                   os.path.join("June11_2018", "S21_C2_300K_0.00V_0mA.csv"),
+                   os.path.join("June11_2018", "S22_C2_300K_0.00V_0mA.csv"),
+                   ]},
+    {"title": "TolTEC2_Port1_C3_300K",
+     "file_names":[os.path.join("March25_2018", "C3_S11_300K.csv"),
+                   os.path.join("March25_2018", "C3_S12_300K.csv"),
+                   os.path.join("March25_2018", "C3_S21_300K.csv"),
+                   os.path.join("March25_2018", "C3_S22_300K.csv"),
+                   os.path.join("April27_2018", "C3_S11_300K.csv"),
+                   os.path.join("April27_2018", "C3_S12_300K.csv"),
+                   os.path.join("April27_2018", "C3_S21_300K.csv"),
+                   os.path.join("April27_2018", "C3_S22_300K.csv"),
+                   os.path.join("June11_2018", "S11_C3_300K_0.00V_0mA.csv"),
+                   os.path.join("June11_2018", "S12_C3_300K_0.00V_0mA.csv"),
+                   os.path.join("June11_2018", "S21_C3_300K_0.00V_0mA.csv"),
+                   os.path.join("June11_2018", "S22_C3_300K_0.00V_0mA.csv"),
+                   ]},
+    {"title": "Eds_Port2_C1_300K",
+         "file_names":[os.path.join("June11_2018", "S11_C1_300K_3.17V_22mA.csv"),
+                       os.path.join("June11_2018", "S12_C1_300K_3.17V_22mA.csv"),
+                       os.path.join("June11_2018", "S21_C1_300K_3.17V_22mA.csv"),
+                       os.path.join("June11_2018", "S22_C1_300K_3.17V_22mA.csv"),
+                       ]},
+    {"title": "Eds_Port1_A2_300K",
+         "file_names":[os.path.join("June11_2018", "S11_A2_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S12_A2_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S21_A2_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S22_A2_300K_0.00V_0mA.csv"),
+                       ]},
+    {"title": "SuperConducting_Port1_A1_300K",
+         "file_names":[os.path.join("June11_2018", "S11_A1_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S12_A1_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S21_A1_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S22_A1_300K_0.00V_0mA.csv"),
+                       ]},
+    {"title": "SuperConducting_Port2_B1_300K",
+         "file_names":[os.path.join("June11_2018", "S11_B1_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S12_B1_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S21_B1_300K_0.00V_0mA.csv"),
+                       os.path.join("June11_2018", "S22_B1_300K_0.00V_0mA.csv"),
+                       ]},
+    {"title": "Nanowire_Through_300K",
+     "file_names": [os.path.join("April27_2018", "nanowire_through_300K", "S11_3.04V_0.22A.csv"),
+                    os.path.join("April27_2018", "nanowire_through_300K", "S12_3.04V_0.22A.csv"),
+                    os.path.join("April27_2018", "nanowire_through_300K", "S21_3.04V_0.22A.csv"),
+                    os.path.join("April27_2018", "nanowire_through_300K", "S22_3.04V_0.22A.csv")]},
+    {"title": "Amplifier_X_300K",
+     "file_names": [os.path.join("April27_2018", "Amplifier_X", "S11_2.88V.csv"),
+                    os.path.join("April27_2018", "Amplifier_X", "S12_2.88V.csv"),
+                    os.path.join("April27_2018", "Amplifier_X", "S21_2.88V.csv"),
+                    os.path.join("April27_2018", "Amplifier_X", "S22_2.88V.csv")]},
+     {"title": "Amplifier_Z_300K",
+      "file_names": [os.path.join("April27_2018", "Amplifier_Z", "S11_2.89V.csv"),
+                     os.path.join("April27_2018", "Amplifier_Z", "S12_2.89V.csv"),
+                     os.path.join("April27_2018", "Amplifier_Z", "S21_2.89V.csv"),
+                     os.path.join("April27_2018", "Amplifier_Z", "S22_2.89V.csv")]}
+]
+
+
 if getuser() == "chw3k5":
     parentFolder = os.path.join("/Users", "chw3k5", "Documents", "ASUpostdoc", "BabyBeluga", "Sparams")
 
-    filesToConvert = [
-        (os.path.join(parentFolder, "June11_2018"), "RandS_A3_300K_2.78V_22mA.csv", "A3_300K_2.78V_22mA.csv")
-    ]
-
-    setsOfFileNames =[
-        {"title":"SuperSpec_Port2_A3_300K",
-         "file_names":[os.path.join("March25_2018", "A3_S11_300K_2.10V.csv"),
-                       os.path.join("March25_2018", "A3_S12_300K_2.10V.csv"),
-                       os.path.join("March25_2018", "A3_S21_300K_2.10V.csv"),
-                       os.path.join("March25_2018", "A3_S22_300K_2.10V.csv"),
-                       os.path.join("April27_2018", "A3_S11_300K_2.81V.csv"),
-                       os.path.join("April27_2018", "A3_S12_300K_2.81V.csv"),
-                       os.path.join("April27_2018", "A3_S21_300K_2.81V.csv"),
-                       os.path.join("April27_2018", "A3_S22_300K_2.81V.csv"),
-                       os.path.join("June11_2018", "S11_A3_300K_2.78V_22mA.csv"),
-                       os.path.join("June11_2018", "S12_A3_300K_2.78V_22mA.csv"),
-                       os.path.join("June11_2018", "S21_A3_300K_2.78V_22mA.csv"),
-                       os.path.join("June11_2018", "S22_A3_300K_2.78V_22mA.csv"),
-                       ]},
-        {"title": "TolTech_Port2_B3_300K",
-         "file_names":[os.path.join("March25_2018", "B3_S11_300K_1.54V.csv"),
-                       os.path.join("March25_2018", "B3_S12_300K_1.54V.csv"),
-                       os.path.join("March25_2018", "B3_S21_300K_1.54V.csv"),
-                       os.path.join("March25_2018", "B3_S22_300K_1.54V.csv"),
-                       os.path.join("April27_2018", "B3_S11_300K_2.35V.csv"),
-                       os.path.join("April27_2018", "B3_S12_300K_2.35V.csv"),
-                       os.path.join("April27_2018", "B3_S21_300K_2.35V.csv"),
-                       os.path.join("April27_2018", "B3_S22_300K_2.35V.csv"),]},
-        {"title": "SuperSpec_Port1_C2_300K",
-         "file_names":[os.path.join("March25_2018", "C2_S11_300K.csv"),
-                       os.path.join("March25_2018", "C2_S12_300K.csv"),
-                       os.path.join("March25_2018", "C2_S21_300K.csv"),
-                       os.path.join("March25_2018", "C2_S22_300K.csv"),
-                       os.path.join("April27_2018", "C2_S11_300K.csv"),
-                       os.path.join("April27_2018", "C2_S12_300K.csv"),
-                       os.path.join("April27_2018", "C2_S21_300K.csv"),
-                       os.path.join("April27_2018", "C2_S22_300K.csv"),]},
-        {"title": "TolTech_Port1_C3_300K",
-         "file_names":[os.path.join("March25_2018", "C3_S11_300K.csv"),
-                       os.path.join("March25_2018", "C3_S12_300K.csv"),
-                       os.path.join("March25_2018", "C3_S21_300K.csv"),
-                       os.path.join("March25_2018", "C3_S22_300K.csv"),
-                       os.path.join("April27_2018", "C3_S11_300K.csv"),
-                       os.path.join("April27_2018", "C3_S12_300K.csv"),
-                       os.path.join("April27_2018", "C3_S21_300K.csv"),
-                       os.path.join("April27_2018", "C3_S22_300K.csv"),]},
-        {"title": "Nanowire_Through_300K",
-         "file_names": [os.path.join("April27_2018", "nanowire_through_300K", "S11_3.04V_0.22A.csv"),
-                        os.path.join("April27_2018", "nanowire_through_300K", "S12_3.04V_0.22A.csv"),
-                        os.path.join("April27_2018", "nanowire_through_300K", "S21_3.04V_0.22A.csv"),
-                        os.path.join("April27_2018", "nanowire_through_300K", "S22_3.04V_0.22A.csv")]},
-        {"title": "Amplifier_X_300K",
-         "file_names": [os.path.join("April27_2018", "Amplifier_X", "S11_2.88V.csv"),
-                        os.path.join("April27_2018", "Amplifier_X", "S12_2.88V.csv"),
-                        os.path.join("April27_2018", "Amplifier_X", "S21_2.88V.csv"),
-                        os.path.join("April27_2018", "Amplifier_X", "S22_2.88V.csv")]},
-         {"title": "Amplifier_Z_300K",
-          "file_names": [os.path.join("April27_2018", "Amplifier_Z", "S11_2.89V.csv"),
-                         os.path.join("April27_2018", "Amplifier_Z", "S12_2.89V.csv"),
-                         os.path.join("April27_2018", "Amplifier_Z", "S21_2.89V.csv"),
-                         os.path.join("April27_2018", "Amplifier_Z", "S22_2.89V.csv")]}
-    ]
     for (dataPath, RandS_fileName, convertedBaseName) in filesToConvert:
-        convertRandS_toAgilent(dataPath, RandS_fileName, convertedBaseName)
+        convertRandS_toAgilent(os.path.join(parentFolder, dataPath), RandS_fileName, convertedBaseName)
 
 
     for set_dict in setsOfFileNames:
@@ -341,6 +390,20 @@ if getuser() == "chw3k5":
                                xminmax=(None, 5),
                                title=set_dict["title"], verbose=True)
 
+
+elif getuser() == "Rebop":
+    parentFolder = os.path.join("C:\\", "Users", "Rebop", "Google Drive", "BabyBeluga", "Sparams")
+
+    for (dataPath, RandS_fileName, convertedBaseName) in filesToConvert:
+        convertRandS_toAgilent(os.path.join(parentFolder, dataPath), RandS_fileName, convertedBaseName)
+
+
+    for set_dict in setsOfFileNames:
+        paramGroup = AgilentData(set_dict["file_names"], parentFolder)
+        paramGroup.readData()
+        paramGroup.plotSparams(show_plots=False, save_plots=True, frequency_type="GHz",
+                               xminmax=(None, 5),
+                               title=set_dict["title"], verbose=True)
 
 else:
     print("Your username is:", getuser())
