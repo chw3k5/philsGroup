@@ -275,6 +275,7 @@ filesToConvert = [
         ("June11_2018", "RandS_A2_300K_0.00V_0mA.csv", "A2_300K_0.00V_0mA.csv"),
         ("June11_2018", "RandS_A1_300K_0.00V_0mA.csv", "A1_300K_0.00V_0mA.csv"),
         ("June11_2018", "RandS_B1_300K_0.00V_0mA.csv", "B1_300K_0.00V_0mA.csv"),
+        ("June11_2018", "RandS_B1_to_A1_300K_SupCondCable.csv", "B1_to_A1_300K.csv"),
     ]
 
 setsOfFileNames =[
@@ -357,6 +358,12 @@ setsOfFileNames =[
                        os.path.join("June11_2018", "S12_B1_300K_0.00V_0mA.csv"),
                        os.path.join("June11_2018", "S21_B1_300K_0.00V_0mA.csv"),
                        os.path.join("June11_2018", "S22_B1_300K_0.00V_0mA.csv"),
+                       ]},
+    {"title": "SuperConductingCable_B1_to_A1",
+         "file_names":[os.path.join("June11_2018", "S11_B1_to_A1_300K.csv"),
+                       os.path.join("June11_2018", "S12_B1_to_A1_300K.csv"),
+                       os.path.join("June11_2018", "S21_B1_to_A1_300K.csv"),
+                       os.path.join("June11_2018", "S22_B1_to_A1_300K.csv"),
                        ]},
     {"title": "Nanowire_Through_300K",
      "file_names": [os.path.join("April27_2018", "nanowire_through_300K", "S11_3.04V_0.22A.csv"),
