@@ -359,7 +359,7 @@ setsOfFileNames =[
                        os.path.join("June11_2018", "S21_B1_300K_0.00V_0mA.csv"),
                        os.path.join("June11_2018", "S22_B1_300K_0.00V_0mA.csv"),
                        ]},
-    {"title": "SuperConductingCable_B1_to_A1",
+    {"title": "SuperConductingCable_B1_to_A1_300K",
          "file_names":[os.path.join("June11_2018", "S11_B1_to_A1_300K.csv"),
                        os.path.join("June11_2018", "S12_B1_to_A1_300K.csv"),
                        os.path.join("June11_2018", "S21_B1_to_A1_300K.csv"),
