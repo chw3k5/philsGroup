@@ -22,3 +22,5 @@ if __name__ == "__main__":
     T1 = float(40) # in Kelvin
     T2 = float(41) # in Kelvin
     print(heatTransfer(area, length, T1, T2))
+
+    print("Tests finished")
