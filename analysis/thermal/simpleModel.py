@@ -14,19 +14,24 @@ def heatTransfer(area, length, T1, T2, thermal_conductivity=thermal_conductivity
 
 if __name__ == "__main__":
     print("starting Tests")
+
     thermal_conductivity = thermal_conductivity_of_copper
     thickness = float(1) # in millimeters
-
     width = float(30) # in millimeters
     area =( thickness / 1000.) * (width / 1000.0) # m^2
-    length = float(100) / 1000.0
+    length = np.arange(0.001, 0.3, 0.05)
     T1 = float(4) # in Kelvin
     T2 = float(41) # in Kelvin
     heating_W = heatTransfer(area, length, T1, T2)
-    print(heating_W, "is the heating in Watts")
-    print("Tests finished")
+   # print(heating_W, "is the heating in Watts")
 
-    width = float(30) # in millimeters
-    area =(thickness/1000.) * (width/1000.0) # m^2
-    heatTransfer(area, length, T1, T2)
+plt.plot(length,heating_W)
+plt.yscale('log')
+plt.ylabel('Heat Transfer (W)')
+plt.xlabel('Length(m)')
+plt.show()
+
+print("Tests finished")
+
+
 
