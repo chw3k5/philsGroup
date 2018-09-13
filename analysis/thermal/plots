@@ -1,0 +1,9 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+thermal_conductivity_of_copper = 401.0 # Watts per m Kelvin
+
+def length(area,heating,delta_T, thermal_conductivity=thermal_conductivity_of_copper )
+
+    return thermal_conductivity*(area/heating)*delta_T
+
