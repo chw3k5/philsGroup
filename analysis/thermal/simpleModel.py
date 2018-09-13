@@ -11,7 +11,6 @@ def heatTransfer(area, length, T1, T2, thermal_conductivity=thermal_conductivity
     return heating_W
 
 
-
 if __name__ == "__main__":
     print("starting Tests")
     thermal_conductivity = thermal_conductivity_of_copper
@@ -21,6 +20,6 @@ if __name__ == "__main__":
     length = float(100) / 1000.0
     T1 = float(40) # in Kelvin
     T2 = float(41) # in Kelvin
-    print(heatTransfer(area, length, T1, T2))
-
+    heating_W = heatTransfer(area, length, T1, T2)
+    print(heating_W, "is the heating in Watts")
     print("Tests finished")
