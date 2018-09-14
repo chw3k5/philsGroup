@@ -23,6 +23,12 @@ import time
 import numpy as np
 
 
+def reject_outliers(data, m=2.):
+    d = np.abs(data - np.median(data))
+    mdev = np.median(d)
+    s = d / mdev if mdev else 0.
+    return data[s < m]
+
 
 class PID:
     def __init__(self, goal_output, zone1_difference, zone1_pid, zone2_pid,
@@ -65,6 +71,10 @@ class PID:
         self.derivative_counter = 0
 
         self.data_length = 0
+
+        self.sigma_to_reject_integral_outliers = float(1.5)
+        self.sigma_to_reject_derivative_outliers = float(1.5)
+        self.sigma_to_reject_dinputdoutput_outliers = float(1.5)
 
     def record_measured_data(self, input, output):
         self.time_measurements.append(time.time())
@@ -139,17 +149,18 @@ class PID:
             output_differences_to_use_for_integral_term = output_difference_array[index_for_integral_calculation:]
             time_differences_to_use_for_integral_term = time_difference_array[index_for_integral_calculation:]
             # calculate the integral array
-            integral_in_output_and_time_units = np.sum(output_differences_to_use_for_integral_term
-                                                       * time_differences_to_use_for_integral_term)
+            integral_in_output_and_time_units_array = output_differences_to_use_for_integral_term \
+                                                      * time_differences_to_use_for_integral_term
+            # reject the outliers in the integral
+            integral_in_output_and_time_units_array = reject_outliers(integral_in_output_and_time_units_array,
+                                                                      self.sigma_to_reject_integral_outliers)
             # normalize the integral to be comparable to the proportional terms
             # (this is a mean instead of a sum on N points)
-            norm_integral_in_output_and_time_units = integral_in_output_and_time_units \
-                                                     / float(len(output_differences_to_use_for_integral_term))
-
-
-
+            norm_integral_in_output_and_time_units = np.mean(integral_in_output_and_time_units_array)
             # convert out of output times time units
-            norm_integral_in_output_units = norm_integral_in_output_and_time_units / np.mean(time_differences_to_use_for_integral_term)
+            norm_integral_in_output_units = norm_integral_in_output_and_time_units \
+                                            / np.mean(reject_outliers(time_differences_to_use_for_integral_term,
+                                                                      m=self.sigma_to_reject_integral_outliers))
             # in output units, and should be comparable to the output_difference / integral_constant
             # due to the mean. This is not a true integral, but rather a running average of the output_difference
             integral_term = integral_constant * norm_integral_in_output_units
@@ -178,9 +189,15 @@ class PID:
                     break
             output_differences_to_use_for_derivative_term = output_difference_array[index_for_derivative_calculation:]
             time_differences_to_use_for_derivative_term = time_difference_array[index_for_derivative_calculation:]
+            # Get the array of derivatives.
+            derivative_array = output_differences_to_use_for_derivative_term \
+                               / time_differences_to_use_for_derivative_term
+            # reject the outliers and get the average derivative
+            mean_derivative_in_output_divided_by_time_units = \
+                np.mean(reject_outliers(derivative_array, m=self.sigma_to_reject_derivative_outliers))
             # calculate the derivative
-            mean_derivative_in_output_divided_by_time_units = np.sum(output_differences_to_use_for_derivative_term) \
-                                                                / np.sum(time_differences_to_use_for_derivative_term)
+            # mean_derivative_in_output_divided_by_time_units = np.sum(output_differences_to_use_for_derivative_term) \
+            #                                                     / np.sum(time_differences_to_use_for_derivative_term)
             # convert to output units
             derivative_in_output_units = mean_derivative_in_output_divided_by_time_units \
                                          * np.mean(time_differences_to_use_for_derivative_term)
@@ -200,8 +217,14 @@ class PID:
                 # this stops the loop and saves the index where
                 # self.time_difference_for_input_units is less than integral_time_sum
                 break
-        dinput_by_doutput = np.sum(input_measurements[index_for_input_calculation:]) \
-                            / np.sum(output_measurements[index_for_input_calculation:])
+        # get the array of input change relative to output change
+        dinput_by_doutput_array = input_measurements[index_for_input_calculation:] \
+                                  /output_measurements[index_for_input_calculation:]
+        # Get the array average and reject the outliers
+        dinput_by_doutput = np.mean(reject_outliers(dinput_by_doutput_array,
+                                                    m=self.sigma_to_reject_dinputdoutput_outliers))
+        # dinput_by_doutput = np.sum(input_measurements[index_for_input_calculation:]) \
+        #                     / np.sum(output_measurements[index_for_input_calculation:])
         # dinput_by_doutput = 1000.
         # convert the set_term_change to the input units
         set_term_change_in_input_units = set_term_change_in_output_units * dinput_by_doutput
@@ -241,25 +264,37 @@ if __name__ == "__main__":
     # set parameters for the PID function
     goal_output = 17.0
     zone1_difference = 1.2
-    zone1_pid = (0.0, 0.2, 0.03)
+    zone1_pid = (0.01, 0.01, 0.008)
     zone2_pid = (0.2, 0.0, 0.0)
     # averaging times
-    time_difference_for_integral = 1.0  # in seconds
-    time_difference_for_derivative = 1.  # in seconds
+    time_difference_for_integral = 80.0  # in seconds
+    time_difference_for_derivative = 15.0  # in seconds
     time_difference_for_input_units = 1.0  # in seconds
+    # time between measurements
+    meas_time = 0.1  # in seconds
+    # traing set loops
+    training_loop = 5
+    # pid_loops
+    pid_loops = 1000
+    # the saved data array used for measurement calculations,
+    # here we save all the data for the plot at the end of this example
+    max_array_length = training_loop + pid_loops +1
+
     # initialize the class that holds the pid function
     my_pid =  PID(goal_output, zone1_difference, zone1_pid, zone2_pid,
                   time_difference_for_integral,
                   time_difference_for_derivative,
-                  time_difference_for_input_units, verbose=True)
-    # time between measurements
-    meas_time = 0.1  # in seconds
+                  time_difference_for_input_units, max_array_length=max_array_length,
+                  verbose=True)
+
     """
     Make some fake test data
     """
     # This something that changes the system output that you cannot control
     # like heating from the sun or mass water in a lake from evaporation and rain.
-    sine_wave = 10.0 * np.sin(np.arange(0.0, 100.0, 0.01))
+    step = 0.01
+    stop = float(max_array_length + 1) * step
+    sine_wave = 10.0 * np.sin(np.arange(0.0, stop, step))
     noise = (np.array([random.random() for n in range(len(sine_wave))]) - 0.5)
     externalFunction = sine_wave + noise
 
@@ -303,7 +338,7 @@ if __name__ == "__main__":
     # Change the inputVal by some amount to train the the PID function
     # this action can be repeat a few times but has no benefit after time greater than
     # that of time_difference_for_integral, time_difference_for_derivative, time_difference_for_input_units
-    for n in range(5):
+    for n in range(training_loop):
         inputVal -= 1000
         counter, my_pid = measurement_loop(counter, my_pid, inputVal)
 
@@ -313,7 +348,7 @@ if __name__ == "__main__":
     counter, my_pid = measurement_loop(counter, my_pid, inputVal)
 
     # repeat to let the PID function control your input
-    for n in range(900):
+    for n in range(pid_loops):
         # get a new set value from the PID function
         inputVal = my_pid.get_new_set_point()
         counter, my_pid = measurement_loop(counter, my_pid, inputVal)
@@ -337,7 +372,7 @@ if __name__ == "__main__":
     legendHandleLength = 4
 
     plt.plot(my_pid.time_measurements, np.array(my_pid.output_measurements) * 0.0 + goal_output, color='green')
-    plt.plot(my_pid.time_measurements, externalFunction[:counter], color='firebrick')
+    plt.plot(my_pid.time_measurements, externalFunction[:counter-1], color='firebrick')
     device_output = []
     for n in my_pid.input_measurements:
         one_device_output = the_device[n]
