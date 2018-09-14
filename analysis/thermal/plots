@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print("starting Tests")
 
     thermal_conductivity = thermal_conductivity_of_copper
-    area_A =np.arange(.0006,.0010,0.0005) # m^2
+    area_A =np.arange(.0006,.0010,.0005) # m^2
     delta_T = float(10) # in Kelvin
     heating = float(1) # in Watts
     length_M =thermal_conductivity*(area_A/heating)*delta_T
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     plt.plot(area_A,length_M)
     plt.yscale('log')
     plt.ylabel('Length(m)')
-    plt.xlabel('Area(m**2)')
+    plt.xlabel('Area')
     plt.show()
 
     print("Tests finished")
