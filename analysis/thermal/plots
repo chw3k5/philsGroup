@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 thermal_conductivity_of_copper = 401.0 # Watts per m Kelvin
 
-def length_M(area_A,heating,delta_T, thermal_conductivity=thermal_conductivity_of_copper )
+def length_M(area_A,heating,delta_T, thermal_conductivity=thermal_conductivity_of_copper):
 
     return thermal_conductivity*(area/heating)*delta_T
 
@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print("starting Tests")
 
     thermal_conductivity = thermal_conductivity_of_copper
-    area_A =np.arange(0.0006,0010,0.00005) # m^2
+    area_A =np.arange(.0006,.0010,0.0005) # m^2
     delta_T = float(10) # in Kelvin
     heating = float(1) # in Watts
     length_M =thermal_conductivity*(area_A/heating)*delta_T
