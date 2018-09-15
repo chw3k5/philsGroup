@@ -4,19 +4,19 @@ from matplotlib import rc
 
 
 
-thermal_conductivity_of_copper = 0.0401 # Watts per mm Kelvin
+thermal_conductivity_of_copper = 4.01 # Watts per cm Kelvin
 
 def area_A(length_M,heating,delta_T, thermal_conductivity=thermal_conductivity_of_copper):
 
-    return thermal_conductivity*(area/heating)*delta_T
+    return (length_M/thermal_conductivity)*(heating/delta_T)
 
 if __name__ == "__main__":
     print("starting Tests")
 
     thermal_conductivity = thermal_conductivity_of_copper
-    length_M =np.arange(30,100,10) # mm^2
+    length_M =np.arange(3,10,1) # cm
     delta_T = float(10) # in Kelvin
-    heating = float(1) # in Watts
+    heating = float(50) # in Watts
     area_A =(length_M/thermal_conductivity)*(heating/delta_T)
 
     delta_T2 = float(3)  # in Kelvin
@@ -46,9 +46,9 @@ if __name__ == "__main__":
     plt.plot(length_M,area_A6, label="\u0394T = 0.03 K")
     plt.plot(length_M,area_A7, label="\u0394T = 0.01 K")
     plt.yscale('log')
-    plt.ylabel('Area [$mm^2$]')
+    plt.ylabel('Area [$cm^2$]')
    # plt.xscale('log')
-    plt.xlabel('Length [mm]')
+    plt.xlabel('Length [cm]')
     plt.title('First Stage (P = 50 Watts) ')
     plt.legend()
     plt.show()
