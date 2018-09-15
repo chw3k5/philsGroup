@@ -4,9 +4,9 @@ from matplotlib import rc
 
 
 
-thermal_conductivity_of_copper = 401.0 # Watts per m Kelvin
+thermal_conductivity_of_copper = 0.0401 # Watts per mm Kelvin
 
-def length_M(area_A,heating,delta_T, thermal_conductivity=thermal_conductivity_of_copper):
+def area_A(length_M,heating,delta_T, thermal_conductivity=thermal_conductivity_of_copper):
 
     return thermal_conductivity*(area/heating)*delta_T
 
@@ -14,44 +14,42 @@ if __name__ == "__main__":
     print("starting Tests")
 
     thermal_conductivity = thermal_conductivity_of_copper
-    area_A =np.arange(.00001,.00015,.00001) # m^2
+    length_M =np.arange(30,100,10) # mm^2
     delta_T = float(10) # in Kelvin
-    heating = float(40) # in Watts
-    length_M =thermal_conductivity*(area_A/heating)*delta_T
+    heating = float(1) # in Watts
+    area_A =(length_M/thermal_conductivity)*(heating/delta_T)
 
     delta_T2 = float(3)  # in Kelvin
-    length_M2 = thermal_conductivity * (area_A / heating) * delta_T2
+    area_A2 = (length_M / thermal_conductivity) * (heating / delta_T2)
 
     delta_T3 = float(1)  # in Kelvin
-    length_M3 = thermal_conductivity * (area_A / heating) * delta_T3
+    area_A3 = (length_M / thermal_conductivity) * (heating / delta_T3)
 
     delta_T4 = float(0.3)  # in Kelvin
-    length_M4 = thermal_conductivity * (area_A / heating) * delta_T4
+    area_A4 = (length_M / thermal_conductivity) * (heating / delta_T4)
 
     delta_T5 = float(0.3)  # in Kelvin
-    length_M5 = thermal_conductivity * (area_A / heating) * delta_T5
+    area_A5 = (length_M / thermal_conductivity) * (heating / delta_T5)
 
     delta_T6 = float(0.03)  # in Kelvin
-    length_M6 = thermal_conductivity * (area_A / heating) * delta_T6
+    area_A6 = (length_M / thermal_conductivity) * (heating / delta_T6)
 
     delta_T7 = float(0.01)  # in Kelvin
-    length_M7 = thermal_conductivity * (area_A / heating) * delta_T7
+    area_A7 = (length_M / thermal_conductivity) * (heating / delta_T7)
 
 
-    plt.plot(area_A,length_M,label="\u0394T = 10 K")
-    plt.plot(area_A, length_M2, label="\u0394T = 3 K")
-    plt.plot(area_A, length_M3, label="\u0394T = 1 K")
-    plt.plot(area_A, length_M4, label="\u0394T = 0.3 K")
-    plt.plot(area_A, length_M5, label="\u0394T = 0.1 K")
-    plt.plot(area_A, length_M6, label="\u0394T = 0.03 K")
-    plt.plot(area_A, length_M7, label="\u0394T = 0.01 K")
+    plt.plot(length_M, area_A, label="\u0394T = 10 K")
+    plt.plot(length_M,area_A2, label="\u0394T = 3 K")
+    plt.plot(length_M,area_A3, label="\u0394T = 1 K")
+    plt.plot(length_M,area_A4, label="\u0394T = 0.3 K")
+    plt.plot(length_M,area_A5, label="\u0394T = 0.1 K")
+    plt.plot(length_M,area_A6, label="\u0394T = 0.03 K")
+    plt.plot(length_M,area_A7, label="\u0394T = 0.01 K")
     plt.yscale('log')
-    plt.ylabel('Length [m]')
+    plt.ylabel('Area [$mm^2$]')
    # plt.xscale('log')
-    plt.xlabel('Area [$m^2$]')
-    plt.rc('xtick', labelsize=30)
-    plt.rc('ytick', labelsize=30)
-    plt.title('First Stage (P = 40 Watts) ')
+    plt.xlabel('Length [mm]')
+    plt.title('First Stage (P = 50 Watts) ')
     plt.legend()
     plt.show()
 
