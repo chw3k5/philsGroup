@@ -15,8 +15,8 @@ def areaOfHeatTransfer(heating_W, length_m, T1_K, T2_K, thermal_conductivity_W_m
     """
     :param heating_W: the amount of heating in Watts
     :param length_m: the length of the heat strapping in meters
-    :param T1_K: The temperature in Kelvin of the coldhead or heat sink
-    :param T2_K: The temperature in Kelvin of the thing being cooled or heated
+    :param T2_K: The temperature in Kelvin of the coldhead or heat sink
+    :param T1_K: The temperature in Kelvin of the thing being cooled or heated
     :param thermal_conductivity_W_mK: Thermal conductivity in Watt per (meter * Kelvin
     :return: area in units of meters squared
     Q = k * (A/L) * (T2 - T1)
@@ -111,6 +111,12 @@ class HeatConductionStudy():
         if units == "cm":
             plt.ylabel('Conduction Cross Section ($cm^2$)')
             plt.xlabel('Conduction Length (cm)')
+        elif units == "mm":
+            plt.ylabel('Conduction Cross Section ($mm^2$)')
+            plt.xlabel('Conduction Length (mm)')
+        else:
+            plt.ylabel('Conduction Cross Section ($m^2$)')
+            plt.xlabel('Conduction Length (m)')
         plotTitleString = "" + str("%1.2f" % self.heating_W) + "W at " + str("%1.2f" %self.T2) + "K"
         plt.title(plotTitleString)
         plt.legend()
@@ -133,13 +139,13 @@ if __name__ == "__main__":
     heating_W = 50.0 # Watts
     T2 = 40.0 # Kelvin
     # Here we make a list of temperatures for a cryogenic device under test
-    difference_list = list(10.0**np.arange(-2, 1.5, 0.5, dtype=float)) # Kelvin
-
+    difference_list = list(10.0**np.arange(-0.5, 1.5, 0.1, dtype=float)) # Kelvin
+    testLengthList_m = np.arange(5.0, 15.0, 0.1, dtype=float)
     Study1 = HeatConductionStudy(heating_W=heating_W, T2_K=T2,
                                  temperatureDifferenceList_K=difference_list,
-                                 testLengthList_m=np.arange(5.0, 15.0, 0.1, dtype=float),
+                                 testLengthList_m=testLengthList_m,
                                  thermalConductivity_W_mK = 1161.0)
-    Study1.generatePlots(units='cm')
+    Study1.generatePlots(units='mm')
 
     print("Testing Complete")
 
