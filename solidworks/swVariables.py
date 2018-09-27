@@ -9,7 +9,7 @@ def putInQuotes(var):
 
 
 def makeLine(varName, value, units):
-    return putInQuotes(varName) + "=" + str(value) + units + "\n"
+    return putInQuotes(varName) + "=" + str(float(value)) + units + "\n"
 
 
 class equationsFile():
@@ -44,14 +44,14 @@ if __name__ == "__main__":
     innerDepth_str = "innerDepth"
     wallThickness_str = "wallThickness"
     inch_str = "in"
-    shellSection.addVarLine(innerLength_str, 30, inch_str)
-    shellSection.addVarLine(innerWidth_str, 20, inch_str)
-    shellSection.addVarLine(innerDepth_str, 10, inch_str)
+    shellSection.addVarLine(innerLength_str, 30., inch_str)
+    shellSection.addVarLine(innerWidth_str, 20., inch_str)
+    shellSection.addVarLine(innerDepth_str, 10., inch_str)
     shellSection.addVarLine(wallThickness_str, 0.25, inch_str)
     shellSection.addRefLine("D1@sketch1", innerLength_str)
     shellSection.addRefLine("D2@sketch1", innerWidth_str)
     shellSection.addRefLine("D1@Boss-Extrude2", innerDepth_str)
-    #shellSection.writeFile()
-    print(shellSection.fileContent)
+    shellSection.writeFile()
+    # print(shellSection.fileContent)
 
 
