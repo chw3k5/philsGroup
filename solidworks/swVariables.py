@@ -49,18 +49,25 @@ if __name__ == "__main__":
                 "Universal Readout Harness\\ASU Test Cryostat\\EDM Shell"
     valuesDict = {}
     inch_str = "in"
+    (workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (30.0, 20.0, 10.0, 11.0)
+    shellThickness = 0.375
+    millRadius = 2.0
+    flangeWidth = 1.5
+    flangeThickness = 0.5
+    flangeHoleInset = 0.3
+
 
     # bottom Walls for cryostat shell parameters
     bottomWallInnerLength_str = "bottomWallInnerLength"
-    valuesDict[bottomWallInnerLength_str] = (30.0, inch_str)
+    valuesDict[bottomWallInnerLength_str] = (workingLen, inch_str)
     bottomWallInnerWidth_str = "bottomWallInnerWidth"
-    valuesDict[bottomWallInnerWidth_str] = (20.0, inch_str)
+    valuesDict[bottomWallInnerWidth_str] = (workingWidth, inch_str)
     bottomWallInnerDepth_str = "bottomWallInnerDepth"
-    valuesDict[bottomWallInnerDepth_str] = (10.0, inch_str)
+    valuesDict[bottomWallInnerDepth_str] = (workingDepthBottom, inch_str)
     bottomWallThickness_str = "bottomWallThickness"
-    valuesDict[bottomWallThickness_str] = (0.375, inch_str)
+    valuesDict[bottomWallThickness_str] = (shellThickness, inch_str)
     bottomWallMillRadius_str = "bottomWallMillRadius"
-    valuesDict[bottomWallMillRadius_str] = (1.0, inch_str)
+    valuesDict[bottomWallMillRadius_str] = (millRadius, inch_str)
     bottomShellStringList = [bottomWallInnerLength_str, bottomWallInnerWidth_str,
                              bottomWallInnerDepth_str, bottomWallThickness_str,
                              bottomWallMillRadius_str]
@@ -68,15 +75,15 @@ if __name__ == "__main__":
 
     # top Walls for cryostat shell parameters
     topWallInnerLength_str = "topWallInnerLength"
-    valuesDict[topWallInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0], inch_str)
+    valuesDict[topWallInnerLength_str] = (workingLen, inch_str)
     topWallInnerWidth_str = "topWallInnerWidth"
-    valuesDict[topWallInnerWidth_str] = (valuesDict[bottomWallInnerWidth_str][0], inch_str)
+    valuesDict[topWallInnerWidth_str] = (workingWidth, inch_str)
     topWallInnerDepth_str = "topWallInnerDepth"
-    valuesDict[topWallInnerDepth_str] = (8.0, inch_str)
+    valuesDict[topWallInnerDepth_str] = (workingDepthTop, inch_str)
     topWallThickness_str = "topWallThickness"
-    valuesDict[topWallThickness_str] = (valuesDict[bottomWallThickness_str][0], inch_str)
+    valuesDict[topWallThickness_str] = (shellThickness, inch_str)
     topWallMillRadius_str = "topWallMillRadius"
-    valuesDict[topWallMillRadius_str] = (1.0, inch_str)
+    valuesDict[topWallMillRadius_str] = (millRadius, inch_str)
     topShellStringList = [topWallInnerLength_str, topWallInnerWidth_str,
                           topWallInnerDepth_str, topWallThickness_str,
                           topWallThickness_str]
@@ -84,38 +91,34 @@ if __name__ == "__main__":
 
     # bottom Flange Parameters
     bottomFlangeInnerLength_str = "bottomFlangeInnerLength"
-    valuesDict[bottomFlangeInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0] +
-                                               (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
+    valuesDict[bottomFlangeInnerLength_str] = (workingLen + (2.0 * shellThickness), inch_str)
     bottomFlangeInnerWidth_str = "bottomFlangeInnerWidth"
-    valuesDict[bottomFlangeInnerWidth_str] = (valuesDict[bottomWallInnerWidth_str][0] +
-                                              (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
+    valuesDict[bottomFlangeInnerWidth_str] = (workingWidth + (2.0 * shellThickness), inch_str)
     bottomFlangeWidth_str = "bottomFlangeWidth"
-    valuesDict[bottomFlangeWidth_str] = (1.5, inch_str)
+    valuesDict[bottomFlangeWidth_str] = (flangeWidth, inch_str)
     bottomFlangeThickness_str = "bottomFlangeThickness"
-    valuesDict[bottomFlangeThickness_str] = (0.5, inch_str)
+    valuesDict[bottomFlangeThickness_str] = (flangeThickness, inch_str)
     bottomFlangeHoleInsetDist_str = "bottomFlangeHoleInsetDist"
-    valuesDict[bottomFlangeHoleInsetDist_str] = (0.3, inch_str)
+    valuesDict[bottomFlangeHoleInsetDist_str] = (flangeHoleInset, inch_str)
     bottomFlangeMillRadius_str = "bottomFlangeMillRadius"
-    valuesDict[bottomFlangeMillRadius_str] = (1.0, inch_str)
+    valuesDict[bottomFlangeMillRadius_str] = (millRadius, inch_str)
     bottomFlangeStringList = [bottomFlangeInnerLength_str, bottomFlangeInnerWidth_str,
                               bottomFlangeWidth_str, bottomFlangeThickness_str,
                               bottomFlangeHoleInsetDist_str, bottomFlangeMillRadius_str]
 
     # top Flange Parameters
     topFlangeInnerLength_str = "topFlangeInnerLength"
-    valuesDict[topFlangeInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0] +
-                                            (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
+    valuesDict[topFlangeInnerLength_str] = (workingLen + (2.0 * shellThickness), inch_str)
     topFlangeInnerWidth_str = "topFlangeInnerWidth"
-    valuesDict[topFlangeInnerWidth_str] = (valuesDict[bottomWallInnerWidth_str][0] +
-                                           (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
+    valuesDict[topFlangeInnerWidth_str] = (workingWidth + (2.0 * shellThickness), inch_str)
     topFlangeWidth_str = "topFlangeWidth"
-    valuesDict[topFlangeWidth_str] = (1.5, inch_str)
+    valuesDict[topFlangeWidth_str] = (flangeWidth, inch_str)
     topFlangeThickness_str = "topFlangeThickness"
-    valuesDict[topFlangeThickness_str] = (0.5, inch_str)
+    valuesDict[topFlangeThickness_str] = (flangeThickness, inch_str)
     topFlangeHoleInsetDist_str = "topFlangeHoleInsetDist"
-    valuesDict[topFlangeHoleInsetDist_str] = (0.3, inch_str)
+    valuesDict[topFlangeHoleInsetDist_str] = (flangeHoleInset, inch_str)
     topFlangeMillRadius_str = "topFlangeMillRadius"
-    valuesDict[topFlangeMillRadius_str] = (1.0, inch_str)
+    valuesDict[topFlangeMillRadius_str] = (millRadius, inch_str)
     topFlangeStringList = [topFlangeInnerLength_str, topFlangeInnerWidth_str,
                            topFlangeWidth_str, topFlangeThickness_str,
                            topFlangeHoleInsetDist_str, topFlangeMillRadius_str]
