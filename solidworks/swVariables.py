@@ -98,7 +98,7 @@ if __name__ == "__main__":
     valuesDict[topFlangeInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0] +
                                             (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
     topFlangeInnerWidth_str = "topFlangeInnerWidth"
-    valuesDict[topFlangeInnerWidth_str] = (valuesDict[bottomWallInnerLength_str][0] +
+    valuesDict[topFlangeInnerWidth_str] = (valuesDict[bottomWallInnerWidth_str][0] +
                                            (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
     topFlangeWidth_str = "topFlangeWidth"
     valuesDict[topFlangeWidth_str] = (1.5, inch_str)
