@@ -124,6 +124,9 @@ if __name__ == "__main__":
                            topFlangeWidth_str, topFlangeThickness_str,
                            topFlangeHoleInsetDist_str, topFlangeMillRadius_str]
 
+    # flange and Walls Assembly
+    tolerance_str = "tolerance"
+
     """
     Start of the the script for making equation files
     """
@@ -184,3 +187,15 @@ if __name__ == "__main__":
         topFlangeForWalls.writeFile()
     else:
         print(topFlangeForWalls.fileContent)
+
+    # flange and wall assembly
+    flangeAndWallsAssem = equationsFile(fullFilePath=parentDir, fileName="flangeAndWallsAssemEquations")
+    flangeAndWallsAssem.addVarLine(tolerance_str, tolerance, inch_str)
+    flangeAndWallsAssem.addRefLine("D1@Distance1", tolerance_str)
+    flangeAndWallsAssem.addRefLine("D1@Distance2", tolerance_str)
+    flangeAndWallsAssem.addRefLine("D1@Distance3", tolerance_str)
+    flangeAndWallsAssem.addRefLine("D1@Distance4", tolerance_str)
+    if sys.platform == "win32":
+        flangeAndWallsAssem.writeFile()
+    else:
+        print(flangeAndWallsAssem.fileContent)
