@@ -72,9 +72,11 @@ if __name__ == "__main__":
     valuesDict[bottomFlangeWidth_str] = (1.5, inch_str)
     bottomFlangeThickness_str = "bottomFlangeThickness"
     valuesDict[bottomFlangeThickness_str] = (0.5, inch_str)
+    bottomFlangeHoleInsetDist_str = "bottomFlangeHoleInsetDist"
+    valuesDict[bottomFlangeHoleInsetDist_str] = (0.3, inch_str)
     bottomFlangeStringList = [bottomFlangeInnerLength_str, bottomFlangeInnerWidth_str,
-                              bottomFlangeWidth_str, bottomFlangeThickness_str]
-
+                              bottomFlangeWidth_str, bottomFlangeThickness_str,
+                              bottomFlangeHoleInsetDist_str]
 
     # top Flange Parameters
     topFlangeInnerLength_str = "topFlangeInnerLength"
@@ -87,8 +89,11 @@ if __name__ == "__main__":
     valuesDict[topFlangeWidth_str] = (1.5, inch_str)
     topFlangeThickness_str = "topFlangeThickness"
     valuesDict[topFlangeThickness_str] = (0.5, inch_str)
+    topFlangeHoleInsetDist_str = "topFlangeHoleInsetDist"
+    valuesDict[topFlangeHoleInsetDist_str] = (0.3, inch_str)
     topFlangeStringList = [topFlangeInnerLength_str, topFlangeInnerWidth_str,
-                              topFlangeWidth_str, topFlangeThickness_str]
+                           topFlangeWidth_str, topFlangeThickness_str,
+                           topFlangeHoleInsetDist_str]
 
     """
     Start of the the script for making equation files
@@ -112,6 +117,7 @@ if __name__ == "__main__":
     bottomFlangeForWalls.addRefLine("D2@sketch1", bottomFlangeInnerWidth_str)
     bottomFlangeForWalls.addRefLine("D3@sketch1", bottomFlangeWidth_str)
     bottomFlangeForWalls.addRefLine("D1@Boss-Extrude1", bottomFlangeThickness_str)
+    bottomFlangeForWalls.addRefLine("D1@Sketch3", bottomFlangeHoleInsetDist_str)
     if sys.platform == "win32":
         bottomFlangeForWalls.writeFile()
     else:
