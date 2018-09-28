@@ -86,7 +86,7 @@ if __name__ == "__main__":
     valuesDict[topWallMillRadius_str] = (millRadius, inch_str)
     topShellStringList = [topWallInnerLength_str, topWallInnerWidth_str,
                           topWallInnerDepth_str, topWallThickness_str,
-                          topWallThickness_str]
+                          topWallMillRadius_str]
 
 
     # bottom Flange Parameters
