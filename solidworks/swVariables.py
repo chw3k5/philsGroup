@@ -145,6 +145,7 @@ if __name__ == "__main__":
     topShellWalls.addRefLine("D1@sketch1", topWallInnerLength_str)
     topShellWalls.addRefLine("D2@sketch1", topWallInnerWidth_str)
     topShellWalls.addRefLine("D3@sketch1", topWallThickness_str)
+    topShellWalls.addRefLine("D1@Fillet1", topWallMillRadius_str)
     topShellWalls.addRefLine("D1@Boss-Extrude2", topWallInnerDepth_str)
     if sys.platform == "win32":
         topShellWalls.writeFile()
@@ -158,6 +159,7 @@ if __name__ == "__main__":
     bottomFlangeForWalls.addRefLine("D2@sketch1", bottomFlangeInnerWidth_str)
     bottomFlangeForWalls.addRefLine("D3@sketch1", bottomFlangeWidth_str)
     bottomFlangeForWalls.addRefLine("D1@Boss-Extrude1", bottomFlangeThickness_str)
+    bottomFlangeForWalls.addRefLine("D1@Fillet1", bottomFlangeMillRadius_str)
     bottomFlangeForWalls.addRefLine("D1@Sketch3", bottomFlangeHoleInsetDist_str)
     if sys.platform == "win32":
         bottomFlangeForWalls.writeFile()
@@ -171,6 +173,7 @@ if __name__ == "__main__":
     topFlangeForWalls.addRefLine("D2@sketch1", topFlangeInnerWidth_str)
     topFlangeForWalls.addRefLine("D3@sketch1", topFlangeWidth_str)
     topFlangeForWalls.addRefLine("D1@Boss-Extrude1", topFlangeThickness_str)
+    topFlangeForWalls.addRefLine("D1@Fillet1", topFlangeMillRadius_str)
     if sys.platform == "win32":
         topFlangeForWalls.writeFile()
     else:
