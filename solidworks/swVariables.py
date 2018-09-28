@@ -51,23 +51,38 @@ if __name__ == "__main__":
     inch_str = "in"
 
     # bottom Walls for cryostat shell parameters
-    innerLength_str = "innerLength"
-    valuesDict[innerLength_str] = (30.0, inch_str)
-    innerWidth_str = "innerWidth"
-    valuesDict[innerWidth_str] = (20.0, inch_str)
-    innerDepth_str = "innerDepth"
-    valuesDict[innerDepth_str] = (10.0, inch_str)
-    wallThickness_str = "wallThickness"
-    valuesDict[wallThickness_str] = (0.375, inch_str)
-    bottomShellStringList = [innerLength_str, innerWidth_str, innerDepth_str, wallThickness_str]
+    bottomWallInnerLength_str = "bottomWallInnerLength"
+    valuesDict[bottomWallInnerLength_str] = (30.0, inch_str)
+    bottomWallInnerWidth_str = "bottomWallInnerWidth"
+    valuesDict[bottomWallInnerWidth_str] = (20.0, inch_str)
+    bottomWallInnerDepth_str = "bottomWallInnerDepth"
+    valuesDict[bottomWallInnerDepth_str] = (10.0, inch_str)
+    bottomWallThickness_str = "bottomWallThickness"
+    valuesDict[bottomWallThickness_str] = (0.375, inch_str)
+    bottomShellStringList = [bottomWallInnerLength_str, bottomWallInnerWidth_str,
+                             bottomWallInnerDepth_str, bottomWallThickness_str]
+
+
+    # top Walls for cryostat shell parameters
+    topWallInnerLength_str = "topWallInnerLength"
+    valuesDict[topWallInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0], inch_str)
+    topWallInnerWidth_str = "topWallInnerWidth"
+    valuesDict[topWallInnerWidth_str] = (valuesDict[bottomWallInnerWidth_str][0], inch_str)
+    topWallInnerDepth_str = "topWallInnerDepth"
+    valuesDict[topWallInnerDepth_str] = (8.0, inch_str)
+    topWallThickness_str = "topWallThickness"
+    valuesDict[topWallThickness_str] = (valuesDict[bottomWallThickness_str][0], inch_str)
+    topShellStringList = [topWallInnerLength_str, topWallInnerWidth_str,
+                             topWallInnerDepth_str, topWallThickness_str]
+
 
     # bottom Flange Parameters
     bottomFlangeInnerLength_str = "bottomFlangeInnerLength"
-    valuesDict[bottomFlangeInnerLength_str] = (valuesDict[innerLength_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
-                                         inch_str)
+    valuesDict[bottomFlangeInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0] +
+                                               (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
     bottomFlangeInnerWidth_str = "bottomFlangeInnerWidth"
-    valuesDict[bottomFlangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
-                                         inch_str)
+    valuesDict[bottomFlangeInnerWidth_str] = (valuesDict[bottomWallInnerWidth_str][0] +
+                                              (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
     bottomFlangeWidth_str = "bottomFlangeWidth"
     valuesDict[bottomFlangeWidth_str] = (1.5, inch_str)
     bottomFlangeThickness_str = "bottomFlangeThickness"
@@ -80,11 +95,11 @@ if __name__ == "__main__":
 
     # top Flange Parameters
     topFlangeInnerLength_str = "topFlangeInnerLength"
-    valuesDict[topFlangeInnerLength_str] = (valuesDict[innerLength_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
-                                         inch_str)
+    valuesDict[topFlangeInnerLength_str] = (valuesDict[bottomWallInnerLength_str][0] +
+                                            (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
     topFlangeInnerWidth_str = "topFlangeInnerWidth"
-    valuesDict[topFlangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
-                                         inch_str)
+    valuesDict[topFlangeInnerWidth_str] = (valuesDict[bottomWallInnerLength_str][0] +
+                                           (2.0 * valuesDict[bottomWallThickness_str][0]), inch_str)
     topFlangeWidth_str = "topFlangeWidth"
     valuesDict[topFlangeWidth_str] = (1.5, inch_str)
     topFlangeThickness_str = "topFlangeThickness"
@@ -101,14 +116,26 @@ if __name__ == "__main__":
     # bottom shell walls
     bottomShellWalls = equationsFile(fullFilePath=parentDir, fileName="bottomShellWallsEquations")
     bottomShellWalls.listAddVarLine(bottomShellStringList, valuesDict)
-    bottomShellWalls.addRefLine("D1@sketch1", innerLength_str)
-    bottomShellWalls.addRefLine("D2@sketch1", innerWidth_str)
-    bottomShellWalls.addRefLine("D3@sketch1", wallThickness_str)
-    bottomShellWalls.addRefLine("D1@Boss-Extrude2", innerDepth_str)
+    bottomShellWalls.addRefLine("D1@sketch1", bottomWallInnerLength_str)
+    bottomShellWalls.addRefLine("D2@sketch1", bottomWallInnerWidth_str)
+    bottomShellWalls.addRefLine("D3@sketch1", bottomWallThickness_str)
+    bottomShellWalls.addRefLine("D1@Boss-Extrude2", bottomWallInnerDepth_str)
     if sys.platform == "win32":
         bottomShellWalls.writeFile()
     else:
         print(bottomShellWalls.fileContent)
+
+    # top shell walls
+    topShellWalls = equationsFile(fullFilePath=parentDir, fileName="topShellWallsEquations")
+    topShellWalls.listAddVarLine(topShellStringList, valuesDict)
+    topShellWalls.addRefLine("D1@sketch1", topWallInnerLength_str)
+    topShellWalls.addRefLine("D2@sketch1", topWallInnerWidth_str)
+    topShellWalls.addRefLine("D3@sketch1", topWallThickness_str)
+    topShellWalls.addRefLine("D1@Boss-Extrude2", topWallInnerDepth_str)
+    if sys.platform == "win32":
+        topShellWalls.writeFile()
+    else:
+        print(topShellWalls.fileContent)
 
     # bottom flange for walls
     bottomFlangeForWalls = equationsFile(fullFilePath=parentDir, fileName="bottomFlangeForWallsEquations")
