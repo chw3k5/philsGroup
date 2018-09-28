@@ -55,6 +55,7 @@ if __name__ == "__main__":
     flangeWidth = 1.5
     flangeThickness = 0.5
     flangeHoleInset = 0.3
+    tolerance = 0.005
 
 
     # bottom Walls for cryostat shell parameters
@@ -91,9 +92,9 @@ if __name__ == "__main__":
 
     # bottom Flange Parameters
     bottomFlangeInnerLength_str = "bottomFlangeInnerLength"
-    valuesDict[bottomFlangeInnerLength_str] = (workingLen + (2.0 * shellThickness), inch_str)
+    valuesDict[bottomFlangeInnerLength_str] = (workingLen + (2.0 * (tolerance + shellThickness)), inch_str)
     bottomFlangeInnerWidth_str = "bottomFlangeInnerWidth"
-    valuesDict[bottomFlangeInnerWidth_str] = (workingWidth + (2.0 * shellThickness), inch_str)
+    valuesDict[bottomFlangeInnerWidth_str] = (workingWidth + (2.0 * (tolerance + shellThickness)), inch_str)
     bottomFlangeWidth_str = "bottomFlangeWidth"
     valuesDict[bottomFlangeWidth_str] = (flangeWidth, inch_str)
     bottomFlangeThickness_str = "bottomFlangeThickness"
@@ -108,9 +109,9 @@ if __name__ == "__main__":
 
     # top Flange Parameters
     topFlangeInnerLength_str = "topFlangeInnerLength"
-    valuesDict[topFlangeInnerLength_str] = (workingLen + (2.0 * shellThickness), inch_str)
+    valuesDict[topFlangeInnerLength_str] = (workingLen + (2.0 * (tolerance + shellThickness)), inch_str)
     topFlangeInnerWidth_str = "topFlangeInnerWidth"
-    valuesDict[topFlangeInnerWidth_str] = (workingWidth + (2.0 * shellThickness), inch_str)
+    valuesDict[topFlangeInnerWidth_str] = (workingWidth + (2.0 * (tolerance + shellThickness)), inch_str)
     topFlangeWidth_str = "topFlangeWidth"
     valuesDict[topFlangeWidth_str] = (flangeWidth, inch_str)
     topFlangeThickness_str = "topFlangeThickness"
