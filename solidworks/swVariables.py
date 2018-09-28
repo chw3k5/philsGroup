@@ -59,8 +59,11 @@ if __name__ == "__main__":
     valuesDict[bottomWallInnerDepth_str] = (10.0, inch_str)
     bottomWallThickness_str = "bottomWallThickness"
     valuesDict[bottomWallThickness_str] = (0.375, inch_str)
+    bottomWallMillRadius_str = "bottomWallMillRadius"
+    valuesDict[bottomWallMillRadius_str] = (1.0, inch_str)
     bottomShellStringList = [bottomWallInnerLength_str, bottomWallInnerWidth_str,
-                             bottomWallInnerDepth_str, bottomWallThickness_str]
+                             bottomWallInnerDepth_str, bottomWallThickness_str,
+                             bottomWallMillRadius_str]
 
 
     # top Walls for cryostat shell parameters
@@ -72,8 +75,11 @@ if __name__ == "__main__":
     valuesDict[topWallInnerDepth_str] = (8.0, inch_str)
     topWallThickness_str = "topWallThickness"
     valuesDict[topWallThickness_str] = (valuesDict[bottomWallThickness_str][0], inch_str)
+    topWallMillRadius_str = "topWallMillRadius"
+    valuesDict[topWallMillRadius_str] = (1.0, inch_str)
     topShellStringList = [topWallInnerLength_str, topWallInnerWidth_str,
-                             topWallInnerDepth_str, topWallThickness_str]
+                          topWallInnerDepth_str, topWallThickness_str,
+                          topWallThickness_str]
 
 
     # bottom Flange Parameters
@@ -89,9 +95,11 @@ if __name__ == "__main__":
     valuesDict[bottomFlangeThickness_str] = (0.5, inch_str)
     bottomFlangeHoleInsetDist_str = "bottomFlangeHoleInsetDist"
     valuesDict[bottomFlangeHoleInsetDist_str] = (0.3, inch_str)
+    bottomFlangeMillRadius_str = "bottomFlangeMillRadius"
+    valuesDict[bottomFlangeMillRadius_str] = (1.0, inch_str)
     bottomFlangeStringList = [bottomFlangeInnerLength_str, bottomFlangeInnerWidth_str,
                               bottomFlangeWidth_str, bottomFlangeThickness_str,
-                              bottomFlangeHoleInsetDist_str]
+                              bottomFlangeHoleInsetDist_str, bottomFlangeMillRadius_str]
 
     # top Flange Parameters
     topFlangeInnerLength_str = "topFlangeInnerLength"
@@ -106,9 +114,11 @@ if __name__ == "__main__":
     valuesDict[topFlangeThickness_str] = (0.5, inch_str)
     topFlangeHoleInsetDist_str = "topFlangeHoleInsetDist"
     valuesDict[topFlangeHoleInsetDist_str] = (0.3, inch_str)
+    topFlangeMillRadius_str = "topFlangeMillRadius"
+    valuesDict[topFlangeMillRadius_str] = (1.0, inch_str)
     topFlangeStringList = [topFlangeInnerLength_str, topFlangeInnerWidth_str,
                            topFlangeWidth_str, topFlangeThickness_str,
-                           topFlangeHoleInsetDist_str]
+                           topFlangeHoleInsetDist_str, topFlangeMillRadius_str]
 
     """
     Start of the the script for making equation files
@@ -119,6 +129,7 @@ if __name__ == "__main__":
     bottomShellWalls.addRefLine("D1@sketch1", bottomWallInnerLength_str)
     bottomShellWalls.addRefLine("D2@sketch1", bottomWallInnerWidth_str)
     bottomShellWalls.addRefLine("D3@sketch1", bottomWallThickness_str)
+    bottomShellWalls.addRefLine("D1@Fillet1", bottomWallMillRadius_str)
     bottomShellWalls.addRefLine("D1@Boss-Extrude2", bottomWallInnerDepth_str)
     if sys.platform == "win32":
         bottomShellWalls.writeFile()
