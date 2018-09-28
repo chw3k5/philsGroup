@@ -62,17 +62,33 @@ if __name__ == "__main__":
     bottomShellStringList = [innerLength_str, innerWidth_str, innerDepth_str, wallThickness_str]
 
     # bottom Flange Parameters
-    flangeInnerLength_str = "flangeInnerLength"
-    valuesDict[flangeInnerLength_str] = (valuesDict[innerLength_str][0] + valuesDict[wallThickness_str][0],
+    bottomFlangeInnerLength_str = "bottomFlangeInnerLength"
+    valuesDict[bottomFlangeInnerLength_str] = (valuesDict[innerLength_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
                                          inch_str)
-    flangeInnerWidth_str = "flangeInnerWidth"
-    valuesDict[flangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + valuesDict[wallThickness_str][0],
+    bottomFlangeInnerWidth_str = "bottomFlangeInnerWidth"
+    valuesDict[bottomFlangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
                                          inch_str)
-    flangeWidth_str = "flangeWidth"
-    valuesDict[flangeWidth_str] = (1.0, inch_str)
-    flangeThickness_str = "flangeThickness"
-    valuesDict[flangeThickness_str] = (0.375, inch_str)
-    bottomFlangeStringList = [flangeInnerLength_str, flangeInnerWidth_str, flangeWidth_str, flangeThickness_str]
+    bottomFlangeWidth_str = "bottomFlangeWidth"
+    valuesDict[bottomFlangeWidth_str] = (1.0, inch_str)
+    bottomFlangeThickness_str = "bottomFlangeThickness"
+    valuesDict[bottomFlangeThickness_str] = (0.375, inch_str)
+    bottomFlangeStringList = [bottomFlangeInnerLength_str, bottomFlangeInnerWidth_str,
+                              bottomFlangeWidth_str, bottomFlangeThickness_str]
+
+
+    # top Flange Parameters
+    topFlangeInnerLength_str = "topFlangeInnerLength"
+    valuesDict[topFlangeInnerLength_str] = (valuesDict[innerLength_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
+                                         inch_str)
+    topFlangeInnerWidth_str = "topFlangeInnerWidth"
+    valuesDict[topFlangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
+                                         inch_str)
+    topFlangeWidth_str = "topFlangeWidth"
+    valuesDict[topFlangeWidth_str] = (1.0, inch_str)
+    topFlangeThickness_str = "topFlangeThickness"
+    valuesDict[topFlangeThickness_str] = (0.375, inch_str)
+    topFlangeStringList = [topFlangeInnerLength_str, topFlangeInnerWidth_str,
+                              topFlangeWidth_str, topFlangeThickness_str]
 
     """
     Start of the the script for making equation files
@@ -82,6 +98,7 @@ if __name__ == "__main__":
     bottomShellWalls.listAddVarLine(bottomShellStringList, valuesDict)
     bottomShellWalls.addRefLine("D1@sketch1", innerLength_str)
     bottomShellWalls.addRefLine("D2@sketch1", innerWidth_str)
+    bottomShellWalls.addRefLine("D3@sketch1", wallThickness_str)
     bottomShellWalls.addRefLine("D1@Boss-Extrude2", innerDepth_str)
     if sys.platform == "win32":
         bottomShellWalls.writeFile()
@@ -91,12 +108,23 @@ if __name__ == "__main__":
     # bottom flange for walls
     bottomFlangeForWalls = equationsFile(fullFilePath=parentDir, fileName="bottomFlangeForWallsEquations")
     bottomFlangeForWalls.listAddVarLine(bottomFlangeStringList, valuesDict)
-    bottomFlangeForWalls.addRefLine("D1@sketch1", flangeInnerLength_str)
-    bottomFlangeForWalls.addRefLine("D2@sketch1", flangeInnerWidth_str)
-    bottomFlangeForWalls.addRefLine("D3@sketch1", flangeWidth_str)
-    bottomFlangeForWalls.addRefLine("D1@Boss-Extrude1", flangeThickness_str)
+    bottomFlangeForWalls.addRefLine("D1@sketch1", bottomFlangeInnerLength_str)
+    bottomFlangeForWalls.addRefLine("D2@sketch1", bottomFlangeInnerWidth_str)
+    bottomFlangeForWalls.addRefLine("D3@sketch1", bottomFlangeWidth_str)
+    bottomFlangeForWalls.addRefLine("D1@Boss-Extrude1", bottomFlangeThickness_str)
     if sys.platform == "win32":
         bottomFlangeForWalls.writeFile()
     else:
         print(bottomFlangeForWalls.fileContent)
 
+    # top flange for walls
+    topFlangeForWalls = equationsFile(fullFilePath=parentDir, fileName="topFlangeForWallsEquations")
+    topFlangeForWalls.listAddVarLine(topFlangeStringList, valuesDict)
+    topFlangeForWalls.addRefLine("D1@sketch1", topFlangeInnerLength_str)
+    topFlangeForWalls.addRefLine("D2@sketch1", topFlangeInnerWidth_str)
+    topFlangeForWalls.addRefLine("D3@sketch1", topFlangeWidth_str)
+    topFlangeForWalls.addRefLine("D1@Boss-Extrude1", topFlangeThickness_str)
+    if sys.platform == "win32":
+        topFlangeForWalls.writeFile()
+    else:
+        print(topFlangeForWalls.fileContent)
