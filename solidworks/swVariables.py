@@ -58,7 +58,7 @@ if __name__ == "__main__":
     innerDepth_str = "innerDepth"
     valuesDict[innerDepth_str] = (10.0, inch_str)
     wallThickness_str = "wallThickness"
-    valuesDict[wallThickness_str] = (0.25, inch_str)
+    valuesDict[wallThickness_str] = (0.375, inch_str)
     bottomShellStringList = [innerLength_str, innerWidth_str, innerDepth_str, wallThickness_str]
 
     # bottom Flange Parameters
@@ -69,9 +69,9 @@ if __name__ == "__main__":
     valuesDict[bottomFlangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
                                          inch_str)
     bottomFlangeWidth_str = "bottomFlangeWidth"
-    valuesDict[bottomFlangeWidth_str] = (1.0, inch_str)
+    valuesDict[bottomFlangeWidth_str] = (1.5, inch_str)
     bottomFlangeThickness_str = "bottomFlangeThickness"
-    valuesDict[bottomFlangeThickness_str] = (0.375, inch_str)
+    valuesDict[bottomFlangeThickness_str] = (0.5, inch_str)
     bottomFlangeStringList = [bottomFlangeInnerLength_str, bottomFlangeInnerWidth_str,
                               bottomFlangeWidth_str, bottomFlangeThickness_str]
 
@@ -84,9 +84,9 @@ if __name__ == "__main__":
     valuesDict[topFlangeInnerWidth_str] = (valuesDict[innerWidth_str][0] + (2.0 * valuesDict[wallThickness_str][0]),
                                          inch_str)
     topFlangeWidth_str = "topFlangeWidth"
-    valuesDict[topFlangeWidth_str] = (1.0, inch_str)
+    valuesDict[topFlangeWidth_str] = (1.5, inch_str)
     topFlangeThickness_str = "topFlangeThickness"
-    valuesDict[topFlangeThickness_str] = (0.375, inch_str)
+    valuesDict[topFlangeThickness_str] = (0.5, inch_str)
     topFlangeStringList = [topFlangeInnerLength_str, topFlangeInnerWidth_str,
                               topFlangeWidth_str, topFlangeThickness_str]
 
