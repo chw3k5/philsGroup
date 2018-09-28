@@ -13,7 +13,7 @@ def makeLine(varName, value, units):
 
 
 def exctactInputVals(val_str, valuesDict):
-    return val_str, valuesDict[innerLength_str][0], valuesDict[innerLength_str][1]
+    return val_str, valuesDict[val_str][0], valuesDict[val_str][1]
 
 
 class equationsFile():
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     flangeWidth_str = "flangeWidth"
     valuesDict[flangeWidth_str] = (1.0, inch_str)
     flangeThickness_str = "flangeThickness"
-    valuesDict[flangeWidth_str] = (0.375, inch_str)
+    valuesDict[flangeThickness_str] = (0.375, inch_str)
     bottomFlangeStringList = [flangeInnerLength_str, flangeInnerWidth_str, flangeWidth_str, flangeThickness_str]
 
     """
@@ -93,6 +93,7 @@ if __name__ == "__main__":
     bottomFlangeForWalls.listAddVarLine(bottomFlangeStringList, valuesDict)
     bottomFlangeForWalls.addRefLine("D1@sketch1", flangeInnerLength_str)
     bottomFlangeForWalls.addRefLine("D2@sketch1", flangeInnerWidth_str)
+    bottomFlangeForWalls.addRefLine("D3@sketch1", flangeWidth_str)
     bottomFlangeForWalls.addRefLine("D1@Boss-Extrude1", flangeThickness_str)
     if sys.platform == "win32":
         bottomFlangeForWalls.writeFile()
