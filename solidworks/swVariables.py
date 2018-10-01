@@ -252,9 +252,9 @@ if __name__ == "__main__":
 
 
     if sys.platform == "win32":
-        flangeAndWallsAssem.writeFile()
+        bottomWallAndPorts.writeFile()
     else:
-        print(flangeAndWallsAssem.fileContent)
+        print(bottomWallAndPorts.fileContent)
 
 
     bottomWallStringList = [bottomWallInnerLength_str, bottomWallInnerWidth_str,
