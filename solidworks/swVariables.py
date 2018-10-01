@@ -49,13 +49,14 @@ if __name__ == "__main__":
                 "Universal Readout Harness\\ASU Test Cryostat\\EDM Shell"
     valuesDict = {}
     inch_str = "in"
-    (workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (30.0, 20.0, 10.0, 11.0)
+    (workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (23.0, 20.0, 9.0, 9.0)
     shellThickness = 0.375
+    bottomWallShellThickness = 0.5
     oringInsetDistance = 0.4
     millRadius = 2.0
     flangeWidth = 1.5
     flangeThickness = 0.5
-    flangeHoleInset = 0.3
+    flangeHoleInset = 0.4
     tolerance = 0.005
 
 
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     bottomWallOuterWidth_str = "bottomWallOuterWidth"
     valuesDict[bottomWallOuterWidth_str] = ((2.0 * (flangeWidth + tolerance + shellThickness)) + workingWidth, inch_str)
     bottomWallThickness_str = "bottomWallThickness"
-    valuesDict[bottomWallThickness_str] = (shellThickness, inch_str)
+    valuesDict[bottomWallThickness_str] = (bottomWallShellThickness, inch_str)
     bottomWallOringInsetDistance_str = "bottomWallOringInsetDistance"
     valuesDict[bottomWallOringInsetDistance_str] = (oringInsetDistance, inch_str)
     bottomWallMatingFlangeMillRadius_str = "bottomWallMatingFlangeMillRadius"
@@ -242,7 +243,7 @@ if __name__ == "__main__":
     bottomWallAndPorts.addRefLine("D1@Bottom Plate", bottomWallThickness_str)
 
     bottomWallAndPorts.addRefLine("D1@Sketch13", bottomWallOringInsetDistance_str)
-    bottomWallAndPorts.addRefLine("D2@Sketch13", bottomWallMillRadius_str)
+    bottomWallAndPorts.addRefLine("D2@Sketch13", bottomWallMatingFlangeMillRadius_str)
 
     bottomWallAndPorts.addRefLine("D1@Fillet1", bottomWallHoleInsetDist_str)
 
