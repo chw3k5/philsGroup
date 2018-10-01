@@ -234,14 +234,14 @@ if __name__ == "__main__":
     # bottom wall (insert and coldhead)
     flangeAndWallsAssem = equationsFile(fullFilePath=parentDir, fileName="bottomWallAndPorts")
     flangeAndWallsAssem.listAddVarLine(bottomWallStringList, valuesDict)
-    flangeAndWallsAssem.addRefLine("D1@sketch1", bottomWallInnerLength_str)
+    flangeAndWallsAssem.addRefLine("D1@sketch1", bottomWallOuterLength_str)
     flangeAndWallsAssem.addRefLine("D2@sketch1", bottomWallInnerWidth_str)
-    flangeAndWallsAssem.addRefLine("D3@sketch1", bottomWallOuterLength_str)
+    flangeAndWallsAssem.addRefLine("D3@sketch1", bottomWallInnerLength_str)
     flangeAndWallsAssem.addRefLine("D4@sketch1", bottomWallOuterWidth_str)
 
     flangeAndWallsAssem.addRefLine("D1@Bottom Plate", bottomWallThickness_str)
 
-    
+
     if sys.platform == "win32":
         flangeAndWallsAssem.writeFile()
     else:
