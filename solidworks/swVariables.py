@@ -241,12 +241,12 @@ if __name__ == "__main__":
 
     bottomWallAndPorts.addRefLine("D1@Bottom Plate", bottomWallThickness_str)
 
-    bottomWallAndPorts.addRefLine("D1@scetck13", bottomWallOringInsetDistance_str)
-    bottomWallAndPorts.addRefLine("D2@scetck13", bottomWallMillRadius_str)
+    bottomWallAndPorts.addRefLine("D1@sketch13", bottomWallOringInsetDistance_str)
+    bottomWallAndPorts.addRefLine("D2@sketch13", bottomWallMillRadius_str)
 
     bottomWallAndPorts.addRefLine("D1@Fillet1", bottomWallHoleInsetDist_str)
 
-    bottomWallAndPorts.addRefLine("D1@scetck14", bottomWallHoleInsetDist_str)
+    bottomWallAndPorts.addRefLine("D1@sketch14", bottomWallHoleInsetDist_str)
 
     
 
