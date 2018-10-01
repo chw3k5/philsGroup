@@ -138,9 +138,9 @@ if __name__ == "__main__":
     bottomWallInnerWidth_str = "bottomWallInnerWidth"
     valuesDict[bottomWallInnerWidth_str] = (workingWidth, inch_str)
     bottomWallOuterLength_str = "bottomWallOuterLength"
-    valuesDict[bottomWallOuterLength_str] = (flangeWidth + tolerance + shellThickness + workingLen, inch_str)
+    valuesDict[bottomWallOuterLength_str] = ((2.0 * (flangeWidth + tolerance + shellThickness)) + workingLen, inch_str)
     bottomWallOuterWidth_str = "bottomWallOuterWidth"
-    valuesDict[bottomWallOuterWidth_str] = (flangeWidth + tolerance + shellThickness + workingWidth, inch_str)
+    valuesDict[bottomWallOuterWidth_str] = ((2.0 * (flangeWidth + tolerance + shellThickness)) + workingWidth, inch_str)
     bottomWallThickness_str = "bottomWallThickness"
     valuesDict[bottomWallThickness_str] = (shellThickness, inch_str)
     bottomWallOringInsetDistance_str = "bottomWallOringInsetDistance"
