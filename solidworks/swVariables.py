@@ -51,6 +51,7 @@ if __name__ == "__main__":
     inch_str = "in"
     (workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (30.0, 20.0, 10.0, 11.0)
     shellThickness = 0.375
+    oringInsetDistance = 0.4
     millRadius = 2.0
     flangeWidth = 1.5
     flangeThickness = 0.5
@@ -101,6 +102,8 @@ if __name__ == "__main__":
     valuesDict[bottomFlangeThickness_str] = (flangeThickness, inch_str)
     bottomFlangeHoleInsetDist_str = "bottomFlangeHoleInsetDist"
     valuesDict[bottomFlangeHoleInsetDist_str] = (flangeHoleInset, inch_str)
+    bottomFlangeOringInsetDistance_str = "bottomFlangeOringInsetDistance"
+    valuesDict[bottomFlangeOringInsetDistance_str] = (oringInsetDistance, inch_str)
     bottomFlangeMillRadius_str = "bottomFlangeMillRadius"
     valuesDict[bottomFlangeMillRadius_str] = (millRadius, inch_str)
     bottomFlangeStringList = [bottomFlangeInnerLength_str, bottomFlangeInnerWidth_str,
@@ -118,6 +121,8 @@ if __name__ == "__main__":
     valuesDict[topFlangeThickness_str] = (flangeThickness, inch_str)
     topFlangeHoleInsetDist_str = "topFlangeHoleInsetDist"
     valuesDict[topFlangeHoleInsetDist_str] = (flangeHoleInset, inch_str)
+    topFlangeOringInsetDistance_str = "topFlangeOringInsetDistance"
+    valuesDict[topFlangeOringInsetDistance_str] = (oringInsetDistance, inch_str)
     topFlangeMillRadius_str = "topFlangeMillRadius"
     valuesDict[topFlangeMillRadius_str] = (millRadius, inch_str)
     topFlangeStringList = [topFlangeInnerLength_str, topFlangeInnerWidth_str,
@@ -126,6 +131,30 @@ if __name__ == "__main__":
 
     # flange and Walls Assembly
     tolerance_str = "tolerance"
+
+    # bottom wall (insert and coldhead)
+    bottomWallInnerLength_str = "bottomWallInnerLength"
+    valuesDict[bottomWallInnerLength_str] = (workingLen, inch_str)
+    bottomWallInnerWidth_str = "bottomWallInnerWidth"
+    valuesDict[bottomWallInnerWidth_str] = (workingWidth, inch_str)
+    bottomWallOuterLength_str = "bottomWallOuterLength"
+    valuesDict[bottomWallOuterLength_str] = (flangeWidth + tolerance + shellThickness + workingWidth, inch_str)
+    bottomWallOuterWidth_str = "bottomWallOuterWidth"
+    valuesDict[bottomWallOuterWidth_str] = (flangeWidth + tolerance + shellThickness + workingWidth, inch_str)
+    bottomWallThickness_str = "bottomWallThickness"
+    valuesDict[bottomWallThickness_str] = (shellThickness, inch_str)
+    bottomWallOringInsetDistance_str = "bottomWallOringInsetDistance"
+    valuesDict[bottomWallOringInsetDistance_str] = (oringInsetDistance, inch_str)
+    bottomWallMatingFlangeMillRadius_str = "bottomWallMatingFlangeMillRadius"
+    valuesDict[bottomWallMatingFlangeMillRadius_str] = (millRadius, inch_str)
+    bottomWallHoleInsetDist_str = "bottomWallFlangeHoleInsetDist"
+    valuesDict[bottomWallHoleInsetDist_str] = (flangeHoleInset, inch_str)
+
+    bottomWallStringList = [bottomWallInnerLength_str, bottomWallInnerWidth_str,
+                            bottomWallOuterLength_str, bottomWallOuterWidth_str,
+                            bottomWallThickness_str, bottomWallOringInsetDistance_str,
+                            bottomWallMatingFlangeMillRadius_str, bottomWallHoleInsetDist_str]
+
 
     """
     Start of the the script for making equation files
@@ -162,6 +191,7 @@ if __name__ == "__main__":
     bottomFlangeForWalls.addRefLine("D1@sketch1", bottomFlangeInnerLength_str)
     bottomFlangeForWalls.addRefLine("D2@sketch1", bottomFlangeInnerWidth_str)
     bottomFlangeForWalls.addRefLine("D3@sketch1", bottomFlangeWidth_str)
+    bottomFlangeForWalls.addRefLine("D1@sketch2", bottomFlangeOringInsetDistance_str)
     bottomFlangeForWalls.addRefLine("D2@sketch2", bottomFlangeMillRadius_str)
     bottomFlangeForWalls.addRefLine("D1@Boss-Extrude1", bottomFlangeThickness_str)
     bottomFlangeForWalls.addRefLine("D1@Fillet1", bottomFlangeMillRadius_str)
@@ -178,6 +208,7 @@ if __name__ == "__main__":
     topFlangeForWalls.addRefLine("D1@sketch1", topFlangeInnerLength_str)
     topFlangeForWalls.addRefLine("D2@sketch1", topFlangeInnerWidth_str)
     topFlangeForWalls.addRefLine("D3@sketch1", topFlangeWidth_str)
+    topFlangeForWalls.addRefLine("D1@sketch2", topFlangeOringInsetDistance_str)
     topFlangeForWalls.addRefLine("D2@sketch2", topFlangeMillRadius_str)
     topFlangeForWalls.addRefLine("D1@Boss-Extrude1", topFlangeThickness_str)
     topFlangeForWalls.addRefLine("D1@Fillet1", topFlangeMillRadius_str)
@@ -199,3 +230,25 @@ if __name__ == "__main__":
         flangeAndWallsAssem.writeFile()
     else:
         print(flangeAndWallsAssem.fileContent)
+
+    # bottom wall (insert and coldhead)
+    flangeAndWallsAssem = equationsFile(fullFilePath=parentDir, fileName="bottomWallAndPorts")
+    flangeAndWallsAssem.listAddVarLine(bottomWallStringList, valuesDict)
+    flangeAndWallsAssem.addRefLine("D1@sketch1", bottomWallInnerLength_str)
+    flangeAndWallsAssem.addRefLine("D2@sketch1", bottomWallInnerWidth_str)
+    flangeAndWallsAssem.addRefLine("D3@sketch1", bottomWallOuterLength_str)
+    flangeAndWallsAssem.addRefLine("D4@sketch1", bottomWallOuterWidth_str)
+
+    flangeAndWallsAssem.addRefLine("D1@Bottom Plate", bottomWallThickness_str)
+
+    
+    if sys.platform == "win32":
+        flangeAndWallsAssem.writeFile()
+    else:
+        print(flangeAndWallsAssem.fileContent)
+
+
+    bottomWallStringList = [bottomWallInnerLength_str, bottomWallInnerWidth_str,
+                            bottomWallOuterLength_str, bottomWallOuterWidth_str,
+                            bottomWallThickness_str, bottomWallOringInsetDistance_str,
+                            bottomWallMatingFlangeMillRadius_str, bottomWallHoleInsetDist_str]
