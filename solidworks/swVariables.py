@@ -232,14 +232,23 @@ if __name__ == "__main__":
         print(flangeAndWallsAssem.fileContent)
 
     # bottom wall (insert and coldhead)
-    flangeAndWallsAssem = equationsFile(fullFilePath=parentDir, fileName="bottomWallAndPorts")
-    flangeAndWallsAssem.listAddVarLine(bottomWallStringList, valuesDict)
-    flangeAndWallsAssem.addRefLine("D3@sketch1", bottomWallOuterLength_str)
-    flangeAndWallsAssem.addRefLine("D4@sketch1", bottomWallOuterWidth_str)
-    flangeAndWallsAssem.addRefLine("D1@sketch1", bottomWallInnerLength_str)
-    flangeAndWallsAssem.addRefLine("D2@sketch1", bottomWallInnerWidth_str)
+    bottomWallAndPorts = equationsFile(fullFilePath=parentDir, fileName="bottomWallAndPorts")
+    bottomWallAndPorts.listAddVarLine(bottomWallStringList, valuesDict)
+    bottomWallAndPorts.addRefLine("D3@sketch1", bottomWallOuterLength_str)
+    bottomWallAndPorts.addRefLine("D4@sketch1", bottomWallOuterWidth_str)
+    bottomWallAndPorts.addRefLine("D1@sketch1", bottomWallInnerLength_str)
+    bottomWallAndPorts.addRefLine("D2@sketch1", bottomWallInnerWidth_str)
 
-    flangeAndWallsAssem.addRefLine("D1@Bottom Plate", bottomWallThickness_str)
+    bottomWallAndPorts.addRefLine("D1@Bottom Plate", bottomWallThickness_str)
+
+    bottomWallAndPorts.addRefLine("D1@scetck13", bottomWallOringInsetDistance_str)
+    bottomWallAndPorts.addRefLine("D2@scetck13", bottomWallMillRadius_str)
+
+    bottomWallAndPorts.addRefLine("D1@Fillet1", bottomWallHoleInsetDist_str)
+
+    bottomWallAndPorts.addRefLine("D1@scetck14", bottomWallHoleInsetDist_str)
+
+    
 
 
     if sys.platform == "win32":
