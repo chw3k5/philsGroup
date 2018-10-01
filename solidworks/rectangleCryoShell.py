@@ -11,6 +11,7 @@ inch_str = "in"
 (workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (23.0, 20.0, 9.0, 9.0)
 shellThickness = 0.375
 bottomWallShellThickness = 0.5
+lidThickness = 0.5
 oringInsetDistance = 0.4
 millRadius = 2.0
 flangeWidth = 1.5
@@ -213,7 +214,7 @@ valuesDict[lidOuterLength_str] = ((2.0 * (flangeWidth + tolerance + shellThickne
 lidOuterWidth_str = "lidOuterWidth"
 valuesDict[lidOuterWidth_str] = ((2.0 * (flangeWidth + tolerance + shellThickness)) + workingWidth, inch_str)
 lidThickness_str = "lidThickness"
-valuesDict[lidThickness_str] = (shellThickness, inch_str)
+valuesDict[lidThickness_str] = (lidThickness, inch_str)
 lidHoleInsetDist_str = "lidFlangeHoleInsetDist"
 valuesDict[lidHoleInsetDist_str] = (flangeHoleInset, inch_str)
 
@@ -230,7 +231,7 @@ lid.addRefLine("D3@sketch1", lidOuterLength_str)
 lid.addRefLine("D4@sketch1", lidOuterWidth_str)
 lid.addRefLine("D1@Boss-Extrude1", lidThickness_str)
 lid.addRefLine("D1@Fillet1", lidHoleInsetDist_str)
-lid.addRefLine("D1@Sketch14", lidHoleInsetDist_str)
+lid.addRefLine("D1@Sketch2", lidHoleInsetDist_str)
 
 if sys.platform == "win32":
     lid.writeFile()
