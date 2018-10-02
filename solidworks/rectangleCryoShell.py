@@ -237,3 +237,55 @@ if sys.platform == "win32":
     lid.writeFile()
 else:
     print(lid.fileContent)
+
+
+# Collar Extension for Coldhead
+collar_ID = 5
+collar_boltCircleDiameter = 6.693
+collar_OD = 7.087
+collar_oringID = 5.5
+collar_oringWidth = 0.110
+collar_oringDepth = 0.181
+collar_height = 6
+counterBoreDepth = 3
+
+collar_ID_str = "collar_ID"
+valuesDict[collar_ID_str] = (collar_ID, inch_str)
+collar_boltCircleDiameter_str = "collar_boltCircleDiameter"
+valuesDict[collar_boltCircleDiameter_str] = (collar_boltCircleDiameter, inch_str)
+collar_OD_str = "collar_OD"
+valuesDict[collar_OD_str] = (collar_OD, inch_str)
+collar_oringID_str = "collar_oringID"
+valuesDict[collar_oringID_str] = (collar_oringID, inch_str)
+collar_oringWidth_str = "collar_oringWidth"
+valuesDict[collar_oringWidth_str] = (collar_oringWidth, inch_str)
+collar_oringDepth_str = "collar_oringDepth"
+valuesDict[collar_oringDepth_str] = (collar_oringDepth, inch_str)
+collar_height_str = "collar_height"
+valuesDict[collar_height_str] = (collar_height, inch_str)
+counterBoreDepth_str = "counterBoreDepth"
+valuesDict[counterBoreDepth_str] = (collar_height - counterBoreDepth, inch_str)
+
+
+collarStringList = [collar_OD_str, collar_boltCircleDiameter_str,
+                    collar_ID_str, collar_oringID_str,
+                    collar_oringWidth_str, collar_oringDepth_str,
+                    collar_height_str, counterBoreDepth_str]
+
+# Collar Extension for Coldhead
+collar = equationsFile(fullFilePath=parentDir, fileName="collarEquations")
+collar.listAddVarLine(collarStringList, valuesDict)
+collar.addRefLine("D1@sketch1", collar_ID_str)
+collar.addRefLine("D2@sketch1", collar_OD_str)
+collar.addRefLine("D3@sketch1", collar_boltCircleDiameter_str)
+collar.addRefLine("D1@Boss-Extrude1", collar_height_str)
+collar.addRefLine("C'Bore Depth@Sketch4", counterBoreDepth_str)
+collar.addRefLine("D1@sketch6", collar_oringID_str)
+collar.addRefLine("D1@Cut-Extrude-Thin1", collar_oringDepth_str)
+collar.addRefLine("T1@Cut-Extrude-Thin1", collar_oringWidth_str)
+
+
+if sys.platform == "win32":
+    collar.writeFile()
+else:
+    print(collar.fileContent)
