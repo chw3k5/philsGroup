@@ -54,10 +54,10 @@ leftBottomFlange_lengthX = rearExtensionDistance + insert40K_X + frontExtensionD
 leftBottomFlange_widthZ = expected_edgeOverLap + leftExtensionDistance
 
 # Flange Thicknesses
-bottomFlangeThickness = sheildThickness
-topFlangeThickness = sheildThickness
-lid_shieldThickness = sheildThickness
-totalShieldThickness = bottomFlangeThickness + topFlangeThickness + lid_shieldThickness
+bottomFlangeThickness = sheildThickness # inches
+topFlangeThickness = sheildThickness # inches
+lid_shieldThickness = sheildThickness # inches 
+totalShieldThickness = (bottomFlangeThickness + lid_shieldThickness) * inch_to_mm
 
 # Calculations for 40K shield Wall height
 shield_40K_workingHeight = ((workingDepthBottom + workingDepthTop) * inch_to_mm) \
