@@ -14,7 +14,10 @@ rearExtensionDistance = 40.0
 leftExtensionDistance = rearExtensionDistance
 rightExtensionDistance = rearExtensionDistance
 frontExtensionDistance = 150.0
-shellHeight = 2000.0
+
+
+shieldSpace_4K_40K = 15.0
+shieldSpace_40K_300K = 15.0
 
 
 """
@@ -37,11 +40,37 @@ refHole_to_largeSideNextHoleX = 3.175
 refHole_to_largeSideNextHoleZ = 47.9425
 largeSideHole_CenterToCenter = 54.991
 
+# insert measurements
+cryoFloorTo40K_InsertBottom = 94.3
+insert_40KThickness = 6.35
+workingDist_40K_4K = 104.0
+insert_4KThickness = 6.35
+
+
 # Calculations for Left Bottom Flange
 leftBottomFlangeCornerReferenceScrewInsetX = rearExtensionDistance + refHole_to_edgeX
 leftBottomFlangeCornerReferenceScrewInsetZ = expected_edgeOverLap - refHole_to_edgeZ
 leftBottomFlange_lengthX = rearExtensionDistance + insert40K_X + frontExtensionDistance
 leftBottomFlange_widthZ = expected_edgeOverLap + leftExtensionDistance
+
+# Flange Thicknesses
+bottomFlangeThickness = sheildThickness
+topFlangeThickness = sheildThickness
+lid_shieldThickness = sheildThickness
+totalShieldThickness = bottomFlangeThickness + topFlangeThickness + lid_shieldThickness
+
+# Calculations for 40K shield Wall height
+shield_40K_workingHeight = ((workingDepthBottom + workingDepthTop) * inch_to_mm) \
+                           - cryoFloorTo40K_InsertBottom - insert_40KThickness \
+                           - totalShieldThickness - shieldSpace_40K_300K
+
+# Calculations for 4K shield Wall height
+shield_4K_workingHeight = ((workingDepthBottom + workingDepthTop) * inch_to_mm) \
+                           - cryoFloorTo40K_InsertBottom - insert_40KThickness \
+                           - workingDist_40K_4K - insert_4KThickness \
+                           - (2.0 * totalShieldThickness) - shieldSpace_40K_300K \
+                           - shieldSpace_4K_40K
+
 
 """
 Left Bottom Flange
@@ -58,7 +87,7 @@ leftBottomFlange_widthZ_str = "leftBottomFlange_widthZ"
 valuesDict[leftBottomFlange_widthZ_str] = (leftBottomFlange_widthZ, mm_str)
 
 leftBottomFlange_thickness_str = "leftBottomFlange_thickness"
-valuesDict[leftBottomFlange_thickness_str] = (sheildThickness, inch_str)
+valuesDict[leftBottomFlange_thickness_str] = (bottomFlangeThickness, inch_str)
 
 refHole_to_smallSideNextHoleX_str = "refHole_to_smallSideNextHoleX"
 valuesDict[refHole_to_smallSideNextHoleX_str] = (refHole_to_smallSideNextHoleX, mm_str)
@@ -108,7 +137,7 @@ rearBottomFlange_widthZ_str = "rearBottomFlange_widthZ"
 valuesDict[rearBottomFlange_widthZ_str] = (rearBottomFlange_widthZ, mm_str)
 
 rearBottomFlange_thickness_str = "rearBottomFlange_thickness"
-valuesDict[rearBottomFlange_thickness_str] = (sheildThickness, inch_str)
+valuesDict[rearBottomFlange_thickness_str] = (bottomFlangeThickness, inch_str)
 
 refHole_to_largeSideNextHoleX_str = "refHole_to_largeSideNextHoleX"
 valuesDict[refHole_to_largeSideNextHoleX_str] = (refHole_to_largeSideNextHoleX, mm_str)
@@ -146,27 +175,33 @@ else:
 
 
 """Left Wall"""
-
-
 # Left side (viewed from above and with the cold head at the "front") wall at 40k
 leftWallLengthX_str = "leftWallLengthX"
 valuesDict[leftWallLengthX_str] = (leftBottomFlange_lengthX, mm_str)
 leftWallHalfWidthZ_str = "leftWallHalfWidthZ"
-valuesDict[leftWallHalfWidthZ_str] = (leftBottomFlange_widthZ / 2.0, mm_str)
+valuesDict[leftWallHalfWidthZ_str] = ((rearBottomFlange_widthZ / 2.0) + leftBottomFlange_widthZ, mm_str)
+leftWallBendRadius_str = "leftWallBendRadius"
+valuesDict[leftWallBendRadius_str] = (millRadius, inch_str)
+
 leftWallHeightY_str = "leftWallHeightY"
-valuesDict[leftWallHeightY_str] = (shellHeight - (2.0 * sheildThickness), mm_str)
+valuesDict[leftWallHeightY_str] = (shield_40K_workingHeight - (2.0 * sheildThickness), mm_str)
 
 leftWallThickness_str = "leftWallThickness"
 valuesDict[leftWallThickness_str] = (sheildThickness, inch_str)
+bottomShellStringList = [leftWallLengthX_str, leftWallHalfWidthZ_str,
+                         leftWallBendRadius_str,
+                         leftWallHeightY_str, leftWallThickness_str]
 
-
-bottomShellStringList = []
-
-leftWall = equationsFile(fullFilePath=parentDir, fileName="rearBottomFlangeEquations")
+leftWall = equationsFile(fullFilePath=parentDir, fileName="leftWallsEquations")
 leftWall.listAddVarLine(bottomShellStringList, valuesDict)
-leftWall.addRefLine("D1@sketch1", rearBottomFlangeCornerReferenceScrewInsetX_str)
+leftWall.addRefLine("D1@sketch1", leftWallLengthX_str)
+leftWall.addRefLine("D2@sketch1", leftWallHalfWidthZ_str)
+leftWall.addRefLine("D3@sketch1", leftWallBendRadius_str)
+leftWall.addRefLine("D1@Extrude-Thin1", leftWallHeightY_str)
+leftWall.addRefLine("D5@Extrude-Thin1", leftWallThickness_str)
 
 if sys.platform == "win32":
     leftWall.writeFile()
+    print(leftWall.fileContent)
 else:
     print(leftWall.fileContent)
