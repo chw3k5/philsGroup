@@ -14,6 +14,7 @@ rearExtensionDistance = 40.0
 leftExtensionDistance = rearExtensionDistance
 rightExtensionDistance = rearExtensionDistance
 frontExtensionDistance = 150.0
+shellHeight = 2000.0
 
 
 """
@@ -144,3 +145,28 @@ else:
     print(rearBottomFlange.fileContent)
 
 
+"""Left Wall"""
+
+
+# Left side (viewed from above and with the cold head at the "front") wall at 40k
+leftWallLengthX_str = "leftWallLengthX"
+valuesDict[leftWallLengthX_str] = (leftBottomFlange_lengthX, mm_str)
+leftWallHalfWidthZ_str = "leftWallHalfWidthZ"
+valuesDict[leftWallHalfWidthZ_str] = (leftBottomFlange_widthZ / 2.0, mm_str)
+leftWallHeightY_str = "leftWallHeightY"
+valuesDict[leftWallHeightY_str] = (shellHeight - (2.0 * sheildThickness), mm_str)
+
+leftWallThickness_str = "leftWallThickness"
+valuesDict[leftWallThickness_str] = (sheildThickness, inch_str)
+
+
+bottomShellStringList = []
+
+leftWall = equationsFile(fullFilePath=parentDir, fileName="rearBottomFlangeEquations")
+leftWall.listAddVarLine(bottomShellStringList, valuesDict)
+leftWall.addRefLine("D1@sketch1", rearBottomFlangeCornerReferenceScrewInsetX_str)
+
+if sys.platform == "win32":
+    leftWall.writeFile()
+else:
+    print(leftWall.fileContent)
