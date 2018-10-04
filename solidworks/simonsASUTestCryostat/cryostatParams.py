@@ -79,8 +79,8 @@ class PhysicalParams:
         self.insertDist = (self.rearExtensionDistance - self.rearOfInsert300K_edgeTo40K_edge +
                            self.shieldSpace_40K_300K)
         self.workingLen = (self.insertDist + self.vacuumInsertWidth
-                           + (self.coldhead_insert_clearance / self.inch_to_mm)
-                           + (self.collar_OD / 2.0) + (self.coldhead_OD / 2.0)) / self.inch_to_mm
+                           + (self.coldhead_insert_clearance * self.inch_to_mm)
+                           + (self.collar_OD * self.inch_to_mm / 2.0) + (self.coldhead_OD / 2.0)) / self.inch_to_mm
 
         # Calculations for Left Bottom Flange
         self.leftBottomFlangeCornerReferenceScrewInsetX = self.rearExtensionDistance + self.refHole_to_edgeX
