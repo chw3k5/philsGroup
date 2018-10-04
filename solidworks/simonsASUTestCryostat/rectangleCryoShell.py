@@ -10,7 +10,7 @@ valuesDict = {}
 inch_str = "in"
 mm_str = "mm"
 inch_to_mm = 25.4
-(workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (40.0, 20.0, 9.0, 6.0)
+(workingLen, workingWidth, workingDepthBottom, workingDepthTop) = (24.0, 22.0, 6.0, 6.0)
 shellThickness = 0.375
 bottomWallShellThickness = 0.5
 lidThickness = 0.5
@@ -19,7 +19,17 @@ millRadius = 2.0
 flangeWidth = 1.5
 flangeThickness = 0.5
 flangeHoleInset = 0.4
-tolerance = 0.005
+tolerance = 0.05
+
+# Collar Extension for Coldhead
+collar_ID = 5
+collar_boltCircleDiameter = 6.693
+collar_OD = 7.5
+collar_oringID = 5.5
+collar_oringWidth = 0.181
+collar_oringDepth = 0.110
+collar_height = 4
+underHeadThruDistance = (60.0 - 6.0)  # in millimeters
 
 # bottom Walls for cryostat shell parameters
 bottomWallInnerLength_str = "bottomWallInnerLength"
@@ -240,17 +250,6 @@ if sys.platform == "win32":
 else:
     print(lid.fileContent)
 
-
-# Collar Extension for Coldhead
-collar_ID = 5
-collar_boltCircleDiameter = 6.693
-collar_OD = 7.5
-collar_oringID = 5.5
-collar_oringWidth = 0.181
-collar_oringDepth = 0.110
-collar_height = 4
-underHeadThruDistance = 60.0 - 6.0  # in millimeters
-
 collar_ID_str = "collar_ID"
 valuesDict[collar_ID_str] = (collar_ID, inch_str)
 collar_boltCircleDiameter_str = "collar_boltCircleDiameter"
@@ -266,7 +265,7 @@ valuesDict[collar_oringDepth_str] = (collar_oringDepth, inch_str)
 collar_height_str = "collar_height"
 valuesDict[collar_height_str] = (collar_height, inch_str)
 counterBoreDepth_str = "counterBoreDepth"
-valuesDict[counterBoreDepth_str] = ((collar_height * inch_to_mm) - underHeadThruDistance, mm_str)
+valuesDict[counterBoreDepth_str] = (((collar_height * inch_to_mm) - underHeadThruDistance), mm_str)
 
 
 collarStringList = [collar_OD_str, collar_boltCircleDiameter_str,
