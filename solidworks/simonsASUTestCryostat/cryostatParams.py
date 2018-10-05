@@ -8,7 +8,7 @@ class PhysicalParams:
         # in inches (unless otherwise specified)
         # for Vacuum shell components
         self.inch_to_mm = 25.4
-        (self.workingWidth, self.workingDepthBottom, self.workingDepthTop) = (22.0, 9.0, 9.0)
+        (self.workingDepthBottom, self.workingDepthTop) = (9.0, 9.0)
         self.shellThickness = 0.375
         self.bottomWallShellThickness = 0.5
         self.lidThickness = 0.5
@@ -17,7 +17,7 @@ class PhysicalParams:
         self.flangeWidth = 1.5
         self.flangeThickness = 0.5
         self.flangeHoleInset = 0.4
-        self.tolerance = 0.05
+        self.tolerance = 0.005
         self.coldhead_insert_clearance = 0.5
 
         # Collar Extension for Coldhead
@@ -39,6 +39,13 @@ class PhysicalParams:
 
         self.shieldSpace_4K_40K = 15.0
         self.shieldSpace_40K_300K = 15.0
+
+        self.shieldsTopFlangeThickness = 3.0/8.0  # inches
+        self.shieldsTopFlangeWidth = 20.0
+
+        self.shieldsLeftAndRightTopFlangeScrewInsertDist = 0.25 # inches
+
+        self.lidInsetFromInnerWalls = 3.0
 
         """
         measured values (in millimeters)
@@ -81,18 +88,29 @@ class PhysicalParams:
         self.workingLen = (self.insertDist + self.vacuumInsertWidth
                            + (self.coldhead_insert_clearance * self.inch_to_mm)
                            + (self.collar_OD * self.inch_to_mm / 2.0) + (self.coldhead_OD / 2.0)) / self.inch_to_mm
+        self.workingWidth = (self.rightExtensionDistance + self.insert40K_Z + self.leftExtensionDistance
+                             + (2.0 * self.shieldSpace_40K_300K)) / self.inch_to_mm
 
         # Calculations for Left Bottom Flange
         self.leftBottomFlangeCornerReferenceScrewInsetX = self.rearExtensionDistance + self.refHole_to_edgeX
         self.leftBottomFlangeCornerReferenceScrewInsetZ = self.expected_edgeOverLap - self.refHole_to_edgeZ
-        self.leftBottomFlange_lengthX = self.rearExtensionDistance + self.insert40K_X + self.frontExtensionDistance
+        self.leftBottomFlange_lengthX = (self.workingLen * self.inch_to_mm) \
+                                        - (2.0 * self.shieldSpace_40K_300K)
         self.leftBottomFlange_widthZ = self.expected_edgeOverLap + self.leftExtensionDistance
+
+        # Calculations for Rear Bottom Flange
+        self.rearBottomFlangeCornerReferenceScrewInsetX = self.rearExtensionDistance + self.refHole_to_edgeX
+        self.rearBottomFlangeCornerReferenceScrewInsetZ = abs(self.expected_edgeOverLap - self.refHole_to_edgeZ)
+        self.rearBottomFlange_lengthX = self.rearExtensionDistance + self.expected_edgeOverLap
+        self.rearBottomFlange_widthZ = self.insert40K_Z - (2.0 * self.expected_edgeOverLap)
 
         # Flange Thicknesses
         self.bottomFlangeThickness = self.shieldThickness  # inches
-        self.topFlangeThickness = self.shieldThickness  # inches
         self.lid_shieldThickness = self.shieldThickness  # inches
         self.totalShieldThickness = (self.bottomFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
+
+        # Calculations for 40K wall
+        self.Wall40K_halfWidthZ = (self.rearBottomFlange_widthZ / 2.0) + self.leftBottomFlange_widthZ
 
         # Calculations for 40K shield Wall height
         self.shield_40K_workingHeight = ((self.workingDepthBottom + self.workingDepthTop) * self.inch_to_mm) \
@@ -105,3 +123,19 @@ class PhysicalParams:
                                    - self.workingDist_40K_4K - self.insert_4KThickness \
                                    - (2.0 * self.totalShieldThickness) - self.shieldSpace_40K_300K \
                                    - self.shieldSpace_4K_40K
+
+        # Calculations for 40K shield Top flanges
+        self.RearAndFrontTopFlangeBendRadius = self.millRadius - self.shieldThickness
+        self.RearAndFrontTopFlangeLenX = self.rearBottomFlange_widthZ + (2.0 *self.leftBottomFlange_widthZ) \
+                                         - (2.0 * self.shieldThickness * self.inch_to_mm)
+        self.LeftAndRightTopFlangeLen = self.leftBottomFlange_lengthX \
+                                        - (2.0 * (self.millRadius + self.tolerance) * self.inch_to_mm)
+
+        # Calculations for 40K shield Lid
+        self.LidMillRadius = (self.RearAndFrontTopFlangeBendRadius * self.inch_to_mm) - self.lidInsetFromInnerWalls
+        self.LidRearFrontLen = self.RearAndFrontTopFlangeLenX - (2.0 * self.lidInsetFromInnerWalls)
+        self.LidLeftRightLen = self.LeftAndRightTopFlangeLen \
+                               + (2.0 * self.RearAndFrontTopFlangeBendRadius * self.inch_to_mm) \
+                               - (2.0 * self.lidInsetFromInnerWalls)
+        self.LidHoles_InsetDist = (self.shieldsTopFlangeWidth / 2.0) - self.lidInsetFromInnerWalls
+
