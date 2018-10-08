@@ -238,3 +238,74 @@ if sys.platform == "win32":
     print(Lid.fileContent)
 else:
     print(Lid.fileContent)
+
+"""40k vertical half moon (fortyK_verticalHalfMoon)"""
+# The heat strapping as it attached to the topp of the 40K cold head.
+coldhead40K_ID_str = "coldhead40K_ID"
+valuesDict[coldhead40K_ID_str] = (params.coldhead40K_ID, params.mm_str)
+coldhead40K_boltCircle_str = "coldhead40K_boltCircle"
+valuesDict[coldhead40K_boltCircle_str] = (params.coldhead40K_boltCircle, params.mm_str)
+halfMoon_OD_str = "halfMoon_OD"
+valuesDict[halfMoon_OD_str] = (params.halfMoon_OD, params.mm_str)
+coldhead40K_clearanceForID_str = "coldhead40K_clearanceForID"
+valuesDict[coldhead40K_clearanceForID_str] = (params.coldhead40K_clearanceForID, params.mm_str)
+halfMoonHeight_str = "halfMoonHeight"
+valuesDict[halfMoonHeight_str] = (params.halfMoonHeight, params.mm_str)
+
+fortyK_verticalHalfMoonStringList = [coldhead40K_ID_str, coldhead40K_boltCircle_str,
+                                     halfMoon_OD_str, coldhead40K_clearanceForID_str,
+                                     halfMoonHeight_str]
+
+fortyK_verticalHalfMoon = equationsFile(fullFilePath=parentDir, fileName="40K_verticalHalfMoonEquations")
+fortyK_verticalHalfMoon.listAddVarLine(fortyK_verticalHalfMoonStringList, valuesDict)
+fortyK_verticalHalfMoon.addRefLine("D1@sketch1", coldhead40K_ID_str)
+fortyK_verticalHalfMoon.addRefLine("D2@sketch1", coldhead40K_boltCircle_str)
+fortyK_verticalHalfMoon.addRefLine("D3@sketch1", halfMoon_OD_str)
+fortyK_verticalHalfMoon.addRefLine("D5@sketch1", coldhead40K_clearanceForID_str)
+fortyK_verticalHalfMoon.addRefLine("D6@sketch1", coldhead40K_clearanceForID_str)
+fortyK_verticalHalfMoon.addRefLine("D1@Boss-Extrude1", halfMoonHeight_str)
+
+if sys.platform == "win32":
+    fortyK_verticalHalfMoon.writeFile()
+    print(fortyK_verticalHalfMoon.fileContent)
+else:
+    print(fortyK_verticalHalfMoon.fileContent)
+
+
+"""40K heat plate (fortyK_heatPlate)"""
+# The heat strapping as it attached to the topp of the 40K cold head.
+fortyK_heatPlate_ID_str = "fortyK_heatPlate_ID"
+valuesDict[fortyK_heatPlate_ID_str] = (params.fortyK_heatPlate_ID, params.mm_str)
+coldhead40K_boltCircle_str = "coldhead40K_boltCircle"
+valuesDict[coldhead40K_boltCircle_str] = (params.coldhead40K_boltCircle, params.mm_str)
+halfMoon_OD_str = "halfMoon_OD"
+valuesDict[halfMoon_OD_str] = (params.halfMoon_OD, params.mm_str)
+coldhead40K_clearanceForID_str = "coldhead40K_clearanceForID"
+valuesDict[coldhead40K_clearanceForID_str] = (params.coldhead40K_clearanceForID, params.mm_str)
+fortyK_heatPlate_height_str = "fortyK_heatPlate_height"
+valuesDict[fortyK_heatPlate_height_str] = (params.fortyK_heatPlate_height, params.mm_str)
+
+fortyK_heatPlate_extensionDistance_str = "fortyK_heatPlate_extensionDistance"
+valuesDict[fortyK_heatPlate_extensionDistance_str] = (params.fortyK_heatPlate_extensionDistance, params.mm_str)
+
+
+
+fortyK_heatPlateStringList = [fortyK_heatPlate_ID_str, coldhead40K_boltCircle_str,
+                              halfMoon_OD_str, coldhead40K_clearanceForID_str,
+                              fortyK_heatPlate_height_str, fortyK_heatPlate_extensionDistance_str]
+
+fortyK_heatPlate = equationsFile(fullFilePath=parentDir, fileName="Heat Strapping\\40K_heatPlateEquations")
+fortyK_heatPlate.listAddVarLine(fortyK_heatPlateStringList, valuesDict)
+fortyK_heatPlate.addRefLine("D1@sketch1", fortyK_heatPlate_ID_str)
+fortyK_heatPlate.addRefLine("D2@sketch1", coldhead40K_boltCircle_str)
+fortyK_heatPlate.addRefLine("D3@sketch1", halfMoon_OD_str)
+fortyK_heatPlate.addRefLine("D5@sketch1", coldhead40K_clearanceForID_str)
+fortyK_heatPlate.addRefLine("D1@Boss-Extrude1", fortyK_heatPlate_height_str)
+
+fortyK_heatPlate.addRefLine("D1@Boss-Extrude2", fortyK_heatPlate_extensionDistance_str)
+
+if sys.platform == "win32":
+    fortyK_heatPlate.writeFile()
+    print(fortyK_heatPlate.fileContent)
+else:
+    print(fortyK_heatPlate.fileContent)
