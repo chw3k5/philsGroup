@@ -2,6 +2,8 @@ import sys
 from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 
+from solidworks.simonsASUTestCryostat.stainlessSupport import SolidWorksPart
+
 
 # variables for script
 parentDir = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\" + \
