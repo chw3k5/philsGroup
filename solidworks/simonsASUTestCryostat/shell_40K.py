@@ -265,6 +265,7 @@ fortyK_verticalHalfMoon.addRefLine("D5@sketch1", coldhead40K_clearanceForID_str)
 fortyK_verticalHalfMoon.addRefLine("D6@sketch1", coldhead40K_clearanceForID_str)
 fortyK_verticalHalfMoon.addRefLine("D1@Boss-Extrude1", halfMoonHeight_str)
 
+
 if sys.platform == "win32":
     fortyK_verticalHalfMoon.writeFile()
     print(fortyK_verticalHalfMoon.fileContent)
@@ -287,12 +288,13 @@ valuesDict[fortyK_heatPlate_height_str] = (params.fortyK_heatPlate_height, param
 
 fortyK_heatPlate_extensionDistance_str = "fortyK_heatPlate_extensionDistance"
 valuesDict[fortyK_heatPlate_extensionDistance_str] = (params.fortyK_heatPlate_extensionDistance, params.mm_str)
-
-
+forty_heatPlate_widening_str = "forty_heatPlate_widening"
+valuesDict[forty_heatPlate_widening_str] = (params.forty_heatPlate_widening, params.mm_str)
 
 fortyK_heatPlateStringList = [fortyK_heatPlate_ID_str, coldhead40K_boltCircle_str,
                               halfMoon_OD_str, coldhead40K_clearanceForID_str,
-                              fortyK_heatPlate_height_str, fortyK_heatPlate_extensionDistance_str]
+                              fortyK_heatPlate_height_str, fortyK_heatPlate_extensionDistance_str,
+                              forty_heatPlate_widening_str]
 
 fortyK_heatPlate = equationsFile(fullFilePath=parentDir, fileName="Heat Strapping\\40K_heatPlateEquations")
 fortyK_heatPlate.listAddVarLine(fortyK_heatPlateStringList, valuesDict)
@@ -301,9 +303,8 @@ fortyK_heatPlate.addRefLine("D2@sketch1", coldhead40K_boltCircle_str)
 fortyK_heatPlate.addRefLine("D3@sketch1", halfMoon_OD_str)
 fortyK_heatPlate.addRefLine("D5@sketch1", coldhead40K_clearanceForID_str)
 fortyK_heatPlate.addRefLine("D1@Boss-Extrude1", fortyK_heatPlate_height_str)
-
-fortyK_heatPlate.addRefLine("D1@Boss-Extrude2", fortyK_heatPlate_extensionDistance_str)
-
+fortyK_heatPlate.addRefLine("D1@Boss-Extrude3", fortyK_heatPlate_extensionDistance_str)
+fortyK_heatPlate.addRefLine("D1@Boss-Extrude4", forty_heatPlate_widening_str)
 if sys.platform == "win32":
     fortyK_heatPlate.writeFile()
     print(fortyK_heatPlate.fileContent)

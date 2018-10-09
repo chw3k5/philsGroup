@@ -221,3 +221,93 @@ if sys.platform == "win32":
     print(Lid.fileContent)
 else:
     print(Lid.fileContent)
+
+"""4K heat strap (fourK_heatStrap)"""
+# The heat strapping as it attached to the topp of the 40K cold head.
+coldhead4K_boltCircle_str = "coldhead4K_boltCircle"
+valuesDict[coldhead4K_boltCircle_str] = (params.coldhead4K_boltCircle, params.mm_str)
+coldhead4K_OD_str = "fortyK_heatPlate_OD"
+valuesDict[coldhead4K_OD_str] = (params.coldhead4K_OD, params.mm_str)
+coldhead4K_clearanceForID_str = "coldhead4K_clearanceForID"
+valuesDict[coldhead4K_clearanceForID_str] = (params.coldhead4K_clearanceForID, params.mm_str)
+heatStrap4K_OD_str = "heatStrap4K_OD"
+valuesDict[heatStrap4K_OD_str] = (params.heatStrap4K_OD, params.mm_str)
+heatStrappingHeight4K_str = "heatStrappingHeight4K"
+valuesDict[heatStrappingHeight4K_str] = (params.heatStrappingHeight4K, params.mm_str)
+heatStrappingLowerExtensionDistance_str = "heatStrappingLowerExtensionDistance"
+valuesDict[heatStrappingLowerExtensionDistance_str] = (params.heatStrappingLowerExtensionDistance, params.mm_str)
+
+fourK_heatStrapStringList = [coldhead4K_boltCircle_str, coldhead4K_OD_str,
+                             coldhead4K_clearanceForID_str, heatStrap4K_OD_str,
+                             heatStrappingHeight4K_str,
+                             heatStrappingLowerExtensionDistance_str]
+
+fourK_heatStrap = equationsFile(fullFilePath=parentDir, fileName="Heat Strapping\\4K_heatPStrapEquations")
+fourK_heatStrap.listAddVarLine(fourK_heatStrapStringList, valuesDict)
+fourK_heatStrap.addRefLine("D1@sketch1", coldhead4K_boltCircle_str)
+fourK_heatStrap.addRefLine("D2@sketch1", coldhead4K_OD_str)
+fourK_heatStrap.addRefLine("D4@sketch1", coldhead4K_clearanceForID_str)
+fourK_heatStrap.addRefLine("D5@sketch1", heatStrappingHeight4K_str)
+fourK_heatStrap.addRefLine("D8@sketch1", heatStrap4K_OD_str)
+fourK_heatStrap.addRefLine("D1@Boss-Extrude1", heatStrappingHeight4K_str)
+fourK_heatStrap.addRefLine("D1@Boss-Extrude2", heatStrappingLowerExtensionDistance_str)
+
+if sys.platform == "win32":
+    fourK_heatStrap.writeFile()
+    print(fourK_heatStrap.fileContent)
+else:
+    print(fourK_heatStrap.fileContent)
+
+
+"""4K heat plate (fourK_heatPlate)"""
+fourK_heatPlate_refScrewX_str = "fourK_heatPlate_refScrewX"
+valuesDict[fourK_heatPlate_refScrewX_str] = (params.fourK_heatPlate_refScrewX, params.mm_str)
+rearBottomFlangeCornerReferenceScrewInsetZ_str = "rearBottomFlangeCornerReferenceScrewInsetZ"
+valuesDict[rearBottomFlangeCornerReferenceScrewInsetZ_str] = (params.rearBottomFlangeCornerReferenceScrewInsetZ_4K, params.mm_str)
+
+fourK_heatPlate_lengthX_str = "fourK_heatPlate_lengthX"
+valuesDict[fourK_heatPlate_lengthX_str] = (params.fourK_heatPlate_lengthX, params.mm_str)
+rearBottomFlange_widthZ_str = "rearBottomFlange_widthZ"
+valuesDict[rearBottomFlange_widthZ_str] = (params.rearBottomFlange_widthZ_4K, params.mm_str)
+
+rearBottomFlange_thickness_str = "rearBottomFlange_thickness"
+valuesDict[rearBottomFlange_thickness_str] = (params.bottomFlangeThickness_4K, params.inch_str)
+
+largeSideHole_CenterToCenter_str = "largeSideHole_CenterToCenter"
+valuesDict[largeSideHole_CenterToCenter_str] = (params.largeSideHole_CenterToCenter_4K, params.mm_str)
+
+heatPlate_leftOffsetFromRefScrew_str = "heatPlate_leftOffsetFromRefScrew"
+valuesDict[heatPlate_leftOffsetFromRefScrew_str] = (params.heatPlate_leftOffsetFromRefScrew, params.mm_str)
+heatPlate_rightOffsetFromRefScrew_str = "heatPlate_rightOffsetFromRefScrew"
+valuesDict[heatPlate_rightOffsetFromRefScrew_str] = (params.heatPlate_rightOffsetFromRefScrew, params.mm_str)
+fourK_heatConductionExtensionDistance_str = "fourK_heatConductionExtensionDistance"
+valuesDict[fourK_heatConductionExtensionDistance_str] = (params.fourK_heatConductionExtensionDistance, params.mm_str)
+fourK_plateHeight_str = "fourK_plateHeight"
+valuesDict[fourK_plateHeight_str] = (params.fourK_plateHeight, params.mm_str)
+
+
+fourK_heatPlateStringList = [fourK_heatPlate_refScrewX_str, rearBottomFlangeCornerReferenceScrewInsetZ_str,
+                             fourK_heatPlate_lengthX_str, rearBottomFlange_widthZ_str,
+                             rearBottomFlange_thickness_str, largeSideHole_CenterToCenter_str,
+                             heatPlate_leftOffsetFromRefScrew_str, heatPlate_rightOffsetFromRefScrew_str,
+                             fourK_heatConductionExtensionDistance_str, fourK_plateHeight_str]
+
+fourK_heatPlate = equationsFile(fullFilePath=parentDir, fileName="Heat Strapping\\4K_HeatPlateEquations")
+fourK_heatPlate.listAddVarLine(fourK_heatPlateStringList, valuesDict)
+fourK_heatPlate.addRefLine("D1@sketch1", fourK_heatPlate_refScrewX_str)
+fourK_heatPlate.addRefLine("D2@sketch1", rearBottomFlangeCornerReferenceScrewInsetZ_str)
+fourK_heatPlate.addRefLine("D3@sketch1", fourK_heatPlate_lengthX_str)
+fourK_heatPlate.addRefLine("D4@sketch1", rearBottomFlange_widthZ_str)
+fourK_heatPlate.addRefLine("D1@Boss-Extrude1", fourK_plateHeight_str)
+fourK_heatPlate.addRefLine("D3@sketch2", largeSideHole_CenterToCenter_str)
+
+fourK_heatPlate.addRefLine("D1@sketch6", heatPlate_leftOffsetFromRefScrew_str)
+fourK_heatPlate.addRefLine("D2@sketch6", heatPlate_rightOffsetFromRefScrew_str)
+fourK_heatPlate.addRefLine("D3@sketch6", fourK_heatConductionExtensionDistance_str)
+
+
+if sys.platform == "win32":
+    fourK_heatPlate.writeFile()
+    print(fourK_heatPlate.fileContent)
+else:
+    print(fourK_heatPlate.fileContent)
