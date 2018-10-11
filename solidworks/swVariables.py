@@ -1,8 +1,38 @@
 """
-This script generates the txt files that SolidWorks can reference for global variables and equations within parts.
+These are classes used to generate text files that can be imported into SolidWorks to set values.
 """
-import os, sys
+import os
+import sys
 
+
+class SolidWorksPart:
+    def __init__(self, file_name, units="in", parent_directory=None):
+        if parent_directory is None:
+            if sys.platform == "win32":
+                parent_directory = "G:\\chwheele\\SolidWorks\\SimonsObs\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Cryostat\\supports"
+            else:
+                parent_directory = ""
+
+        self.fullFileName = os.path.join(parent_directory, file_name)
+        self.units = units
+        self.fileContent = ""
+
+    def addVariableLine(self, solidworks_variable, a_number, units=None):
+
+        temporary_string = "\"" + solidworks_variable + "\"=" + str(a_number)
+        if units is None:
+            temporary_string += self.units + "\n"
+        else:
+            temporary_string += units + "\n"
+        self.fileContent += temporary_string
+
+    def writeFile(self):
+        file_handle = open(self.fullFileName, "w")
+        file_handle.write(self.fileContent)
+        file_handle.close()
+
+
+"""Legacy classed and definitions that are being phased out."""
 
 def putInQuotes(var):
     return "\"" + var + "\""

@@ -1,35 +1,9 @@
 import os, sys
 
-class SolidWorksPart:
-    def __init__(self, fileName, units="in"):
-        if sys.platform == "win32":
-            parentDirectory = "G:\\chwheele\\SolidWorks\\SimonsObs\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Cryostat\\supports"
-        else:
-            parentDirectory = ""
-
-        self.fullFileName = os.path.join(parentDirectory, fileName)
-        self.units = units
-        self.fileContent = ""
-
-    def addVariableLine(self, solidworks_variable, a_number, units=None):
-
-        temporary_string = "\"" + solidworks_variable + "\"=" + str(a_number)
-        if units is None:
-            temporary_string += self.units + "\n"
-        else:
-            temporary_string += units + "\n"
-        self.fileContent += temporary_string
-
-    def writeFile(self):
-        file_handle = open(self.fullFileName, "w")
-        file_handle.write(self.fileContent)
-        file_handle.close()
-
+from solidworks.swVariables import SolidWorksPart
 """
 These are the variable that you can change
 """
-
-
 tolerance = 0.005
 outer_width = 3.2
 bottom_height = 0.5
