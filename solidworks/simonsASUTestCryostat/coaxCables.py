@@ -26,10 +26,12 @@ port2_copper_cable_amplifier_center_to_forty_kelvin = abs(amplifier_center_pin_t
 These are the variable that you can change (in millimeters)
 """
 parent_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\Coax Cables"
+port_parent_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\Ports"
 standard_helix_radius = 20.0
 standard_helix_pitch = 10.0
 strait_distance_to_amplifier = 5.0
 port2_4to40_helix_start_offset = 10
+
 
 port1_forty_to_four_right = {}
 port1_three_hundred_to_forty_right = {}
@@ -63,6 +65,7 @@ list_of_Amplifier_to40K_cable_dictionaries = [port2_copper_right]
 """Standard dictionary assignments"""
 for dict in list_of_cable_dictionaries:
     dict["arcRadius"] = None
+    dict["setPerpendicularOffset"] = None
     dict["pitch"] = standard_helix_pitch
     dict["helixRadius"] = standard_helix_radius
 
@@ -96,16 +99,41 @@ port1_three_hundred_to_forty_left["pitch"] = port1_three_hundred_to_forty_right[
 port2_four_to_forty_right["pitch"] = 8.0
 
 port2_four_to_forty_left["pitch"] = 12.0
+port2_four_to_forty_left["helixRadius"] = 18.0
 # port2_four_to_forty_left["strait_distance_to_amplifier"] = 2.0
 
-port2_forty_to_three_hundred_right["pitch"] = 27.952
-port2_forty_to_three_hundred_left["pitch"] = 9.838
+dx_offset = 0.0
+port2_forty_to_three_hundred_left_dx = 21.971617 + dx_offset
+port2_forty_to_three_hundred_left_dz = 12.889
+port2_forty_to_three_hundred_left_angle = \
+    np.arctan(port2_forty_to_three_hundred_left_dx / port2_forty_to_three_hundred_left_dz) * 180.0 / np.pi
+port2_forty_to_three_hundred_left["setPerpendicularOffset"] = \
+    ((port2_forty_to_three_hundred_left_dx**2.0) + (port2_forty_to_three_hundred_left_dz**2.0))**(0.5)
 
+port2_forty_to_three_hundred_right_dx = 19.460732 + dx_offset
+port2_forty_to_three_hundred_right_dz = 24.856722
+port2_forty_to_three_hundred_right_angle = \
+    np.arctan(port2_forty_to_three_hundred_right_dx / port2_forty_to_three_hundred_right_dz) * 180.0 / np.pi
+port2_forty_to_three_hundred_right["setPerpendicularOffset"] = \
+    ((port2_forty_to_three_hundred_right_dx**2.0) + (port2_forty_to_three_hundred_right_dz**2.0))**(0.5)
 
 """
 A second round of calculations 
 """
 for dict in list_of_cable_dictionaries:
+    if dict["setPerpendicularOffset"] is not None:
+        newPitch = dict["setPerpendicularOffset"]
+        accuracy = float("inf")
+        requiredAccuracy = 0.001
+        while requiredAccuracy < accuracy:
+            pitch = newPitch
+            slopeAngle_rad = np.arctan(pitch / (2.0 * np.pi * dict["helixRadius"]))
+            height_of_slope_offset = pitch * (1.0 - np.cos(slopeAngle_rad))
+            perpendicular_Offset = pitch + (2.0 * height_of_slope_offset)
+            difference = dict["setPerpendicularOffset"] - perpendicular_Offset
+            accuracy = np.abs(difference)
+            newPitch += difference
+        dict["pitch"] = pitch
     dict["slopeAngle_rad"] = np.arctan(dict["pitch"] / (2.0 * np.pi * dict["helixRadius"]))
     dict["slopeAngle_deg"] = dict["slopeAngle_rad"] * rad_to_deg
     length_of_slope_offset = dict["pitch"] * np.sin(dict["slopeAngle_rad"])
@@ -118,7 +146,6 @@ for dict in list_of_cable_dictionaries:
     dict["totalLength"] = dict["firstRegionLength"] + (2.0 * length_of_slope_offset) + dict["secondRegionLength"]
     if dict["arcRadius"] is not None:
         dict["totalLength"] = dict["totalLength"] + dict["arcRadius"]
-
 
 
 """
@@ -196,6 +223,8 @@ port1_40Kto4K_left.addVariableLine("D4@Helix/Spiral1",
 
 port1_40Kto4K_left.addVariableLine("D1@Slope out of Helix and 2nd Strait Region",
                                    port1_forty_to_four_left["secondRegionLength"])
+port1_40Kto4K_left.addVariableLine("D3@Slope out of Helix and 2nd Strait Region",
+                                   port1_forty_to_four_left["pitch"])
 port1_40Kto4K_left.writeFile()
 
 
@@ -238,7 +267,7 @@ port2_4Kto40K_right.addVariableLine("D1@1st Strait Region",
 port2_4Kto40K_right.addVariableLine("D1@Slope out of Helix and 2nd Strait Region",
                                     port2_four_to_forty_right["secondRegionLength"])
 port2_4Kto40K_right.addVariableLine("D3@Slope-In going from 1st Strait Region to Helix",
-                                    port2_four_to_forty_right["helixRadius"])
+                                    port2_four_to_forty_right["pitch"])
 port2_4Kto40K_right.addVariableLine("D4@Slope-In going from 1st Strait Region to Helix",
                                     port2_four_to_forty_right["slopeAngle_deg"], units="deg")
 port2_4Kto40K_right.addVariableLine("D1@Reference Circle for Helix",
@@ -255,15 +284,15 @@ port2_40Kto300K_right.addVariableLine("D1@1st strait region",
 port2_40Kto300K_right.addVariableLine("D1@Slope out of Helix and 2nd Strait Region",
                                       port2_forty_to_three_hundred_right["secondRegionLength"])
 port2_40Kto300K_right.addVariableLine("D1@Slope-In going from 1st Strait Region to Helix",
-                                      port2_forty_to_three_hundred_right["helixRadius"])
+                                      port2_forty_to_three_hundred_right["pitch"])
 port2_40Kto300K_right.addVariableLine("D2@Slope-In going from 1st Strait Region to Helix",
                                       port2_forty_to_three_hundred_right["slopeAngle_deg"], units="deg")
 port2_40Kto300K_right.addVariableLine("D3@Slope-In going from 1st Strait Region to Helix",
-                                      port2_forty_to_three_hundred_right["helixRadius"])
+                                      port2_forty_to_three_hundred_right["pitch"])
 port2_40Kto300K_right.addVariableLine("D1@Reference Circle for Helix",
                                       port2_forty_to_three_hundred_right["helixRadius"])
-# port2_40Kto300K_right.addVariableLine("D3@Reference Circle for Helix",
-#                                       port2_forty_to_three_hundred_right["pitch"])
+port2_40Kto300K_right.addVariableLine("D3@Helix/Spiral1",
+                                      port2_forty_to_three_hundred_right["pitch"])
 port2_40Kto300K_right.addVariableLine("D4@Helix/Spiral1",
                                       port2_forty_to_three_hundred_right["pitch"])
 
@@ -303,15 +332,38 @@ port2_40Kto300K_left.addVariableLine("D1@1st strait region",
 port2_40Kto300K_left.addVariableLine("D1@Slope out of Helix and 2nd Strait Region",
                                      port2_forty_to_three_hundred_left["secondRegionLength"])
 port2_40Kto300K_left.addVariableLine("D1@Slope-In going from 1st Strait Region to Helix",
-                                     port2_forty_to_three_hundred_left["helixRadius"])
+                                     port2_forty_to_three_hundred_left["pitch"])
 port2_40Kto300K_left.addVariableLine("D2@Slope-In going from 1st Strait Region to Helix",
                                      port2_forty_to_three_hundred_left["slopeAngle_deg"], units="deg")
 port2_40Kto300K_left.addVariableLine("D1@Reference Circle for Helix",
                                      port2_forty_to_three_hundred_left["helixRadius"])
-# port2_40Kto300K_left.addVariableLine("D3@Reference Circle for Helix",
-#                                      port2_forty_to_three_hundred_left["pitch"])
+port2_40Kto300K_left.addVariableLine("D3@Helix/Spiral1",
+                                     port2_forty_to_three_hundred_left["pitch"])
 port2_40Kto300K_left.addVariableLine("D4@Helix/Spiral1",
                                      port2_forty_to_three_hundred_left["pitch"])
 
 port2_40Kto300K_left.writeFile()
 
+""" The Assembly Files """
+port1_assembly_angle = 42.535
+
+
+port1_Assembly_left = SolidWorksPart("port1_assembly_left_Equations.txt", units="deg",
+                                     parent_directory=port_parent_directory)
+port1_Assembly_left.addVariableLine("D1@Angle1", port1_assembly_angle)
+port1_Assembly_left.writeFile()
+
+port1_Assembly_right = SolidWorksPart("port1_assembly_right_Equations.txt", units="deg",
+                                      parent_directory=port_parent_directory)
+port1_Assembly_right.addVariableLine("D1@Angle1", port1_assembly_angle)
+port1_Assembly_right.writeFile()
+
+port2_Assembly_left = SolidWorksPart("port2_assembly_left_Equations.txt", units="deg",
+                                     parent_directory=port_parent_directory)
+port2_Assembly_left.addVariableLine("D1@Angle1", port2_forty_to_three_hundred_left_angle)
+port2_Assembly_left.writeFile()
+
+port2_Assembly_right = SolidWorksPart("port2_assembly_right_Equations.txt", units="deg",
+                                     parent_directory=port_parent_directory)
+port2_Assembly_right.addVariableLine("D1@Angle1", port2_forty_to_three_hundred_right_angle)
+port2_Assembly_right.writeFile()
