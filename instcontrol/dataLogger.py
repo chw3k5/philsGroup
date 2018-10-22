@@ -4,8 +4,8 @@ from instcontrol.lakeshore224 import readLS224
 from instcontrol.lakeshore336 import readLS336
 
 # this is the folder where you can keep the data
-dataLogFolder = os.path.join("cryoLog")
-dataFileName = "April_28.csv"
+dataLogFolder = os.path.join("BabyBeluga", "cryoLog")
+dataFileName = "October_19_2018.csv"
 
 # This an attempt at writing platform independent code.
 if sys.platform == "win32":
@@ -14,7 +14,6 @@ else:
     rootName = "/"
 
 # if the directory does not exist you can make it
-
 if not os.path.exists(rootName + dataLogFolder):
     os.mkdir(rootName + dataLogFolder)
 
