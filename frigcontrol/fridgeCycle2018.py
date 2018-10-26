@@ -395,12 +395,7 @@ def cycle_frig(verbose=False):
 
 
 if __name__ == "__main__":
-    # while True:
-    #     cycle_frig(True)
-    frig_keithleys = Frig_Keithleys(True)
-    # frig_keithleys.assisted_cooldown()
-    # time.sleep(2 * 60 * 60)
-    # frig_keithleys.recycle_equilibrium()
-    # time.sleep(8 * 60 * 60)
-    frig_keithleys.all_channels_off()
+    while True:
+        cycle_frig(True)
+
 
