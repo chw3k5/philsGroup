@@ -5,8 +5,10 @@ import getpass, os, sys
 import numpy as np
 from matplotlib import pyplot as plt
 
+from instcontrol.dataLogger import dataFileName, dataLogFolder
 from analysis.dataGetter import read_csv_file
 from analysis.plotting.quickPlots import quickPlotter
+
 
 
 class MonitorDataSet:
@@ -364,11 +366,12 @@ def plotAllLogData():
 
 
 def realTimePlotting(refresh_rate=5.0, time_type='hours', time_range=1.0, verbose=False):
-    logFolder, plotFolder = get_user_and_os_specific_directories(verbose=False)
     # write the final file names, windows has trouble with eps plots
-    basename = "April_12_2018"
-    logfilename = os.path.join(logFolder, basename + ".csv")
-    plotfilename = os.path.join(plotFolder, basename)
+
+    logfilename = os.path.join("C:\\", dataLogFolder, dataFileName)
+    plot_folder = os.path.join("C:\\", dataLogFolder, "plots")
+    basename = dataFileName.replace(".csv", "")
+    plotfilename = os.path.join(plot_folder, basename)
 
     # read the file using the definition in this file
     logData = read_csv_file(filename=logfilename)
@@ -380,7 +383,7 @@ def realTimePlotting(refresh_rate=5.0, time_type='hours', time_range=1.0, verbos
     Only a few options are available in the input of this definition
     """
     while True:
-        monitor = MonitorPlots(doShow=False, doSave=False, time_type=time_type, verbose=verbose)
+        monitor = MonitorPlots(doShow=True, doSave=False, time_type=time_type, verbose=verbose)
         monitor.loadData(logData=logData, time_range=time_range)
         monitor.temperaturePlotDictSpecifics(plotFileName=plotfilename + "_All_Temperatures",
                                              title="Baby Beluga Temperature Monitor",

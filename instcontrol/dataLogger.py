@@ -64,7 +64,7 @@ def logCryoData(verbose=False, logInterval=5.0, logTime=float("inf")):
         for key in temperatureDict_LS336.keys():
             writeString += str(temperatureDict_LS336[key]) + ","
         # get rid of the final ',' and at the newline character '\n'
-            writeString = writeString[:-1] + "\n"
+        writeString = writeString[:-1] + "\n"
         f.write(writeString)
         f.close()
 

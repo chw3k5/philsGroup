@@ -4,21 +4,25 @@ from datetime import datetime
 from threading import Timer
 from instcontrol.keithley2230 import Keithley2230
 
-max_current_He4Pump = 0.100 # Amps
-max_current_He3InterPump = 0.100 # Amps
-max_current_UltraPump = 0.050 # Amps
-max_current_switches = 0.003 # Amps
-switch_voltage = 5 # Volts
+max_current_He4Pump = 0.100  # Amps
+max_current_He3InterPump = 0.100  # Amps
+max_current_UltraPump = 0.050  # Amps
+max_current_switches = 0.003  # Amps
+switch_voltage = 5  # Volts
 
-default_voltage_He4Pump = 4.400 # Volts
-default_voltage_He3InterPump = 5.100 # Volts
-default_voltage_UltraPump = 7.200 # Volts
+default_voltage_He4Pump = 4.400  # Volts
+default_voltage_He3InterPump = 5.100  # Volts
+default_voltage_UltraPump = 7.200  # Volts
 
-start_cycle_at_hour = 6 # hours in local 24 hour time
-start_cycle_at_minute = 30 # minutes after the hour
-step2_to_step3 = 30 * 60 # in seconds
-step3_to_step4 = 90 * 60 # in seconds
-step4_to_recycle = 12 * 60 *60 # in seconds
+cooldown_voltage_He4Pump = 18.0  # Volts
+cooldown_voltage_He3InterPump = 14.0  # Volts
+cooldown_voltage_UltraPump = 9.0  # Volts
+
+start_cycle_at_hour = 6  # hours in local 24 hour time
+start_cycle_at_minute = 30  # minutes after the hour
+step2_to_step3 = 30 * 60  # in seconds
+step3_to_step4 = 90 * 60  # in seconds
+step4_to_recycle = 12 * 60 * 60  # in seconds
 
 class Frig_Keithleys():
     def __init__(self, verbose=False, innerVerbose=False):
@@ -205,6 +209,19 @@ class Frig_Keithleys():
         self.He3InterPump(state=False)
         self.He3UltraPump(state=False)
 
+    def assisted_cooldown(self):
+        print("   Assisted cool down: Powering as Helium4, intermediate and ultra pumps.")
+        print("all pumps are powered, all switches are not powered.")
+        print("This is meant to make a maximum heat path for the mK plate to cool from 300K to 10K " +
+              "on the initial cool down.\n")
+        print(datetime.today())
+        self.He4Switch(state=False)
+        self.He3InterSwitch(state=False)
+        self.He3UltraSwitch(state=False)
+        self.He4Pump(state=True, voltage=cooldown_voltage_He4Pump)
+        self.He3InterPump(state=True, voltage=cooldown_voltage_He3InterPump)
+        self.He3UltraPump(True, voltage=cooldown_voltage_UltraPump)
+
 
     def all_channels_off(self):
         self.yellowKeithley.turn_off_all_channels()
@@ -377,8 +394,13 @@ def cycle_frig(verbose=False):
     frig_keithleys.close()
 
 
-
 if __name__ == "__main__":
-    while True:
-        cycle_frig(True)
+    # while True:
+    #     cycle_frig(True)
+    frig_keithleys = Frig_Keithleys(True)
+    # frig_keithleys.assisted_cooldown()
+    # time.sleep(2 * 60 * 60)
+    # frig_keithleys.recycle_equilibrium()
+    # time.sleep(8 * 60 * 60)
+    frig_keithleys.all_channels_off()
 

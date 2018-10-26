@@ -108,8 +108,9 @@ class Keithley2400LV():
         self.serialDevice.write(b"SOUR:CURR:RANG MIN\n")
         self.serialDevice.write(b"SOUR:CURR:RANG UP\n")
         self.serialDevice.write(b"SOUR:CURR:RANG UP\n")
+        self.serialDevice.write(b"SOUR:CURR:RANG UP\n")
         self.serialDevice.write(b"SENS:FUNC \"VOLT\"\n")
-        self.serialDevice.write(b"SENS:VOLT:PROT " + numberFormat(2) + b"\n")
+        self.serialDevice.write(b"SENS:VOLT:PROT " + numberFormat(3) + b"\n")
         self.serialDevice.write(b"SYST:RSEN ON\n")
 
 
@@ -153,7 +154,7 @@ def ledSweep():
     keithley2400LV.turnOutput_ON()
     keithley2400LV.initLEDsweep()
 
-    for microAmps in range(60, 61, 10):
+    for microAmps in range(250, 251, 10):
         keithley2400LV.setSourceCurrent(microAmps * 1.0E-6)
         if microAmps == 0:
             f = open(fullDataPath, 'w')
@@ -161,7 +162,7 @@ def ledSweep():
             f = open(fullDataPath, 'a')
         f.write(str(keithley2400LV.getMeasermentVoltage()))
         f.close()
-        time.sleep(200)
+        time.sleep(300)
 
     keithley2400LV.turnOutput_OFF()
     keithley2400LV.closePort()
