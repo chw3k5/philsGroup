@@ -168,7 +168,7 @@ class Frig_Keithleys():
 
     def recycle_equilibrium(self):
         print("   Recycle Equilibrium state for frig keithleys")
-        print(datetime.today())
+        print(datetime.datetime.today())
         self.He4Switch(state=False)
         self.He3InterSwitch(state=False)
         self.He3UltraSwitch(state=False)
@@ -178,7 +178,7 @@ class Frig_Keithleys():
 
     def step2(self):
         print("   Step 2: Turing Off Helium 4 pump with other pumps still on, all switch not powered")
-        print(datetime.today())
+        print(datetime.datetime.today())
         self.He4Switch(state=False)
         self.He3InterSwitch(state=False)
         self.He3UltraSwitch(state=False)
@@ -189,7 +189,7 @@ class Frig_Keithleys():
     def step3(self):
         print("   Step 3: Powering Helium 4 switch, intermediate and ultra pumps still on,")
         print("intermediate and ultra switches not powered")
-        print(datetime.today())
+        print(datetime.datetime.today())
         self.He4Switch(state=True)
         self.He3InterSwitch(state=False)
         self.He3UltraSwitch(state=False)
@@ -201,7 +201,7 @@ class Frig_Keithleys():
         print("   Step 4: Powering intermediate and ultra switches, turing intermediate and ultra pumps off,")
         print("all pumps are not powered, all switches are powered.")
         print("This is where it gets cold.")
-        print(datetime.today())
+        print(datetime.datetime.today())
         self.He4Switch(state=True)
         self.He3InterSwitch(state=True)
         self.He3UltraSwitch(state=True)
@@ -214,7 +214,7 @@ class Frig_Keithleys():
         print("all pumps are powered, all switches are not powered.")
         print("This is meant to make a maximum heat path for the mK plate to cool from 300K to 10K " +
               "on the initial cool down.\n")
-        print(datetime.today())
+        print(datetime.datetime.today())
         self.He4Switch(state=False)
         self.He3InterSwitch(state=False)
         self.He3UltraSwitch(state=False)
@@ -356,7 +356,7 @@ class Frig_Keithleys():
 
 def time_until_cycle_start(verbose=False):
     # get the current date and time
-    x = datetime.datetime.today()
+    x = datetime.datetime.datetime.today()
     # if it is after 6:00 pm start the cycle the following day
     if x.hour > 6:
         x = x + datetime.timedelta(days=1)
