@@ -1,6 +1,6 @@
 import numpy as np
 import time
-from datetime import datetime
+import datetime
 from threading import Timer
 from instcontrol.keithley2230 import Keithley2230
 
@@ -355,22 +355,21 @@ class Frig_Keithleys():
 #     return
 
 def time_until_cycle_start(verbose=False):
-    # get the current data and time
-    x = datetime.today()
+    # get the current date and time
+    x = datetime.datetime.today()
     # if it is after 6:00 pm start the cycle the following day
-    if 18 <= x.hour:
-        extra_day = 1
-    else:
-        extra_day = 0
-    # make the time you want to start something
-    y = x.replace(day=x.day + extra_day, hour=start_cycle_at_hour, minute=start_cycle_at_minute, second=0, microsecond=0)
+    if x.hour > 6:
+        x = x + datetime.timedelta(days=1)
+    y = x.replace(hour=start_cycle_at_hour, minute=start_cycle_at_minute,
+                         second=0,
+                  microsecond=0)
     # get the difference between now and the time you want to start
     delta_t = y - x
     # get that deference time in seconds
     secs = delta_t.seconds + 1
     if verbose:
         print("cycle start:", y)
-        print("seconds until then:", secs, "measured from", x)
+        print("seconds until then:", secs, "measured from", datetime.datetime.today())
     return secs
 
 
