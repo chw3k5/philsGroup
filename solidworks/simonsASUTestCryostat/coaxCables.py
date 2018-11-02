@@ -1,5 +1,6 @@
 import numpy as np
 from solidworks.swVariables import SolidWorksPart
+from sys import platform
 """
 Measured Variables (in millimeters)
 """
@@ -8,7 +9,7 @@ coax_length_four_to_forty = 34.278
 coax_length_four_to_forty_attenuator = 34.276
 coax_length_four_to_amp = 63.353
 amplifier_center_pin_to_forty_coax_end = -5.969
-port1_cable_diameter = 0.89
+port1_cable_diameter = 0.86
 port2_cable_diameter = 2.19
 port2_copper_diameter = 2.09
 
@@ -33,18 +34,18 @@ strait_distance_to_amplifier = 5.0
 port2_4to40_helix_start_offset = 10
 
 
-port1_forty_to_four_right = {}
-port1_three_hundred_to_forty_right = {}
+port1_forty_to_four_right = {"name":"port1_forty_to_four_right", "helix_chirality":"left"}
+port1_three_hundred_to_forty_right = {"name":"port1_three_hundred_to_forty_right", "helix_chirality":"right"}
 
-port1_forty_to_four_left = {}
-port1_three_hundred_to_forty_left = {}
+port1_forty_to_four_left = {"name":"port1_forty_to_four_left", "helix_chirality":"left"}
+port1_three_hundred_to_forty_left = {"name":"port1_three_hundred_to_forty_left", "helix_chirality":"left"}
 
-port2_four_to_forty_right = {}
-port2_copper_right = {}
-port2_forty_to_three_hundred_right = {}
+port2_four_to_forty_right = {"name":"port2_four_to_forty_right", "helix_chirality":"right"}
+port2_copper_right = {"name":"port2_copper_right"}
+port2_forty_to_three_hundred_right = {"name":"port2_forty_to_three_hundred_right", "helix_chirality":"right"}
 
-port2_four_to_forty_left = {}
-port2_forty_to_three_hundred_left = {}
+port2_four_to_forty_left = {"name":"port2_four_to_forty_left", "helix_chirality":"left"}
+port2_forty_to_three_hundred_left = {"name":"port2_forty_to_three_hundred_left", "helix_chirality":"left"}
 
 list_of_cable_dictionaries = [port1_forty_to_four_right, port1_three_hundred_to_forty_right,
                               port1_forty_to_four_left, port1_three_hundred_to_forty_left,
@@ -68,12 +69,21 @@ for dict in list_of_cable_dictionaries:
     dict["setPerpendicularOffset"] = None
     dict["pitch"] = standard_helix_pitch
     dict["helixRadius"] = standard_helix_radius
+    dict["thermal_len"] = 0.0
+    dict["numberToOrder"] = 15.0
+    dict["cableMaterial"] = "Cupronickel/PTFE/Cupronickel"
 
 for dict in list_of_port1_cable_dictionaries:
     dict["cableDiameter"] = port1_cable_diameter
+    dict["loss_dB_per_mm_1Ghz"] = 0.0077
+    dict["loss_dB_per_mm_5Ghz"] = 0.0171
+    dict["loss_dB_per_mm_10Ghz"] = 0.0243
 
 for dict in list_of_port2_cable_dictionaries:
     dict["cableDiameter"] = port2_cable_diameter
+    dict["loss_dB_per_mm_1Ghz"] = 0.0034
+    dict["loss_dB_per_mm_5Ghz"] = 0.0076
+    dict["loss_dB_per_mm_10Ghz"] = 0.0108
 
 for dict in list_of_300K_to40K_cable_dictionaries:
     dict["helixRadius"] = 25.0
@@ -144,8 +154,19 @@ for dict in list_of_cable_dictionaries:
     dict["secondRegionLength"] = dict["secondRegionLength"] - length_of_slope_offset
     dict["perpendicularOffset"] = dict["pitch"] + (2.0 * height_of_slope_offset)
     dict["totalLength"] = dict["firstRegionLength"] + (2.0 * length_of_slope_offset) + dict["secondRegionLength"]
+    # thermal length calculations
+    dict["helix_len"] = ((2.0 * np.pi * dict["helixRadius"])**2.0 + (dict["pitch"])**2.0)**0.5
+    dict["slopeArc_len"] = dict["slopeAngle_rad"] * dict["pitch"]
+    dict["thermal_len"] += dict["firstRegionLength"] \
+                           + (2.0 * dict["slopeArc_len"]) \
+                           + dict["helix_len"] \
+                           + dict["secondRegionLength"]
+
     if dict["arcRadius"] is not None:
         dict["totalLength"] = dict["totalLength"] + dict["arcRadius"]
+        dict["thermal_len"] += ((dict["arcRadius"] * np.pi * 2.0) / 4.0) + dict["strait_distance_to_amplifier"]
+
+    dict["surface_area"] = dict["thermal_len"] * dict["cableDiameter"] * np.pi
 
 
 """
@@ -171,7 +192,8 @@ port1_40Kto4K_right.addVariableLine("D4@Helix/Spiral1",
 
 port1_40Kto4K_right.addVariableLine("D1@Slope out of Helix and 2nd Strait Region",
                                     port1_forty_to_four_right["secondRegionLength"])
-port1_40Kto4K_right.writeFile()
+if platform == "win32":
+    port1_40Kto4K_right.writeFile()
 
 
 port1_300Kto40K_right = SolidWorksPart("port1_300Kto40K_right_Equations.txt", units="mm", parent_directory=parent_directory)
@@ -198,9 +220,8 @@ port1_300Kto40K_right.addVariableLine("D2@Slope out of Helix and 2nd Strait Regi
 
 port1_300Kto40K_right.addVariableLine("D1@Coax profile diameter for sweep",
                                       port1_three_hundred_to_forty_right["cableDiameter"])
-
-port1_300Kto40K_right.writeFile()
-
+if platform == "win32":
+    port1_300Kto40K_right.writeFile()
 
 
 # port1 Left
@@ -225,7 +246,8 @@ port1_40Kto4K_left.addVariableLine("D1@Slope out of Helix and 2nd Strait Region"
                                    port1_forty_to_four_left["secondRegionLength"])
 port1_40Kto4K_left.addVariableLine("D3@Slope out of Helix and 2nd Strait Region",
                                    port1_forty_to_four_left["pitch"])
-port1_40Kto4K_left.writeFile()
+if platform == "win32":
+    port1_40Kto4K_left.writeFile()
 
 
 port1_300Kto40K_left = SolidWorksPart("port1_300Kto40K_left_Equations.txt", units="mm", parent_directory=parent_directory)
@@ -250,9 +272,8 @@ port1_300Kto40K_left.addVariableLine("D1@Slope out of Helix and 2nd Strait Regio
 
 port1_300Kto40K_left.addVariableLine("D1@Coax profile diameter for sweep",
                                      port1_three_hundred_to_forty_left["cableDiameter"])
-
-port1_300Kto40K_left.writeFile()
-
+if platform == "win32":
+    port1_300Kto40K_left.writeFile()
 
 
 # port2 Right
@@ -274,8 +295,8 @@ port2_4Kto40K_right.addVariableLine("D1@Reference Circle for Helix",
                                     port2_four_to_forty_right["helixRadius"])
 port2_4Kto40K_right.addVariableLine("D4@Helix/Spiral1",
                                     port2_four_to_forty_right["pitch"])
-
-port2_4Kto40K_right.writeFile()
+if platform == "win32":
+    port2_4Kto40K_right.writeFile()
 
 
 port2_40Kto300K_right = SolidWorksPart("port2_40Kto300K_right_Equations.txt", units="mm", parent_directory=parent_directory)
@@ -295,8 +316,8 @@ port2_40Kto300K_right.addVariableLine("D3@Helix/Spiral1",
                                       port2_forty_to_three_hundred_right["pitch"])
 port2_40Kto300K_right.addVariableLine("D4@Helix/Spiral1",
                                       port2_forty_to_three_hundred_right["pitch"])
-
-port2_40Kto300K_right.writeFile()
+if platform == "win32":
+    port2_40Kto300K_right.writeFile()
 
 
 # port2 Left
@@ -322,8 +343,8 @@ port2_4Kto40K_left.addVariableLine("D3@Helix/Spiral1",
                                    port2_four_to_forty_left["pitch"])
 port2_4Kto40K_left.addVariableLine("D4@Helix/Spiral1",
                                    port2_four_to_forty_left["pitch"])
-
-port2_4Kto40K_left.writeFile()
+if platform == "win32":
+    port2_4Kto40K_left.writeFile()
 
 
 port2_40Kto300K_left = SolidWorksPart("port2_40Kto300K_left_Equations.txt", units="mm", parent_directory=parent_directory)
@@ -341,8 +362,8 @@ port2_40Kto300K_left.addVariableLine("D3@Helix/Spiral1",
                                      port2_forty_to_three_hundred_left["pitch"])
 port2_40Kto300K_left.addVariableLine("D4@Helix/Spiral1",
                                      port2_forty_to_three_hundred_left["pitch"])
-
-port2_40Kto300K_left.writeFile()
+if platform == "win32":
+    port2_40Kto300K_left.writeFile()
 
 """ The Assembly Files """
 port1_assembly_angle = 42.535
@@ -351,19 +372,77 @@ port1_assembly_angle = 42.535
 port1_Assembly_left = SolidWorksPart("port1_assembly_left_Equations.txt", units="deg",
                                      parent_directory=port_parent_directory)
 port1_Assembly_left.addVariableLine("D1@Angle1", port1_assembly_angle)
-port1_Assembly_left.writeFile()
+if platform == "win32":
+    port1_Assembly_left.writeFile()
 
 port1_Assembly_right = SolidWorksPart("port1_assembly_right_Equations.txt", units="deg",
                                       parent_directory=port_parent_directory)
 port1_Assembly_right.addVariableLine("D1@Angle1", port1_assembly_angle)
-port1_Assembly_right.writeFile()
+if platform == "win32":
+    port1_Assembly_right.writeFile()
 
 port2_Assembly_left = SolidWorksPart("port2_assembly_left_Equations.txt", units="deg",
                                      parent_directory=port_parent_directory)
 port2_Assembly_left.addVariableLine("D1@Angle1", port2_forty_to_three_hundred_left_angle)
-port2_Assembly_left.writeFile()
+if platform == "win32":
+    port2_Assembly_left.writeFile()
 
 port2_Assembly_right = SolidWorksPart("port2_assembly_right_Equations.txt", units="deg",
                                      parent_directory=port_parent_directory)
 port2_Assembly_right.addVariableLine("D1@Angle1", port2_forty_to_three_hundred_right_angle)
-port2_Assembly_right.writeFile()
+if platform == "win32":
+    port2_Assembly_right.writeFile()
+
+
+"""
+Print Calculations for total coax lengths and surface area. 
+"""
+coax_head_electrical_len = 8.255
+coax_head_len = 11.049
+
+for cable_dict in list_of_cable_dictionaries:
+    cable_dict["electrical_len"] = cable_dict["thermal_len"] + (2.0 * coax_head_electrical_len)
+    cable_dict["cable_len"] = cable_dict["thermal_len"] + (2.0 * coax_head_len)
+
+    cable_dict["loss_at_1GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_1Ghz"]
+    cable_dict["loss_at_5GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_5Ghz"]
+    cable_dict["loss_at_10GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_10Ghz"]
+
+def numFormat(testNum, format_str="%2.1f"):
+    try:
+        return str(format_str % testNum)
+    except:
+        return testNum
+
+# header_keys = ["name", "cable_len", "thermal_len", "surface_area", "loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz", "helixRadius"]
+header_keys = ["name", "electrical_len", "thermal_len", "cable_len", "cableDiameter", "cableMaterial", "helixRadius", "helix_chirality", "numberToOrder"]
+if platform != "win32":
+    f = open("/Users/chw3k5/Documents/ASUpostdoc/SimonsObs/ASU Cryostat/cable_properties.csv", "w")
+    write_line = ""
+    for header_key in header_keys:
+        if header_key in ["cable_len", "thermal_len", "cableDiameter", "helixRadius"]:
+            write_line += header_key + " (mm),"
+        elif header_key in ["surface_area"]:
+            write_line += header_key + " (mm^2),"
+        elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
+            write_line += header_key + " (dB),"
+        else:
+            write_line += header_key + ","
+    write_line = write_line[:-1] + "\n"
+    f.write(write_line)
+for cable_dict in list_of_cable_dictionaries:
+    write_line = ""
+    for header_key in header_keys:
+        if header_key in ["cable_len", "thermal_len", "helixRadius"]:
+            write_line += numFormat(cable_dict[header_key], "%3.1f") + ","
+        elif header_key in ["surface_area"]:
+            write_line += numFormat(cable_dict[header_key], "%4.0f") + ","
+        elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
+            write_line += numFormat(cable_dict[header_key], "%02.1f") + ","
+        elif header_key in ["cableDiameter"]:
+            write_line += numFormat(cable_dict[header_key], "%1.2f") + ","
+        else:
+            write_line += numFormat(cable_dict[header_key]) + ","
+    write_line = write_line[:-1] + "\n"
+    f.write(write_line)
+f.close()
