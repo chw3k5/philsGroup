@@ -9,7 +9,7 @@ class PhysicalParams:
         # for Vacuum shell components
         self.inch_to_mm = 25.4
         (self.workingDepthBottom, self.workingDepthTop) = (9.0, 9.0)
-        self.shellThickness = 0.375
+        self.shellThickness = 0.75
         self.bottomWallShellThickness = 0.5
         self.lidThickness = 0.5
         self.oringInsetDistance = 0.4

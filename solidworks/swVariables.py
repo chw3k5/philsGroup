@@ -9,7 +9,7 @@ class SolidWorksPart:
     def __init__(self, file_name, units="in", parent_directory=None):
         if parent_directory is None:
             if sys.platform == "win32":
-                parent_directory = "G:\\chwheele\\SolidWorks\\SimonsObs\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Cryostat\\supports"
+                parent_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Cryostat\\supports"
             else:
                 parent_directory = ""
 

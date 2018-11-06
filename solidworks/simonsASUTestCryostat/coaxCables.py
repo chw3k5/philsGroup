@@ -430,19 +430,20 @@ if platform != "win32":
             write_line += header_key + ","
     write_line = write_line[:-1] + "\n"
     f.write(write_line)
-for cable_dict in list_of_cable_dictionaries:
-    write_line = ""
-    for header_key in header_keys:
-        if header_key in ["cable_len", "thermal_len", "helixRadius"]:
-            write_line += numFormat(cable_dict[header_key], "%3.1f") + ","
-        elif header_key in ["surface_area"]:
-            write_line += numFormat(cable_dict[header_key], "%4.0f") + ","
-        elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
-            write_line += numFormat(cable_dict[header_key], "%02.1f") + ","
-        elif header_key in ["cableDiameter"]:
-            write_line += numFormat(cable_dict[header_key], "%1.2f") + ","
-        else:
-            write_line += numFormat(cable_dict[header_key]) + ","
-    write_line = write_line[:-1] + "\n"
-    f.write(write_line)
-f.close()
+
+    for cable_dict in list_of_cable_dictionaries:
+        write_line = ""
+        for header_key in header_keys:
+            if header_key in ["cable_len", "thermal_len", "helixRadius"]:
+                write_line += numFormat(cable_dict[header_key], "%3.1f") + ","
+            elif header_key in ["surface_area"]:
+                write_line += numFormat(cable_dict[header_key], "%4.0f") + ","
+            elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
+                write_line += numFormat(cable_dict[header_key], "%02.1f") + ","
+            elif header_key in ["cableDiameter"]:
+                write_line += numFormat(cable_dict[header_key], "%1.2f") + ","
+            else:
+                write_line += numFormat(cable_dict[header_key]) + ","
+        write_line = write_line[:-1] + "\n"
+        f.write(write_line)
+    f.close()
