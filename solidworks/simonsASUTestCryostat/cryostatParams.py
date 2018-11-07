@@ -79,8 +79,8 @@ class PhysicalParams:
         measured values (in millimeters)
         """
         # 300 K Insert Flange measurements (millimeters)
-        self.vacuumInsertWidth = 360.2
-        self.vacuumInsertLen = 461.8
+        self.vacuumInsertWidth = 370.0
+        self.vacuumInsertLen = 470.0
 
         """Coldhead measurements"""
         # 300K cold head measurements (millimeters)

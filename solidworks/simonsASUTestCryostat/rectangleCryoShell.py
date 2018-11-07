@@ -7,7 +7,7 @@ from solidworks.simonsASUTestCryostat.stainlessSupport import SolidWorksPart
 
 # variables for script
 parentDir = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Cryostat\\EDM Shell"
+            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\EDM Shell"
 valuesDict = {}
 params = PhysicalParams()
 

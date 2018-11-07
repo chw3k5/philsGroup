@@ -3,7 +3,7 @@ from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 
 parentDir = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Cryostat\\40 K"
+            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\40 K"
 params = PhysicalParams()
 valuesDict = {}
 
