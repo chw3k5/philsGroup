@@ -2,11 +2,10 @@ import sys
 from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 
-parentDir = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\4 K"
 params = PhysicalParams()
 valuesDict = {}
-
+parentDir = params.base_directory + "GrabCAD\\SO\\" + \
+            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\4 K"
 """
 Left Bottom Flange
 """

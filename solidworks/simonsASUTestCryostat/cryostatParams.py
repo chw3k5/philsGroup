@@ -1,6 +1,15 @@
 pi = 3.14159265359
+
+import getpass
+
 class PhysicalParams:
     def __init__(self):
+        if getpass.getuser() == "jemoor15":
+            self.base_directory = "C:\\Users\\jemoor15\\Documents\\"
+        else:
+            self.base_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\"
+
+
         """Controlled Values"""
         self.inch_str = "in"
         self.mm_str = "mm"

@@ -1,6 +1,7 @@
 import numpy as np
 from solidworks.swVariables import SolidWorksPart
 from sys import platform
+from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 """
 Measured Variables (in millimeters)
 """
@@ -26,8 +27,11 @@ port2_copper_cable_amplifier_center_to_forty_kelvin = abs(amplifier_center_pin_t
 """
 These are the variable that you can change (in millimeters)
 """
-parent_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Harness\\Coax Cables"
-port_parent_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Harness\\Ports"
+params = PhysicalParams()
+parent_directory = params.base_directory + "GrabCAD\\SO\\" + \
+            "Universal Readout Harness\\ASU Test Harness\\Coax Cables"
+port_parent_directory =  params.base_directory + "GrabCAD\\SO\\" + \
+            "Universal Readout Harness\\ASU Test Harness\\Ports"
 standard_helix_radius = 20.0
 standard_helix_pitch = 10.0
 strait_distance_to_amplifier = 5.0

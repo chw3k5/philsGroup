@@ -6,11 +6,11 @@ from solidworks.simonsASUTestCryostat.stainlessSupport import SolidWorksPart
 
 
 # variables for script
-parentDir = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\EDM Shell"
+
 valuesDict = {}
 params = PhysicalParams()
-
+parentDir = params.base_directory + "GrabCAD\\SO\\" + \
+            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\EDM Shell"
 
 # bottom Walls for cryostat shell parameters
 bottomWallInnerLength_str = "bottomWallInnerLength"
