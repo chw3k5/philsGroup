@@ -83,11 +83,17 @@ for dict in list_of_port1_cable_dictionaries:
     dict["loss_dB_per_mm_5Ghz"] = 0.0171
     dict["loss_dB_per_mm_10Ghz"] = 0.0243
 
+    dict["coax_head_len"] = 14.0
+    dict["coax_head_electrical_len"] = dict["coax_head_len"] - 2.794
+
 for dict in list_of_port2_cable_dictionaries:
     dict["cableDiameter"] = port2_cable_diameter
     dict["loss_dB_per_mm_1Ghz"] = 0.0034
     dict["loss_dB_per_mm_5Ghz"] = 0.0076
     dict["loss_dB_per_mm_10Ghz"] = 0.0108
+
+    dict["coax_head_len"] = 10.83
+    dict["coax_head_electrical_len"] = dict["coax_head_len"] - 2.794
 
 for dict in list_of_300K_to40K_cable_dictionaries:
     dict["helixRadius"] = 25.0
@@ -401,12 +407,10 @@ if platform == "win32":
 """
 Print Calculations for total coax lengths and surface area. 
 """
-coax_head_electrical_len = 8.255
-coax_head_len = 11.049
 
 for cable_dict in list_of_cable_dictionaries:
-    cable_dict["electrical_len"] = cable_dict["thermal_len"] + (2.0 * coax_head_electrical_len)
-    cable_dict["cable_len"] = cable_dict["thermal_len"] + (2.0 * coax_head_len)
+    cable_dict["electrical_len"] = cable_dict["thermal_len"] + (2.0 * cable_dict["coax_head_electrical_len"])
+    cable_dict["cable_len"] = cable_dict["thermal_len"] + (2.0 * cable_dict["coax_head_len"])
 
     cable_dict["loss_at_1GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_1Ghz"]
     cable_dict["loss_at_5GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_5Ghz"]
