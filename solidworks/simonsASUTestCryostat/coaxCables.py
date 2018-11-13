@@ -5,11 +5,26 @@ from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 """
 Measured Variables (in millimeters)
 """
-coax_length_forty_to_three_hundred = 82.12
-coax_length_four_to_forty = 34.278
-coax_length_four_to_forty_attenuator = 34.276
-coax_length_four_to_amp = 63.353
-amplifier_center_pin_to_forty_coax_end = -5.969
+params = PhysicalParams()
+electrical_plane_to_coax_tip = 2.794
+
+bulkhead_sma_short_side_flange_bottom_to_electrical_plane = 14.224
+bulkhead_sma_long_side_to_electrical_plane = 12.7
+bulkhead_plus_40K_attenuator = 37.338
+fortyK_plate_thickness = 8.0
+sma_weld_to_electrical_plane = 8.382
+amp_center_pin_to_40K_plate = 16.157
+
+inner_distance_40K_to_300K_sma_relief = 111.7
+inner_distance_4K_40K = 102.35
+
+coax_electrical_length_forty_to_three_hundred = inner_distance_40K_to_300K_sma_relief - sma_weld_to_electrical_plane \
+                                                - bulkhead_sma_long_side_to_electrical_plane + fortyK_plate_thickness
+coax_electrical_length_four_to_forty_attenuator = inner_distance_4K_40K - bulkhead_plus_40K_attenuator \
+                                                  - bulkhead_sma_short_side_flange_bottom_to_electrical_plane
+coax_electrical_length_four_to_amp = inner_distance_4K_40K - amp_center_pin_to_40K_plate \
+                                     - bulkhead_sma_short_side_flange_bottom_to_electrical_plane
+# amplifier_center_pin_to_forty_coax_end = -5.969
 port1_cable_diameter = 0.86
 port2_cable_diameter = 2.19
 port2_copper_diameter = 2.09
@@ -21,13 +36,13 @@ Calculations (in millimeters)
 rad_to_deg = 180.0 / np.pi
 
 # port 2 Copper cable from 40K amplifier to 40K bulkhead connector
-port2_copper_cable_amplifier_center_to_forty_kelvin = abs(amplifier_center_pin_to_forty_coax_end)
+# port2_copper_cable_amplifier_center_to_forty_kelvin = abs(amplifier_center_pin_to_forty_coax_end)
 
 
 """
 These are the variable that you can change (in millimeters)
 """
-params = PhysicalParams()
+
 parent_directory = params.base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\Coax Cables"
 port_parent_directory =  params.base_directory + "GrabCAD\\SO\\" + \
@@ -84,7 +99,8 @@ for dict in list_of_port1_cable_dictionaries:
     dict["loss_dB_per_mm_10Ghz"] = 0.0243
 
     dict["coax_head_len"] = 14.0
-    dict["coax_head_electrical_len"] = dict["coax_head_len"] - 2.794
+    dict["coax_head_electrical_len"] = dict["coax_head_len"] - electrical_plane_to_coax_tip
+
 
 for dict in list_of_port2_cable_dictionaries:
     dict["cableDiameter"] = port2_cable_diameter
@@ -93,22 +109,39 @@ for dict in list_of_port2_cable_dictionaries:
     dict["loss_dB_per_mm_10Ghz"] = 0.0108
 
     dict["coax_head_len"] = 10.83
-    dict["coax_head_electrical_len"] = dict["coax_head_len"] - 2.794
+    dict["coax_head_electrical_len"] = dict["coax_head_len"] - electrical_plane_to_coax_tip
 
 for dict in list_of_300K_to40K_cable_dictionaries:
     dict["helixRadius"] = 25.0
-    dict["firstRegionLength"] = coax_length_forty_to_three_hundred / 2.0
-    dict["secondRegionLength"] = coax_length_forty_to_three_hundred / 2.0
+
+    dict["electrical_plane_overall_distance"] = coax_electrical_length_forty_to_three_hundred
+    dict["visible_coax_overall_distance"] = dict["electrical_plane_overall_distance"] \
+                                            - (2.0 * dict["coax_head_electrical_len"])
+    dict["tip_to_tip_overall_distance"] = dict["electrical_plane_overall_distance"] \
+                                          + (2.0 * electrical_plane_to_coax_tip)
+    dict["firstRegionLength"] = dict["visible_coax_overall_distance"] / 2.0
+    dict["secondRegionLength"] = dict["visible_coax_overall_distance"] / 2.0
 
 for dict in list_of_4K_to_attenuator_cable_dictionaries:
-    dict["firstRegionLength"] = coax_length_four_to_forty_attenuator / 2.0
-    dict["secondRegionLength"] = coax_length_four_to_forty_attenuator / 2.0
+    dict["electrical_plane_overall_distance"] = coax_electrical_length_four_to_forty_attenuator
+    dict["visible_coax_overall_distance"] = dict["electrical_plane_overall_distance"] \
+                                            - (2.0 * dict["coax_head_electrical_len"])
+    dict["tip_to_tip_overall_distance"] = dict["electrical_plane_overall_distance"] \
+                                          + (2.0 * electrical_plane_to_coax_tip)
+    dict["firstRegionLength"] = dict["visible_coax_overall_distance"] / 2.0
+    dict["secondRegionLength"] = dict["visible_coax_overall_distance"] / 2.0
 
 port2_four_to_forty_right["arcRadius"] = 15.0
 port2_four_to_forty_left["arcRadius"] = 9.525
 for dict in list_of_4K_toAmplifier_cable_dictionaries:
-    dict["firstRegionLength"] = (coax_length_four_to_amp / 2.0) - dict["arcRadius"] + port2_4to40_helix_start_offset
-    dict["secondRegionLength"] = coax_length_four_to_amp / 2.0 - port2_4to40_helix_start_offset
+    dict["electrical_plane_overall_distance"] = coax_electrical_length_four_to_amp
+    dict["visible_coax_overall_distance"] = dict["electrical_plane_overall_distance"] - dict["coax_head_electrical_len"]
+    dict["tip_to_tip_overall_distance"] = dict["electrical_plane_overall_distance"] + electrical_plane_to_coax_tip
+
+    dict["firstRegionLength"] = (dict["visible_coax_overall_distance"] /
+                                 2.0) - dict["arcRadius"] + port2_4to40_helix_start_offset
+    dict["secondRegionLength"] = (dict["visible_coax_overall_distance"] /
+                                  2.0) - port2_4to40_helix_start_offset
     dict["strait_distance_to_amplifier"] = strait_distance_to_amplifier
 
 
