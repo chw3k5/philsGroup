@@ -20,7 +20,7 @@ def getTableData(filename, skiprows=1, delimiter=',', senseUnits=True):
         secondLine = f.readline()
         columnUnits = secondLine.strip().split(delimiter)
         for unit in columnUnits:
-            unit = unit.replace( ')', '').replace( '(', '')
+            unit = unit.replace(')', '').replace('(', '')
             unit = unit.replace(']', '').replace('[', '')
             if unit.lower() in ['v', 'a', 'm', 'kg, w', 's']:
                 unitFactorsList.append(float(1))
@@ -103,6 +103,17 @@ def read_csv_file(filename, verbose=False):
     # close the file that was being read
     f.close()
     return dataDictonary
+
+
+class AttributeRead:
+    def __init__(self, file_name, delimiter=","):
+        self.file_name = file_name
+        self.delimiter = delimiter
+        self.tableDict = getTableRowData(file_name, delimiter)
+        for key in self.tableDict.keys():
+            setattr(self, str(key), self.tableDict[key])
+
+
 
 # The code below only executes if the this is the top level program that is called as "python dataGetter.py"
 if __name__ == "__main__":

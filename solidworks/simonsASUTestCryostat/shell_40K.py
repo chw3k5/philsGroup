@@ -1,108 +1,132 @@
 import sys
 from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
-
+from solidworks.swVariables import SolidWorksPart
 
 params = PhysicalParams()
 valuesDict = {}
 parentDir = params.base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\40 K"
+
 """
-Left Bottom Flange
+middle flange at 40K
 """
-# Left side (viewed from above and with the cold head at the "front") bottom flange at 40k
-leftBottomFlangeCornerReferenceScrewInsetX_str = "leftBottomFlangeCornerReferenceScrewInsetX"
-valuesDict[leftBottomFlangeCornerReferenceScrewInsetX_str] = (params.leftBottomFlangeCornerReferenceScrewInsetX, params.mm_str)
-leftBottomFlangeCornerReferenceScrewInsetZ_str = "leftBottomFlangeCornerReferenceScrewInsetZ"
-valuesDict[leftBottomFlangeCornerReferenceScrewInsetZ_str] = (params.leftBottomFlangeCornerReferenceScrewInsetZ, params.mm_str)
+middle_flange_40K = SolidWorksPart("middleFlange40K.txt", units="mm", parent_directory=parentDir)
+middle_flange_40K.addVariableLine("D1@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetX)
+middle_flange_40K.addVariableLine("D2@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetZ)
+middle_flange_40K.addVariableLine("D4@sketch1", params.leftBottomFlange_lengthX)
+middle_flange_40K.addVariableLine("D3@sketch1", params.leftBottomFlange_widthZ)
 
-leftBottomFlange_lengthX_str = "leftBottomFlange_lengthX"
-valuesDict[leftBottomFlange_lengthX_str] = (params.leftBottomFlange_lengthX, params.mm_str)
-leftBottomFlange_widthZ_str = "leftBottomFlange_widthZ"
-valuesDict[leftBottomFlange_widthZ_str] = (params.leftBottomFlange_widthZ, params.mm_str)
+middle_flange_40K.addVariableLine("D1@sketch6", params.leftBottomFlange_lengthX)
+middle_flange_40K.addVariableLine("D2@sketch6", params.leftBottomFlange_widthZ)
+middle_flange_40K.addVariableLine("D1@Boss-Extrude Right Side", params.bottomFlangeThickness, units="in")
+middle_flange_40K.addVariableLine("D1@sketch2", params.refHole_to_smallSideNextHoleX)
+middle_flange_40K.addVariableLine("D2@sketch2", params.refHole_to_smallSideNextHoleZ)
+middle_flange_40K.addVariableLine("D3@sketch2", params.smallSideHole_CenterToCenter)
+middle_flange_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
 
-leftBottomFlange_thickness_str = "leftBottomFlange_thickness"
-valuesDict[leftBottomFlange_thickness_str] = (params.bottomFlangeThickness, params.inch_str)
-
-refHole_to_smallSideNextHoleX_str = "refHole_to_smallSideNextHoleX"
-valuesDict[refHole_to_smallSideNextHoleX_str] = (params.refHole_to_smallSideNextHoleX, params.mm_str)
-refHole_to_smallSideNextHoleZ_str = "refHole_to_smallSideNextHoleZ"
-valuesDict[refHole_to_smallSideNextHoleZ_str] = (params.refHole_to_smallSideNextHoleZ, params.mm_str)
-smallSideHole_CenterToCenter_str = "smallSideHole_CenterToCenter"
-valuesDict[smallSideHole_CenterToCenter_str] = (params.smallSideHole_CenterToCenter, params.mm_str)
-
-bottomShellStringList = [leftBottomFlangeCornerReferenceScrewInsetX_str, leftBottomFlangeCornerReferenceScrewInsetZ_str,
-                         leftBottomFlange_lengthX_str, leftBottomFlange_widthZ_str,
-                         leftBottomFlange_thickness_str, refHole_to_smallSideNextHoleX_str,
-                         refHole_to_smallSideNextHoleZ_str, smallSideHole_CenterToCenter_str]
-
-leftBottomFlange = equationsFile(fullFilePath=parentDir, fileName="leftBottomFlangeEquations")
-leftBottomFlange.listAddVarLine(bottomShellStringList, valuesDict)
-leftBottomFlange.addRefLine("D5@sketch1", leftBottomFlangeCornerReferenceScrewInsetX_str)
-leftBottomFlange.addRefLine("D2@sketch1", leftBottomFlangeCornerReferenceScrewInsetZ_str)
-leftBottomFlange.addRefLine("D4@sketch1", leftBottomFlange_lengthX_str)
-leftBottomFlange.addRefLine("D3@sketch1", leftBottomFlange_widthZ_str)
-leftBottomFlange.addRefLine("D1@Boss-Extrude1", leftBottomFlange_thickness_str)
-leftBottomFlange.addRefLine("D1@sketch2", refHole_to_smallSideNextHoleX_str)
-leftBottomFlange.addRefLine("D2@sketch2", refHole_to_smallSideNextHoleZ_str)
-leftBottomFlange.addRefLine("D3@sketch2", smallSideHole_CenterToCenter_str)
-
-if sys.platform == "win32":
-    leftBottomFlange.writeFile()
-else:
-    print(leftBottomFlange.fileContent)
-
-"""Rear Bottom Flange"""
+middle_flange_40K.addVariableLine("D1@sketch5", params.rearBottomFlange_lengthX)
+middle_flange_40K.addVariableLine("D2@sketch5", params.rearBottomFlange_widthZ)
+middle_flange_40K.addVariableLine("D4@sketch2", params.refHole_to_largeSideNextHoleX)
+middle_flange_40K.addVariableLine("D5@sketch2", params.refHole_to_largeSideNextHoleZ)
+middle_flange_40K.addVariableLine("D6@sketch2", params.largeSideHole_CenterToCenter)
 
 
 
-# Rear side (viewed from above and with the cold head at the "front") bottom flange at 40k
-rearBottomFlangeCornerReferenceScrewInsetX_str = "rearBottomFlangeCornerReferenceScrewInsetX"
-valuesDict[rearBottomFlangeCornerReferenceScrewInsetX_str] = (params.rearBottomFlangeCornerReferenceScrewInsetX, params.mm_str)
-rearBottomFlangeCornerReferenceScrewInsetZ_str = "rearBottomFlangeCornerReferenceScrewInsetZ"
-valuesDict[rearBottomFlangeCornerReferenceScrewInsetZ_str] = (params.rearBottomFlangeCornerReferenceScrewInsetZ, params.mm_str)
+middle_flange_40K.writeFile(verbose=True)
 
-rearBottomFlange_lengthX_str = "rearBottomFlange_lengthX"
-valuesDict[rearBottomFlange_lengthX_str] = (params.rearBottomFlange_lengthX, params.mm_str)
-rearBottomFlange_widthZ_str = "rearBottomFlange_widthZ"
-valuesDict[rearBottomFlange_widthZ_str] = (params.rearBottomFlange_widthZ, params.mm_str)
-
-rearBottomFlange_thickness_str = "rearBottomFlange_thickness"
-valuesDict[rearBottomFlange_thickness_str] = (params.bottomFlangeThickness, params.inch_str)
-
-refHole_to_largeSideNextHoleX_str = "refHole_to_largeSideNextHoleX"
-valuesDict[refHole_to_largeSideNextHoleX_str] = (params.refHole_to_largeSideNextHoleX, params.mm_str)
-refHole_to_largeSideNextHoleZ_str = "refHole_to_largeSideNextHoleZ"
-valuesDict[refHole_to_largeSideNextHoleZ_str] = (params.refHole_to_largeSideNextHoleZ, params.mm_str)
-largeSideHole_CenterToCenter_str = "largeSideHole_CenterToCenter"
-valuesDict[largeSideHole_CenterToCenter_str] = (params.largeSideHole_CenterToCenter, params.mm_str)
-
-bottomLefFlange_softCornerRadius_str = "bottomLefFlange_softCornerRadius"
-valuesDict[bottomLefFlange_softCornerRadius_str] = (params.millRadius, params.inch_str)
-
-
-bottomShellStringList = [rearBottomFlangeCornerReferenceScrewInsetX_str, rearBottomFlangeCornerReferenceScrewInsetZ_str,
-                         rearBottomFlange_lengthX_str, rearBottomFlange_widthZ_str,
-                         rearBottomFlange_thickness_str, refHole_to_largeSideNextHoleX_str,
-                         refHole_to_largeSideNextHoleZ_str, largeSideHole_CenterToCenter_str,
-                         bottomLefFlange_softCornerRadius_str]
-
-rearBottomFlange = equationsFile(fullFilePath=parentDir, fileName="rearBottomFlangeEquations")
-rearBottomFlange.listAddVarLine(bottomShellStringList, valuesDict)
-rearBottomFlange.addRefLine("D1@sketch1", rearBottomFlangeCornerReferenceScrewInsetX_str)
-rearBottomFlange.addRefLine("D2@sketch1", rearBottomFlangeCornerReferenceScrewInsetZ_str)
-rearBottomFlange.addRefLine("D3@sketch1", rearBottomFlange_lengthX_str)
-rearBottomFlange.addRefLine("D4@sketch1", rearBottomFlange_widthZ_str)
-rearBottomFlange.addRefLine("D1@Boss-Extrude1", rearBottomFlange_thickness_str)
-rearBottomFlange.addRefLine("D1@sketch2", refHole_to_largeSideNextHoleX_str)
-rearBottomFlange.addRefLine("D2@sketch2", refHole_to_largeSideNextHoleZ_str)
-rearBottomFlange.addRefLine("D3@sketch2", largeSideHole_CenterToCenter_str)
-rearBottomFlange.addRefLine("D1@Fillet1", bottomLefFlange_softCornerRadius_str)
-
-if sys.platform == "win32":
-    rearBottomFlange.writeFile()
-else:
-    print(rearBottomFlange.fileContent)
+# """
+# Left Bottom Flange
+# """
+# # Left side (viewed from above and with the cold head at the "front") bottom flange at 40k
+# leftBottomFlangeCornerReferenceScrewInsetX_str = "leftBottomFlangeCornerReferenceScrewInsetX"
+# valuesDict[leftBottomFlangeCornerReferenceScrewInsetX_str] = (params.leftBottomFlangeCornerReferenceScrewInsetX, params.mm_str)
+# leftBottomFlangeCornerReferenceScrewInsetZ_str = "leftBottomFlangeCornerReferenceScrewInsetZ"
+# valuesDict[leftBottomFlangeCornerReferenceScrewInsetZ_str] = (params.leftBottomFlangeCornerReferenceScrewInsetZ, params.mm_str)
+#
+# leftBottomFlange_lengthX_str = "leftBottomFlange_lengthX"
+# valuesDict[leftBottomFlange_lengthX_str] = (params.leftBottomFlange_lengthX, params.mm_str)
+# leftBottomFlange_widthZ_str = "leftBottomFlange_widthZ"
+# valuesDict[leftBottomFlange_widthZ_str] = (params.leftBottomFlange_widthZ, params.mm_str)
+#
+# leftBottomFlange_thickness_str = "leftBottomFlange_thickness"
+# valuesDict[leftBottomFlange_thickness_str] = (params.bottomFlangeThickness, params.inch_str)
+#
+# refHole_to_smallSideNextHoleX_str = "refHole_to_smallSideNextHoleX"
+# valuesDict[refHole_to_smallSideNextHoleX_str] = (params.refHole_to_smallSideNextHoleX, params.mm_str)
+# refHole_to_smallSideNextHoleZ_str = "refHole_to_smallSideNextHoleZ"
+# valuesDict[refHole_to_smallSideNextHoleZ_str] = (params.refHole_to_smallSideNextHoleZ, params.mm_str)
+# smallSideHole_CenterToCenter_str = "smallSideHole_CenterToCenter"
+# valuesDict[smallSideHole_CenterToCenter_str] = (params.smallSideHole_CenterToCenter, params.mm_str)
+# bottomLefFlange_softCornerRadius_str = "bottomLefFlange_softCornerRadius"
+# valuesDict[bottomLefFlange_softCornerRadius_str] = (params.millRadius, params.inch_str)
+#
+# bottomShellStringList = [leftBottomFlangeCornerReferenceScrewInsetX_str, leftBottomFlangeCornerReferenceScrewInsetZ_str,
+#                          leftBottomFlange_lengthX_str, leftBottomFlange_widthZ_str,
+#                          leftBottomFlange_thickness_str, refHole_to_smallSideNextHoleX_str,
+#                          refHole_to_smallSideNextHoleZ_str, smallSideHole_CenterToCenter_str,
+#                          bottomLefFlange_softCornerRadius_str]
+#
+# leftBottomFlange = equationsFile(fullFilePath=parentDir, fileName="leftBottomFlangeEquations")
+# leftBottomFlange.listAddVarLine(bottomShellStringList, valuesDict)
+# leftBottomFlange.addRefLine("D5@sketch1", leftBottomFlangeCornerReferenceScrewInsetX_str)
+# leftBottomFlange.addRefLine("D2@sketch1", leftBottomFlangeCornerReferenceScrewInsetZ_str)
+# leftBottomFlange.addRefLine("D4@sketch1", leftBottomFlange_lengthX_str)
+# leftBottomFlange.addRefLine("D3@sketch1", leftBottomFlange_widthZ_str)
+# leftBottomFlange.addRefLine("D1@Boss-Extrude1", leftBottomFlange_thickness_str)
+# leftBottomFlange.addRefLine("D1@sketch2", refHole_to_smallSideNextHoleX_str)
+# leftBottomFlange.addRefLine("D2@sketch2", refHole_to_smallSideNextHoleZ_str)
+# leftBottomFlange.addRefLine("D3@sketch2", smallSideHole_CenterToCenter_str)
+# leftBottomFlange.addRefLine("D1@fillet1", bottomLefFlange_softCornerRadius_str)
+#
+# if sys.platform == "win32":
+#     leftBottomFlange.writeFile()
+# else:
+#     print(leftBottomFlange.fileContent)
+#
+# """Rear Bottom Flange"""
+# # Rear side (viewed from above and with the cold head at the "front") bottom flange at 40k
+# rearBottomFlangeCornerReferenceScrewInsetX_str = "rearBottomFlangeCornerReferenceScrewInsetX"
+# valuesDict[rearBottomFlangeCornerReferenceScrewInsetX_str] = (params.rearBottomFlangeCornerReferenceScrewInsetX, params.mm_str)
+# rearBottomFlangeCornerReferenceScrewInsetZ_str = "rearBottomFlangeCornerReferenceScrewInsetZ"
+# valuesDict[rearBottomFlangeCornerReferenceScrewInsetZ_str] = (params.rearBottomFlangeCornerReferenceScrewInsetZ, params.mm_str)
+#
+# rearBottomFlange_lengthX_str = "rearBottomFlange_lengthX"
+# valuesDict[rearBottomFlange_lengthX_str] = (params.rearBottomFlange_lengthX, params.mm_str)
+# rearBottomFlange_widthZ_str = "rearBottomFlange_widthZ"
+# valuesDict[rearBottomFlange_widthZ_str] = (params.rearBottomFlange_widthZ, params.mm_str)
+#
+# rearBottomFlange_thickness_str = "rearBottomFlange_thickness"
+# valuesDict[rearBottomFlange_thickness_str] = (params.bottomFlangeThickness, params.inch_str)
+#
+# refHole_to_largeSideNextHoleX_str = "refHole_to_largeSideNextHoleX"
+# valuesDict[refHole_to_largeSideNextHoleX_str] = (params.refHole_to_largeSideNextHoleX, params.mm_str)
+# refHole_to_largeSideNextHoleZ_str = "refHole_to_largeSideNextHoleZ"
+# valuesDict[refHole_to_largeSideNextHoleZ_str] = (params.refHole_to_largeSideNextHoleZ, params.mm_str)
+# largeSideHole_CenterToCenter_str = "largeSideHole_CenterToCenter"
+# valuesDict[largeSideHole_CenterToCenter_str] = (params.largeSideHole_CenterToCenter, params.mm_str)
+#
+# bottomShellStringList = [rearBottomFlangeCornerReferenceScrewInsetX_str, rearBottomFlangeCornerReferenceScrewInsetZ_str,
+#                          rearBottomFlange_lengthX_str, rearBottomFlange_widthZ_str,
+#                          rearBottomFlange_thickness_str, refHole_to_largeSideNextHoleX_str,
+#                          refHole_to_largeSideNextHoleZ_str, largeSideHole_CenterToCenter_str]
+#
+# rearBottomFlange = equationsFile(fullFilePath=parentDir, fileName="rearBottomFlangeEquations")
+# rearBottomFlange.listAddVarLine(bottomShellStringList, valuesDict)
+# rearBottomFlange.addRefLine("D1@sketch1", rearBottomFlangeCornerReferenceScrewInsetX_str)
+# rearBottomFlange.addRefLine("D2@sketch1", rearBottomFlangeCornerReferenceScrewInsetZ_str)
+# rearBottomFlange.addRefLine("D3@sketch1", rearBottomFlange_lengthX_str)
+# rearBottomFlange.addRefLine("D4@sketch1", rearBottomFlange_widthZ_str)
+# rearBottomFlange.addRefLine("D1@Boss-Extrude1", rearBottomFlange_thickness_str)
+# rearBottomFlange.addRefLine("D1@sketch2", refHole_to_largeSideNextHoleX_str)
+# rearBottomFlange.addRefLine("D2@sketch2", refHole_to_largeSideNextHoleZ_str)
+# rearBottomFlange.addRefLine("D3@sketch2", largeSideHole_CenterToCenter_str)
+#
+#
+# if sys.platform == "win32":
+#     rearBottomFlange.writeFile()
+# else:
+#     print(rearBottomFlange.fileContent)
 
 
 """Left Wall"""

@@ -7,7 +7,7 @@ class PhysicalParams:
         if getpass.getuser() == "jemoor15":
             self.base_directory = "C:\\Users\\jemoor15\\Documents\\"
         else:
-            self.base_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\"
+            self.base_directory = "C:\\Users\\chw3k5\\Documents\\"
 
 
         """Controlled Values"""
@@ -17,8 +17,8 @@ class PhysicalParams:
         # in inches (unless otherwise specified)
         # for Vacuum shell components
         self.inch_to_mm = 25.4
-        (self.workingDepthBottom, self.workingDepthTop) = (9.0, 9.0)
-        self.shellThickness = 0.75
+        (self.workingDepthBottom, self.workingDepthTop) = (6.0, 6.0)
+        self.shellThickness = 1.0
         self.bottomWallShellThickness = 0.5
         self.lidThickness = 0.5
         self.oringInsetDistance = 0.4
@@ -26,12 +26,12 @@ class PhysicalParams:
         self.flangeWidth = 1.5
         self.flangeThickness = 0.5
         self.flangeHoleInset = 0.4
-        self.tolerance = 0.005
+        self.tolerance = 0.010
         self.coldhead_insert_clearance = 0.5
 
         # Collar Extension for Coldhead
         self.collar_ID = 5
-        self.collar_boltCircleDiameter = 6.693
+        self.collar_boltCircleDiameter = 170  # mm
         self.collar_OD = 7.5
         self.collar_oringID = 5.5
         self.collar_oringWidth = 0.181
@@ -55,8 +55,6 @@ class PhysicalParams:
         self.rearExtensionDistance = 40.0
         self.leftExtensionDistance = self.rearExtensionDistance
         self.rightExtensionDistance = self.rearExtensionDistance
-        self.frontExtensionDistance = 150.0
-
 
         self.shieldSpace_40K_300K = 15.0
 
@@ -72,14 +70,13 @@ class PhysicalParams:
         self.rearExtensionDistance_4K = 40.0
         self.leftExtensionDistance_4K = self.rearExtensionDistance_4K
         self.rightExtensionDistance_4K = self.rearExtensionDistance_4K
-        self.frontExtensionDistance_4K = 150.0
 
         self.shieldSpace_4K_40K = 15.0
 
         self.shieldsTopFlangeThickness_4K = 3.0/8.0  # inches
         self.shieldsTopFlangeWidth_4K = 20.0
 
-        self.shieldsLeftAndRightTopFlangeScrewInsertDist_4K = 0.25 # inches
+        self.shieldsLeftAndRightTopFlangeScrewInsertDist_4K = 0.25  # inches
 
         self.lidInsetFromInnerWalls_4K = 3.0
 
@@ -88,8 +85,8 @@ class PhysicalParams:
         measured values (in millimeters)
         """
         # 300 K Insert Flange measurements (millimeters)
-        self.vacuumInsertWidth = 370.0
-        self.vacuumInsertLen = 470.0
+        self.vacuumInsertWidth = 370.0  # Cannot Change, Part exists
+        self.vacuumInsertLen = 470.0  # Cannot Change, Part exists
 
         """Coldhead measurements"""
         # 300K cold head measurements (millimeters)
@@ -154,20 +151,28 @@ class PhysicalParams:
         self.largeSideHole_CenterToCenter_4K = 50.8
 
         """ General insert measurements"""
-        self.cryoFloorTo40K_InsertBottom = 94.3
-        self.insert_40KThickness = 6.35
-        self.workingDist_40K_4K = 104.0
-        self.insert_4KThickness = 6.35
-        self.rearOfInsert300K_edgeTo40K_edge = 30.1
+        self.cryoFloorTo40K_InsertBottom = 92.65
+        self.insert_40KThickness = 8
+        self.workingDist_40K_4K = 102.35
+        self.insert_4KThickness = 8
+        self.rearOfInsert300K_edgeTo40K_edge = 35
 
-        """Calculation for Bottom Vacuum Wall (inches)"""
-        self.insertDist = (self.rearExtensionDistance - self.rearOfInsert300K_edgeTo40K_edge +
-                           self.shieldSpace_40K_300K)
-        self.workingLen = (self.insertDist + self.vacuumInsertWidth
-                           + (self.coldhead_insert_clearance * self.inch_to_mm)
-                           + (self.collar_OD * self.inch_to_mm / 2.0) + (self.coldhead_OD / 2.0)) / self.inch_to_mm
-        self.workingWidth = (self.rightExtensionDistance + self.insert40K_Z + self.leftExtensionDistance
-                             + (2.0 * self.shieldSpace_40K_300K)) / self.inch_to_mm
+        """
+        Calculation for Bottom Vacuum Wall (inches)
+        
+        These values have been hard coded on January 15, 2019, after the parts were sent
+        out to the ASU machine shop for fabrication. 
+        """
+        # self.insertDist = (self.rearExtensionDistance - self.rearOfInsert300K_edgeTo40K_edge +
+        #                    self.shieldSpace_40K_300K)
+        # self.workingLen = (self.insertDist + self.vacuumInsertWidth
+        #                    + (self.coldhead_insert_clearance * self.inch_to_mm)
+        #                    + (self.collar_OD * self.inch_to_mm / 2.0) + (self.coldhead_OD / 2.0)) / self.inch_to_mm
+        # self.workingWidth = (self.rightExtensionDistance + self.insert40K_Z + self.leftExtensionDistance
+        #                      + (2.0 * self.shieldSpace_40K_300K)) / self.inch_to_mm
+        self.insertDist = 20.0  # millimeters
+        self.workingLen = 23.147638  # inches
+        self.workingWidth = 20.07874  # inches
 
         """40K shield"""
         # Calculations for Left Bottom Flange

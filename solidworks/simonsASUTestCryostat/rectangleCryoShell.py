@@ -239,7 +239,7 @@ else:
 collar_ID_str = "collar_ID"
 valuesDict[collar_ID_str] = (params.collar_ID, params.inch_str)
 collar_boltCircleDiameter_str = "collar_boltCircleDiameter"
-valuesDict[collar_boltCircleDiameter_str] = (params.collar_boltCircleDiameter, params.inch_str)
+valuesDict[collar_boltCircleDiameter_str] = (params.collar_boltCircleDiameter, params.mm_str)
 collar_OD_str = "collar_OD"
 valuesDict[collar_OD_str] = (params.collar_OD, params.inch_str)
 collar_oringID_str = "collar_oringID"

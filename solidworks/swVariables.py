@@ -9,7 +9,7 @@ class SolidWorksPart:
     def __init__(self, file_name, units="in", parent_directory=None):
         if parent_directory is None:
             if sys.platform == "win32":
-                parent_directory = "C:\\Users\\chwheele.ASURITE\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Cryostat\\supports"
+                parent_directory = "C:\\Users\\chw3k5\\Documents\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\supports"
             else:
                 parent_directory = ""
 
@@ -26,10 +26,12 @@ class SolidWorksPart:
             temporary_string += units + "\n"
         self.fileContent += temporary_string
 
-    def writeFile(self):
+    def writeFile(self, verbose=False):
         file_handle = open(self.fullFileName, "w")
         file_handle.write(self.fileContent)
         file_handle.close()
+        if verbose:
+            print("Wrote file:\n ", self.fullFileName, "\n")
 
 
 """Legacy classed and definitions that are being phased out."""
