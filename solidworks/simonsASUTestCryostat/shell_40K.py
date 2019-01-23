@@ -1,7 +1,7 @@
 import sys
 from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
-from solidworks.swVariables import SolidWorksPart
+from solidworks.solidWorksVariables import SolidWorksPart
 
 params = PhysicalParams()
 valuesDict = {}
@@ -11,29 +11,83 @@ parentDir = params.base_directory + "GrabCAD\\SO\\" + \
 """
 middle flange at 40K
 """
-middle_flange_40K = SolidWorksPart("middleFlange40K.txt", units="mm", parent_directory=parentDir)
-middle_flange_40K.addVariableLine("D1@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetX)
-middle_flange_40K.addVariableLine("D2@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetZ)
-middle_flange_40K.addVariableLine("D4@sketch1", params.leftBottomFlange_lengthX)
-middle_flange_40K.addVariableLine("D3@sketch1", params.leftBottomFlange_widthZ)
+middle_flange_40K = SolidWorksPart("middleFlange40K_v2.txt", units="mm", parent_directory=parentDir)
+middle_flange_40K.addVariableLine("D1@Extrude-Thin1",params.bottomFlangeThickness, units="in")
+middle_flange_40K.addVariableLine("D5@Extrude-Thin1", params.shieldsTopFlangeWidth)
+
+middle_flange_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
+middle_flange_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
+middle_flange_40K.addVariableLine("D8@sketch1", params.millRadius, units="in")
+
+middle_flange_40K.addVariableLine("D1@3Dsketch1", params.coldhead_flangeScrewInset)
 
 middle_flange_40K.addVariableLine("D1@sketch6", params.leftBottomFlange_lengthX)
 middle_flange_40K.addVariableLine("D2@sketch6", params.leftBottomFlange_widthZ)
-middle_flange_40K.addVariableLine("D1@Boss-Extrude Right Side", params.bottomFlangeThickness, units="in")
-middle_flange_40K.addVariableLine("D1@sketch2", params.refHole_to_smallSideNextHoleX)
-middle_flange_40K.addVariableLine("D2@sketch2", params.refHole_to_smallSideNextHoleZ)
-middle_flange_40K.addVariableLine("D3@sketch2", params.smallSideHole_CenterToCenter)
+
+middle_flange_40K.addVariableLine("D3@sketch6", params.rearBottomFlange_lengthX)
+
 middle_flange_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
 
-middle_flange_40K.addVariableLine("D1@sketch5", params.rearBottomFlange_lengthX)
-middle_flange_40K.addVariableLine("D2@sketch5", params.rearBottomFlange_widthZ)
-middle_flange_40K.addVariableLine("D4@sketch2", params.refHole_to_largeSideNextHoleX)
-middle_flange_40K.addVariableLine("D5@sketch2", params.refHole_to_largeSideNextHoleZ)
-middle_flange_40K.addVariableLine("D6@sketch2", params.largeSideHole_CenterToCenter)
 
-
+# middle_flange_40K.addVariableLine("D1@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetX)
+# middle_flange_40K.addVariableLine("D2@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetZ)
+# middle_flange_40K.addVariableLine("D4@sketch1", params.leftBottomFlange_lengthX)
+# middle_flange_40K.addVariableLine("D3@sketch1", params.leftBottomFlange_widthZ)
+#
+# middle_flange_40K.addVariableLine("D1@sketch6", params.leftBottomFlange_lengthX)
+# middle_flange_40K.addVariableLine("D2@sketch6", params.leftBottomFlange_widthZ)
+# middle_flange_40K.addVariableLine("D1@Boss-Extrude Right Side", params.bottomFlangeThickness, units="in")
+# middle_flange_40K.addVariableLine("D1@sketch2", params.refHole_to_smallSideNextHoleX)
+# middle_flange_40K.addVariableLine("D2@sketch2", params.refHole_to_smallSideNextHoleZ)
+# middle_flange_40K.addVariableLine("D3@sketch2", params.smallSideHole_CenterToCenter)
+# middle_flange_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
+#
+# middle_flange_40K.addVariableLine("D1@sketch5", params.rearBottomFlange_lengthX)
+# middle_flange_40K.addVariableLine("D2@sketch5", params.rearBottomFlange_widthZ)
+# middle_flange_40K.addVariableLine("D4@sketch2", params.refHole_to_largeSideNextHoleX)
+# middle_flange_40K.addVariableLine("D5@sketch2", params.refHole_to_largeSideNextHoleZ)
+# middle_flange_40K.addVariableLine("D6@sketch2", params.largeSideHole_CenterToCenter)
 
 middle_flange_40K.writeFile(verbose=True)
+
+"""
+coldhead flange at 40K
+"""
+coldhead_flangeFront_40K = SolidWorksPart("coldhead_flangeFront_40K.txt", units="mm", parent_directory=parentDir)
+coldhead_flangeFront_40K.addVariableLine("D1@Boss-Extrude1", params.coldhead40K_flange_thickness)
+coldhead_flangeFront_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
+coldhead_flangeFront_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
+
+coldhead_flangeFront_40K.addVariableLine("D1@sketch6", params.coldhead_flangeScrewInset)
+coldhead_flangeFront_40K.writeFile(verbose=True)
+
+"""
+coldhead Ring Flanges
+"""
+coldhead_ringFlange_40K = SolidWorksPart("coldhead_ringFlange_40K.txt", units="mm", parent_directory=parentDir)
+coldhead_ringFlange_40K.addVariableLine("D1@Extrude-Thin1", params.shieldsTopFlangeThickness)
+coldhead_ringFlange_40K.addVariableLine("D5@Extrude-Thin1", params.shieldsTopFlangeWidth)
+
+coldhead_ringFlange_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
+coldhead_ringFlange_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
+coldhead_ringFlange_40K.addVariableLine("D8@sketch1", params.millRadius, units="in")
+
+coldhead_ringFlange_40K.addVariableLine("D1@3Dsketch1", params.coldhead_flangeScrewInset)
+coldhead_ringFlange_40K.writeFile(verbose=True)
+
+"""
+coldhead shield Wall
+"""
+coldhead_shieldwall_40K = SolidWorksPart("coldhead_shieldWall_40K.txt", units="mm", parent_directory=parentDir)
+coldhead_shieldwall_40K.addVariableLine("D1@Extrude-Thin1", params.coldheadShieldWall_height)
+coldhead_shieldwall_40K.addVariableLine("D5@Extrude-Thin1", params.shieldThickness_heatConduction)
+
+coldhead_shieldwall_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
+coldhead_shieldwall_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
+coldhead_shieldwall_40K.addVariableLine("D8@sketch1", params.millRadius, units="in")
+coldhead_shieldwall_40K.writeFile(verbose=True)
+
+
 
 # """
 # Left Bottom Flange

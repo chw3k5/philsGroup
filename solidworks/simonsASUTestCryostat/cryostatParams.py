@@ -16,31 +16,31 @@ class PhysicalParams:
 
         # in inches (unless otherwise specified)
         # for Vacuum shell components
-        self.inch_to_mm = 25.4
-        (self.workingDepthBottom, self.workingDepthTop) = (6.0, 6.0)
-        self.shellThickness = 1.0
-        self.bottomWallShellThickness = 0.5
-        self.lidThickness = 0.5
-        self.oringInsetDistance = 0.4
-        self.millRadius = 2.0
-        self.flangeWidth = 1.5
-        self.flangeThickness = 0.5
-        self.flangeHoleInset = 0.4
-        self.tolerance = 0.010
-        self.coldhead_insert_clearance = 0.5
+        self.inch_to_mm = 25.4   # Do not change, set by an order to the machine shop
+        (self.workingDepthBottom, self.workingDepthTop) = (6.0, 6.0)  # Do not change
+        self.shellThickness = 1.0  # Do not change, set by an order to the machine shop
+        self.bottomWallShellThickness = 0.5  # Do not change, set by an order to the machine shop
+        self.lidThickness = 0.5  # Do not change, set by an order to the machine shop
+        self.oringInsetDistance = 0.4  # Do not change, set by an order to the machine shop
+        self.millRadius = 2.0  # Do not change, set by an order to the machine shop
+        self.flangeWidth = 1.5  # Do not change, set by an order to the machine shop
+        self.flangeThickness = 0.5  # Do not change, set by an order to the machine shop
+        self.flangeHoleInset = 0.4  # Do not change, set by an order to the machine shop
+        self.tolerance = 0.010  # Do not change, set by an order to the machine shop
+        self.coldhead_insert_clearance = 0.5  # Do not change, set by an order to the machine shop
 
         # Collar Extension for Coldhead
-        self.collar_ID = 5
-        self.collar_boltCircleDiameter = 170  # mm
-        self.collar_OD = 7.5
-        self.collar_oringID = 5.5
-        self.collar_oringWidth = 0.181
-        self.collar_oringDepth = 0.110
-        self.collar_height = 4.0
-        self.underHeadThruDistance = (60.0 - 6.0)  # in millimeters
+        self.collar_ID = 5  # Do not change, set by an order to the machine shop
+        self.collar_boltCircleDiameter = 170  # mm,   # Do not change, set by an order to the machine shop
+        self.collar_OD = 7.5   # Do not change, set by an order to the machine shop
+        self.collar_oringID = 5.5  # Do not change, set by an order to the machine shop
+        self.collar_oringWidth = 0.181  # Do not change, set by an order to the machine shop
+        self.collar_oringDepth = 0.110  # Do not change, set by an order to the machine shop
+        self.collar_height = 4.0  # Do not change, set by an order to the machine shop
+        self.underHeadThruDistance = (60.0 - 6.0)  # in millimeters  # Do not change, set by an order to the machine shop
 
         # 40 Cold head Heat strapping
-        self.coldhead40K_clearanceForID = 2.0 # millimeters
+        self.coldhead40K_clearanceForID = 2.0  # millimeters
         self.coldhead40K_OD_overshoot = 10.0
 
         # 4k Cold-head heat strapping
@@ -52,18 +52,21 @@ class PhysicalParams:
 
         # 40 K shield (in millimeters)
         self.shieldThickness = (1.0 / 8.0)  # inches
+        self.shieldThickness_heatConduction = (1.0 / 8.0) * self.inch_to_mm  # millimeters
         self.rearExtensionDistance = 40.0
         self.leftExtensionDistance = self.rearExtensionDistance
         self.rightExtensionDistance = self.rearExtensionDistance
 
         self.shieldSpace_40K_300K = 15.0
 
-        self.shieldsTopFlangeThickness = 3.0/8.0  # inches
+        self.shieldsTopFlangeThickness = 9.00  # millimeters
         self.shieldsTopFlangeWidth = 20.0
 
         self.shieldsLeftAndRightTopFlangeScrewInsertDist = 0.25  # inches
 
         self.lidInsetFromInnerWalls = 3.0
+        self.coldhead40K_flange_thickness = 10.0  # millimeters
+        self.coldhead40K_flange_Z = 170.0  # millimeters
 
         # 4 K shield (in millimeters)
         self.shieldThickness_4K = (1.0 / 8.0)  # inches
@@ -79,7 +82,6 @@ class PhysicalParams:
         self.shieldsLeftAndRightTopFlangeScrewInsertDist_4K = 0.25  # inches
 
         self.lidInsetFromInnerWalls_4K = 3.0
-
 
         """
         measured values (in millimeters)
@@ -188,10 +190,17 @@ class PhysicalParams:
         self.rearBottomFlange_lengthX = self.rearExtensionDistance + self.expected_edgeOverLap
         self.rearBottomFlange_widthZ = self.insert40K_Z - (2.0 * self.expected_edgeOverLap)
 
+        self.total40K_FlangeWidth = self.rearBottomFlange_widthZ + (2.0 * self.leftBottomFlange_widthZ)
+
         # Flange Thicknesses
         self.bottomFlangeThickness = self.shieldThickness  # inches
         self.lid_shieldThickness = self.shieldThickness  # inches
         self.totalShieldThickness = (self.bottomFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
+
+        # 40 K coldhead sheilding in g flanges
+        self.coldheadShieldWall_height = 65.45 - (2.0 * self.shieldsTopFlangeThickness)
+        self.coldhead_flangeScrewInset = (self.shieldsTopFlangeWidth
+         + self.shieldThickness_heatConduction) / 2.0
 
         # Calculations for 40K wall
         self.Wall40K_halfWidthZ = (self.rearBottomFlange_widthZ / 2.0) + self.leftBottomFlange_widthZ
@@ -290,13 +299,10 @@ class PhysicalParams:
                                   - (2.0 * self.lidInsetFromInnerWalls_4K)
         self.LidHoles_InsetDist_4K = (self.shieldsTopFlangeWidth_4K / 2.0) - self.lidInsetFromInnerWalls_4K
 
-        # calculations for 4k Heat heat strapping
+        # calculations for 4k heat strapping
         self.heatStrap4K_OD = (self.heatStrap4K_overshoot * 2.0) + self.coldhead4K_OD
         coldhead_conduction_area = pi * ((self.heatStrap4K_OD / 2.0)**2.0)
         self.heatStrappingHeight4K = coldhead_conduction_area / (2.0 * self.heatStrap4K_OD)
-
-
-
 
         self.fourK_heatPlate_lengthX = 192.05 + self.expected_edgeOverLap_4K
         self.fourK_heatPlate_refScrewX = self.expected_edgeOverLap_4K - self.largeSideRefHole_to_edgeX_4K

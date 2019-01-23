@@ -1,11 +1,19 @@
 import numpy as np
-from solidworks.swVariables import SolidWorksPart
+from solidworks.solidWorksVariables import SolidWorksPart
 from sys import platform
-from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
+
+
+def numFormat(testNum, format_str="%2.1f"):
+    try:
+        return str(format_str % testNum)
+    except:
+        return testNum
+
+
 """
 Measured Variables (in millimeters)
 """
-params = PhysicalParams()
+base_directory = "C:\\Users\\chw3k5\\Documents\\"
 electrical_plane_to_coax_tip = 2.794
 
 bulkhead_sma_short_side_flange_bottom_to_electrical_plane = 14.224
@@ -43,9 +51,9 @@ rad_to_deg = 180.0 / np.pi
 These are the variable that you can change (in millimeters)
 """
 
-parent_directory = params.base_directory + "GrabCAD\\SO\\" + \
+parent_directory = base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\Coax Cables"
-port_parent_directory =  params.base_directory + "GrabCAD\\SO\\" + \
+port_parent_directory = base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\Ports"
 standard_helix_radius = 20.0
 standard_helix_pitch = 10.0
@@ -448,12 +456,6 @@ for cable_dict in list_of_cable_dictionaries:
     cable_dict["loss_at_1GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_1Ghz"]
     cable_dict["loss_at_5GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_5Ghz"]
     cable_dict["loss_at_10GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_10Ghz"]
-
-def numFormat(testNum, format_str="%2.1f"):
-    try:
-        return str(format_str % testNum)
-    except:
-        return testNum
 
 # header_keys = ["name", "cable_len", "thermal_len", "surface_area", "loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz", "helixRadius"]
 header_keys = ["name", "electrical_len", "thermal_len", "cable_len", "cableDiameter", "cableMaterial", "helixRadius", "helix_chirality", "numberToOrder"]
