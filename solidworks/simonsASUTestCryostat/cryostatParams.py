@@ -198,7 +198,7 @@ class PhysicalParams:
         self.totalShieldThickness = (self.bottomFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
 
         # 40 K coldhead sheilding in g flanges
-        self.coldheadShieldWall_height = 65.45 - (2.0 * self.shieldsTopFlangeThickness)
+        self.coldheadShieldWall_height = 65.45 - self.shieldsTopFlangeThickness
         self.coldhead_flangeScrewInset = (self.shieldsTopFlangeWidth
          + self.shieldThickness_heatConduction) / 2.0
 

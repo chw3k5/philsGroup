@@ -2,6 +2,8 @@ import sys
 from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 from solidworks.solidWorksVariables import SolidWorksPart
+from solidworks.simonsASUTestCryostat.jwSupports import ceiling_shield_hole_distance, \
+    cryo_side_ceiling_base_hole_offset
 
 params = PhysicalParams()
 valuesDict = {}
@@ -28,25 +30,8 @@ middle_flange_40K.addVariableLine("D3@sketch6", params.rearBottomFlange_lengthX)
 
 middle_flange_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
 
-
-# middle_flange_40K.addVariableLine("D1@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetX)
-# middle_flange_40K.addVariableLine("D2@sketch1", params.leftBottomFlangeCornerReferenceScrewInsetZ)
-# middle_flange_40K.addVariableLine("D4@sketch1", params.leftBottomFlange_lengthX)
-# middle_flange_40K.addVariableLine("D3@sketch1", params.leftBottomFlange_widthZ)
-#
-# middle_flange_40K.addVariableLine("D1@sketch6", params.leftBottomFlange_lengthX)
-# middle_flange_40K.addVariableLine("D2@sketch6", params.leftBottomFlange_widthZ)
-# middle_flange_40K.addVariableLine("D1@Boss-Extrude Right Side", params.bottomFlangeThickness, units="in")
-# middle_flange_40K.addVariableLine("D1@sketch2", params.refHole_to_smallSideNextHoleX)
-# middle_flange_40K.addVariableLine("D2@sketch2", params.refHole_to_smallSideNextHoleZ)
-# middle_flange_40K.addVariableLine("D3@sketch2", params.smallSideHole_CenterToCenter)
-# middle_flange_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
-#
-# middle_flange_40K.addVariableLine("D1@sketch5", params.rearBottomFlange_lengthX)
-# middle_flange_40K.addVariableLine("D2@sketch5", params.rearBottomFlange_widthZ)
-# middle_flange_40K.addVariableLine("D4@sketch2", params.refHole_to_largeSideNextHoleX)
-# middle_flange_40K.addVariableLine("D5@sketch2", params.refHole_to_largeSideNextHoleZ)
-# middle_flange_40K.addVariableLine("D6@sketch2", params.largeSideHole_CenterToCenter)
+middle_flange_40K.addVariableLine("D3@sketch14", ceiling_shield_hole_distance)
+middle_flange_40K.addVariableLine("D4@sketch14", cryo_side_ceiling_base_hole_offset)
 
 middle_flange_40K.writeFile(verbose=True)
 

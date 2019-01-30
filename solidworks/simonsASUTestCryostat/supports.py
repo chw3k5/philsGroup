@@ -4,7 +4,7 @@ from solidworks.swVariables import SolidWorksPart
 params = PhysicalParams()
 valuesDict = {}
 parentDir = params.base_directory + "GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\supports"
+            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\supports\\legacy"
 """
 Universal Driving Values
 """
@@ -22,12 +22,13 @@ slot_depth = 5.0  # 3.0 * fiberglass_thickness_40K
 # Driving Values -> 40 K supports
 fiberglass_width_40K = 70.0  # millimeters
 base_length_40K = 120
+ceiling_length_40K = 90
 
-fiberglass_thickness_40K = (1. / 16.) * params.inch_to_mm
+fiberglass_thickness_40K = (1. / 8.) * params.inch_to_mm
 slot_clearance_for_fiberglass_40K = 0.015 * params.inch_to_mm
 
 ceiling_depth_40K = 30
-ceiling_slot_offset_fraction_40K = 0.8  # 1 is all the way to the top, 0.5 is in the middle, 0 is on the bottom
+ceiling_slot_offset_fraction_40K = 0.3  # 1 is all the way to the top, 0.5 is in the middle, 0 is on the bottom
 
 # Calculations -> 40K supports
 slot_width_40K = fiberglass_thickness_40K + (2.0 * slot_clearance_for_fiberglass_40K)
@@ -67,7 +68,7 @@ fiberglass_sheet_40K.writeFile(verbose=True)
 ### Equations file -> 40K - ceiling - Fiber Glass Supports
 ceiling_fiberglass_40K = SolidWorksPart("equations_40_ceiling_fiberglass.txt", units="mm", parent_directory=parentDir)
 
-ceiling_fiberglass_40K.addVariableLine("D1@sketch1", max(base_length_40K, 3.0 * params.inch_to_mm))  # ceiling length
+ceiling_fiberglass_40K.addVariableLine("D1@sketch1", max(ceiling_length_40K, 3.0 * params.inch_to_mm))  # ceiling length
 ceiling_fiberglass_40K.addVariableLine("D2@sketch1", ceiling_depth_40K)  # ceiling depth (short dimension)
 ceiling_fiberglass_40K.addVariableLine("D1@Boss-Extrude1", base_slash_ceiling_height)  # ceiling thickness
 
