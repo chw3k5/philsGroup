@@ -1,13 +1,79 @@
-import sys
-from solidworks.swVariables import equationsFile
+from solidworks.swVariables import equationsFile, SolidWorksPart
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
+
 
 params = PhysicalParams()
 valuesDict = {}
 parentDir = params.base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\4 K"
+
+
+relief_cut_4k_shield_and_heat_strap = 260
+relief_cut_corner_radius_4k_shield_and_heat_strap = 12.7
+
+"""
+4K Shield bottom flange. 
+"""
+bottom_flange_4K = SolidWorksPart("bottom_flange_4K.txt", units="mm", parent_directory=parentDir)
+bottom_flange_4K.addVariableLine("D1@Boss-Extrude1", params.shieldThickness_4K, units="in")
+bottom_flange_4K.addVariableLine("D5@sketch1", params.shieldExtensionDistance_4K)
+bottom_flange_4K.addVariableLine("D6@sketch1", params.shieldExtensionDistance_4K)
+bottom_flange_4K.addVariableLine("D7@sketch1", params.shieldExtensionFromColdHeadCenter)
+
+bottom_flange_4K.addVariableLine("D1@fillet1", params.millRadius, units="in")
+
+bottom_flange_4K.addVariableLine("D1@sketch7", relief_cut_4k_shield_and_heat_strap)
+bottom_flange_4K.addVariableLine("D2@sketch7", relief_cut_corner_radius_4k_shield_and_heat_strap)
+
+bottom_flange_4K.addVariableLine("D1@fillet2", relief_cut_corner_radius_4k_shield_and_heat_strap)
+
+bottom_flange_4K.writeFile(verbose=True)
+
+
+"""
+4 K Plate and Heat Strap
+"""
+pate_and_heat_strap_4K = SolidWorksPart("Heat Strapping\\pate_and_heat_strap_4K.txt", units="mm",
+                                        parent_directory=parentDir)
+pate_and_heat_strap_4K.addVariableLine("D1@Relief Cut for Shield", params.shieldThickness_4K, units="in")
+pate_and_heat_strap_4K.addVariableLine("D1@sketch5", relief_cut_4k_shield_and_heat_strap)
+
+pate_and_heat_strap_4K.addVariableLine("D1@Boss-Extrude1", params.fourK_plateHeight)
+
+pate_and_heat_strap_4K.addVariableLine("D2@sketch5", relief_cut_corner_radius_4k_shield_and_heat_strap)
+
+pate_and_heat_strap_4K.addVariableLine("D1@fillet1", relief_cut_corner_radius_4k_shield_and_heat_strap)
+
+pate_and_heat_strap_4K.writeFile(verbose=True)
+
+
+"""
+Plate to cold head heat strap - 4K
+
+The heat strapping as it attached to the top of the 40K cold head.
+"""
+
+plate_to_cold_head_strap_4K = SolidWorksPart("Heat Strapping\\plate_to_cold_head_strap_4K.txt", units="mm",
+                                        parent_directory=parentDir)
+
+plate_to_cold_head_strap_4K.addVariableLine("D1@sketch1", params.coldhead4K_boltCircle)
+plate_to_cold_head_strap_4K.addVariableLine("D2@sketch1", params.coldhead4K_OD)
+plate_to_cold_head_strap_4K.addVariableLine("D4@sketch1", params.coldhead4K_clearanceForID)
+plate_to_cold_head_strap_4K.addVariableLine("D5@sketch1", params.heatStrappingHeight4K)
+plate_to_cold_head_strap_4K.addVariableLine("D8@sketch1", params.heatStrap4K_OD)
+plate_to_cold_head_strap_4K.addVariableLine("D1@Boss-Extrude1", params.heatStrappingHeight4K)
+
+plate_to_cold_head_strap_4K.addVariableLine("D1@Boss-Extrude2", params.heatStrappingLowerExtensionDistance)
+
+plate_to_cold_head_strap_4K.writeFile(verbose=True)
+
+
+
 """
 Left Bottom Flange
+
+
+The sections below have not benn updated!
 """
 # Left side (viewed from above and with the cold head at the "front") bottom flange at 40k
 leftBottomFlangeCornerReferenceScrewInsetZ_str = "leftBottomFlangeCornerReferenceScrewInsetZ"
@@ -36,12 +102,8 @@ leftBottomFlange.addRefLine("D3@sketch1", leftBottomFlange_widthZ_str)
 leftBottomFlange.addRefLine("D1@Boss-Extrude1", leftBottomFlange_thickness_str)
 leftBottomFlange.addRefLine("D3@sketch2", smallSideHole_CenterToCenter_str)
 
+# leftBottomFlange.writeFile()
 
-if sys.platform == "win32":
-    leftBottomFlange.writeFile()
-    print(leftBottomFlange.fileContent)
-else:
-    print(leftBottomFlange.fileContent)
 
 """Rear Bottom Flange"""
 # Rear side (viewed from above and with the cold head at the "front") bottom flange at 40k
@@ -79,11 +141,7 @@ rearBottomFlange.addRefLine("D4@sketch1", rearBottomFlange_widthZ_str)
 rearBottomFlange.addRefLine("D1@Boss-Extrude1", rearBottomFlange_thickness_str)
 rearBottomFlange.addRefLine("D3@sketch2", largeSideHole_CenterToCenter_str)
 
-
-if sys.platform == "win32":
-    rearBottomFlange.writeFile()
-else:
-    print(rearBottomFlange.fileContent)
+# rearBottomFlange.writeFile()
 
 
 """Left Wall"""
@@ -112,11 +170,8 @@ leftWall.addRefLine("D3@sketch1", leftWallBendRadius_str)
 leftWall.addRefLine("D1@Extrude-Thin1", leftWallHeightY_str)
 leftWall.addRefLine("D5@Extrude-Thin1", leftWallThickness_str)
 
-if sys.platform == "win32":
-    leftWall.writeFile()
-    print(leftWall.fileContent)
-else:
-    print(leftWall.fileContent)
+# leftWall.writeFile()
+
 
 """Rear and Front Top Flange"""
 # Rear and Front (viewed from above and with the cold head at the "front") Flanges at 40k
@@ -141,11 +196,8 @@ RearAndFrontTopFlange.addRefLine("D4@sketch1", RearAndFrontTopFlangeInPlaneWidth
 RearAndFrontTopFlange.addRefLine("D5@Extrude-Thin1", RearAndFrontTopFlangeInPlaneWidth_str)
 RearAndFrontTopFlange.addRefLine("D1@Extrude-Thin1", RearAndFrontTopFlangeThickness_str)
 
-if sys.platform == "win32":
-    RearAndFrontTopFlange.writeFile()
-    print(RearAndFrontTopFlange.fileContent)
-else:
-    print(RearAndFrontTopFlange.fileContent)
+# RearAndFrontTopFlange.writeFile()
+
 
 """Left and Right Top Flange"""
 # Rear and Front (viewed from above and with the cold head at the "front") Flanges at 40k
@@ -170,11 +222,7 @@ LeftAndRightTopFlange.addRefLine("D2@sketch1", LeftAndRightTopFlangeInPlaneWidth
 LeftAndRightTopFlange.addRefLine("D3@Sketch1", shieldsLeftAndRightTopFlangeScrewInsertDist_str)
 LeftAndRightTopFlange.addRefLine("D1@Boss-Extrude1", LeftAndRightTopFlangeThickness_str)
 
-if sys.platform == "win32":
-    LeftAndRightTopFlange.writeFile()
-    print(LeftAndRightTopFlange.fileContent)
-else:
-    print(LeftAndRightTopFlange.fileContent)
+# LeftAndRightTopFlange.writeFile()
 
 # flange and walls assembly
 tolerance_str = "tolerance"
@@ -185,11 +233,8 @@ ShieldAssem40K.addVarLine(tolerance_str, params.tolerance, params.inch_str)
 ShieldAssem40K.addRefLine("D1@Distance4", tolerance_str)
 ShieldAssem40K.addRefLine("D1@Distance5", tolerance_str)
 
+# ShieldAssem40K.writeFile()
 
-if sys.platform == "win32":
-    ShieldAssem40K.writeFile()
-else:
-    print(ShieldAssem40K.fileContent)
 
 """Lid"""
 # The Lid of the 40k shields
@@ -215,98 +260,5 @@ Lid.addRefLine("D4@Sketch1", LidHoles_InsetDist_str)
 Lid.addRefLine("D5@Sketch1", LidHoles_InsetDist_str)
 Lid.addRefLine("D1@Sketch1", shieldsLeftAndRightTopFlangeScrewInsertDist_str)
 
-if sys.platform == "win32":
-    Lid.writeFile()
-    print(Lid.fileContent)
-else:
-    print(Lid.fileContent)
+# Lid.writeFile()
 
-"""4K heat strap (fourK_heatStrap)"""
-# The heat strapping as it attached to the topp of the 40K cold head.
-coldhead4K_boltCircle_str = "coldhead4K_boltCircle"
-valuesDict[coldhead4K_boltCircle_str] = (params.coldhead4K_boltCircle, params.mm_str)
-coldhead4K_OD_str = "fortyK_heatPlate_OD"
-valuesDict[coldhead4K_OD_str] = (params.coldhead4K_OD, params.mm_str)
-coldhead4K_clearanceForID_str = "coldhead4K_clearanceForID"
-valuesDict[coldhead4K_clearanceForID_str] = (params.coldhead4K_clearanceForID, params.mm_str)
-heatStrap4K_OD_str = "heatStrap4K_OD"
-valuesDict[heatStrap4K_OD_str] = (params.heatStrap4K_OD, params.mm_str)
-heatStrappingHeight4K_str = "heatStrappingHeight4K"
-valuesDict[heatStrappingHeight4K_str] = (params.heatStrappingHeight4K, params.mm_str)
-heatStrappingLowerExtensionDistance_str = "heatStrappingLowerExtensionDistance"
-valuesDict[heatStrappingLowerExtensionDistance_str] = (params.heatStrappingLowerExtensionDistance, params.mm_str)
-
-fourK_heatStrapStringList = [coldhead4K_boltCircle_str, coldhead4K_OD_str,
-                             coldhead4K_clearanceForID_str, heatStrap4K_OD_str,
-                             heatStrappingHeight4K_str,
-                             heatStrappingLowerExtensionDistance_str]
-
-fourK_heatStrap = equationsFile(fullFilePath=parentDir, fileName="Heat Strapping\\4K_heatPStrapEquations")
-fourK_heatStrap.listAddVarLine(fourK_heatStrapStringList, valuesDict)
-fourK_heatStrap.addRefLine("D1@sketch1", coldhead4K_boltCircle_str)
-fourK_heatStrap.addRefLine("D2@sketch1", coldhead4K_OD_str)
-fourK_heatStrap.addRefLine("D4@sketch1", coldhead4K_clearanceForID_str)
-fourK_heatStrap.addRefLine("D5@sketch1", heatStrappingHeight4K_str)
-fourK_heatStrap.addRefLine("D8@sketch1", heatStrap4K_OD_str)
-fourK_heatStrap.addRefLine("D1@Boss-Extrude1", heatStrappingHeight4K_str)
-fourK_heatStrap.addRefLine("D1@Boss-Extrude2", heatStrappingLowerExtensionDistance_str)
-
-if sys.platform == "win32":
-    fourK_heatStrap.writeFile()
-    print(fourK_heatStrap.fileContent)
-else:
-    print(fourK_heatStrap.fileContent)
-
-
-"""4K heat plate (fourK_heatPlate)"""
-fourK_heatPlate_refScrewX_str = "fourK_heatPlate_refScrewX"
-valuesDict[fourK_heatPlate_refScrewX_str] = (params.fourK_heatPlate_refScrewX, params.mm_str)
-rearBottomFlangeCornerReferenceScrewInsetZ_str = "rearBottomFlangeCornerReferenceScrewInsetZ"
-valuesDict[rearBottomFlangeCornerReferenceScrewInsetZ_str] = (params.rearBottomFlangeCornerReferenceScrewInsetZ_4K, params.mm_str)
-
-fourK_heatPlate_lengthX_str = "fourK_heatPlate_lengthX"
-valuesDict[fourK_heatPlate_lengthX_str] = (params.fourK_heatPlate_lengthX, params.mm_str)
-rearBottomFlange_widthZ_str = "rearBottomFlange_widthZ"
-valuesDict[rearBottomFlange_widthZ_str] = (params.rearBottomFlange_widthZ_4K, params.mm_str)
-
-rearBottomFlange_thickness_str = "rearBottomFlange_thickness"
-valuesDict[rearBottomFlange_thickness_str] = (params.bottomFlangeThickness_4K, params.inch_str)
-
-largeSideHole_CenterToCenter_str = "largeSideHole_CenterToCenter"
-valuesDict[largeSideHole_CenterToCenter_str] = (params.largeSideHole_CenterToCenter_4K, params.mm_str)
-
-heatPlate_leftOffsetFromRefScrew_str = "heatPlate_leftOffsetFromRefScrew"
-valuesDict[heatPlate_leftOffsetFromRefScrew_str] = (params.heatPlate_leftOffsetFromRefScrew, params.mm_str)
-heatPlate_rightOffsetFromRefScrew_str = "heatPlate_rightOffsetFromRefScrew"
-valuesDict[heatPlate_rightOffsetFromRefScrew_str] = (params.heatPlate_rightOffsetFromRefScrew, params.mm_str)
-fourK_heatConductionExtensionDistance_str = "fourK_heatConductionExtensionDistance"
-valuesDict[fourK_heatConductionExtensionDistance_str] = (params.fourK_heatConductionExtensionDistance, params.mm_str)
-fourK_plateHeight_str = "fourK_plateHeight"
-valuesDict[fourK_plateHeight_str] = (params.fourK_plateHeight, params.mm_str)
-
-
-fourK_heatPlateStringList = [fourK_heatPlate_refScrewX_str, rearBottomFlangeCornerReferenceScrewInsetZ_str,
-                             fourK_heatPlate_lengthX_str, rearBottomFlange_widthZ_str,
-                             rearBottomFlange_thickness_str, largeSideHole_CenterToCenter_str,
-                             heatPlate_leftOffsetFromRefScrew_str, heatPlate_rightOffsetFromRefScrew_str,
-                             fourK_heatConductionExtensionDistance_str, fourK_plateHeight_str]
-
-fourK_heatPlate = equationsFile(fullFilePath=parentDir, fileName="Heat Strapping\\4K_HeatPlateEquations")
-fourK_heatPlate.listAddVarLine(fourK_heatPlateStringList, valuesDict)
-fourK_heatPlate.addRefLine("D1@sketch1", fourK_heatPlate_refScrewX_str)
-fourK_heatPlate.addRefLine("D2@sketch1", rearBottomFlangeCornerReferenceScrewInsetZ_str)
-fourK_heatPlate.addRefLine("D3@sketch1", fourK_heatPlate_lengthX_str)
-fourK_heatPlate.addRefLine("D4@sketch1", rearBottomFlange_widthZ_str)
-fourK_heatPlate.addRefLine("D1@Boss-Extrude1", fourK_plateHeight_str)
-fourK_heatPlate.addRefLine("D3@sketch2", largeSideHole_CenterToCenter_str)
-
-fourK_heatPlate.addRefLine("D1@sketch6", heatPlate_leftOffsetFromRefScrew_str)
-fourK_heatPlate.addRefLine("D2@sketch6", heatPlate_rightOffsetFromRefScrew_str)
-fourK_heatPlate.addRefLine("D3@sketch6", fourK_heatConductionExtensionDistance_str)
-
-
-if sys.platform == "win32":
-    fourK_heatPlate.writeFile()
-    print(fourK_heatPlate.fileContent)
-else:
-    print(fourK_heatPlate.fileContent)
