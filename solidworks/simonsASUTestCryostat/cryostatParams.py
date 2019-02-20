@@ -52,13 +52,14 @@ class PhysicalParams:
 
         # 40 K shield (in millimeters)
         # https://www.protocase.com/products/materials-components-finishes/materials/aluminum.php
+        self.shieldSpace_40K_300K = 10.0  # Updated Variable for shields version 2
+
         self.shieldThickness = 2.06  # millimeters: 2.06 is gauge 12, 1.63 is gauge 14, 1.30 is gauge 16
         self.shieldThickness_heatConduction = (1.0 / 8.0) * self.inch_to_mm  # Updated Variable for shields version 2
-        self.rearExtensionDistance = 40.0
-        self.leftExtensionDistance = self.rearExtensionDistance
-        self.rightExtensionDistance = self.rearExtensionDistance
+        self.rearExtensionDistance = 55.0 - self.shieldSpace_40K_300K  # Updated Variable for shields version 2
+        self.leftExtensionDistance = self.rearExtensionDistance  # Updated Variable for shields version 2
+        self.rightExtensionDistance = self.rearExtensionDistance  # Updated Variable for shields version 2
 
-        self.shieldSpace_40K_300K = 15.0
 
         self.shieldsFlangeThickness = 10.00  # Updated Variable for shields version 2
         self.shieldsFlangeWidth = 24  # Updated Variable for shields version 2
@@ -67,23 +68,16 @@ class PhysicalParams:
         self.HMS_bottomFlangeThickness = (3.0 / 16.0) * self.inch_to_mm  # Updated Variable for shields version 2
         self.HMS_topFlangeThickness = (3.0 / 16.0) * self.inch_to_mm  # Updated Variable for shields version 2
         self.coldhead40K_flange_thickness = 10.0  # Updated Variable for shields version 2
-        self.coldhead40K_flange_Z = 170.0  # millimeters
+        self.coldhead40K_flange_Z = 185.0 - self.shieldSpace_40K_300K  # Updated Variable for shields version 2
 
         # 4 K shield (in millimeters)
-        self.shieldThickness_4K = (1.0 / 8.0)  # inches
-        self.shieldSpace_4K_40K = 15.0  # Updated Variable for shields version 2
-        self.shieldExtensionDistance_4K = 73.0 - (2.0 * self.shieldSpace_4K_40K)  # For shields version2
-        self.shieldExtensionFromColdHeadCenter = 75.0 - self.shieldSpace_4K_40K  # Updated Variable for shields version2
+        self.shieldSpace_4K_40K = 10.0  # Updated Variable for shields version 2
+        self.fourK_plateHeight = (3.0 / 8.0) * self.inch_to_mm  # Updated Variable for shields version 2
 
+        self.heatStrappingHeight4K = 28.0  # Updated Variable for shields version 2
+        self.heatStrap4K_OD = 72.0  # Updated Variable for shields version 2
+        self.heatStrappingLowerExtensionDistance = 57.675  # Updated Variable for shields version 2
 
-
-
-        self.shieldsTopFlangeThickness_4K = 3.0/8.0  # inches
-        self.shieldsTopFlangeWidth_4K = 20.0
-
-        self.shieldsLeftAndRightTopFlangeScrewInsertDist_4K = 0.25  # inches
-
-        self.lidInsetFromInnerWalls_4K = 3.0
 
         """
         measured values (in millimeters)
@@ -167,13 +161,6 @@ class PhysicalParams:
         These values have been hard coded on January 15, 2019, after the parts were sent
         out to the ASU machine shop for fabrication. 
         """
-        # self.insertDist = (self.rearExtensionDistance - self.rearOfInsert300K_edgeTo40K_edge +
-        #                    self.shieldSpace_40K_300K)
-        # self.workingLen = (self.insertDist + self.vacuumInsertWidth
-        #                    + (self.coldhead_insert_clearance * self.inch_to_mm)
-        #                    + (self.collar_OD * self.inch_to_mm / 2.0) + (self.coldhead_OD / 2.0)) / self.inch_to_mm
-        # self.workingWidth = (self.rightExtensionDistance + self.insert40K_Z + self.leftExtensionDistance
-        #                      + (2.0 * self.shieldSpace_40K_300K)) / self.inch_to_mm
         self.insertDist = 20.0  # millimeters
         self.workingLen = 23.147638  # inches
         self.workingWidth = 20.07874  # inches
@@ -195,9 +182,9 @@ class PhysicalParams:
         self.total40K_FlangeWidth = self.rearBottomFlange_widthZ + (2.0 * self.leftBottomFlange_widthZ)
         #
         # Flange Thicknesses
-        self.bottomFlangeThickness = self.shieldThickness  # inches
-        self.lid_shieldThickness = self.shieldThickness  # inches
-        self.totalShieldThickness = (self.bottomFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
+        self.baseFlangeThickness = (1.0 / 8.0)  * self.inch_to_mm  # updated for version 2
+        self.lid_shieldThickness = self.shieldThickness
+        self.totalShieldThickness = (self.baseFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
 
         # 40 K coldhead shielding in g flanges
         self.coldheadShieldWall_height = 65.45 - self.shieldsFlangeThickness
@@ -211,117 +198,25 @@ class PhysicalParams:
         self.shield_40K_workingHeight = ((self.workingDepthBottom + self.workingDepthTop) * self.inch_to_mm) \
                                         - self.cryoFloorTo40K_InsertBottom - self.insert_40KThickness \
                                         - self.totalShieldThickness - self.shieldSpace_40K_300K \
-                                        - self.HMS_bottomFlangeThickness - self.HMS_topFlangeThickness
-        #
-        # # Calculations for 40K shield Top flanges
-        # self.RearAndFrontTopFlangeBendRadius = self.millRadius - self.shieldThickness
-        # self.RearAndFrontTopFlangeLenX = self.rearBottomFlange_widthZ + (2.0 *self.leftBottomFlange_widthZ) \
-        #                                  - (2.0 * self.shieldThickness * self.inch_to_mm)
-        # self.LeftAndRightTopFlangeLen = self.leftBottomFlange_lengthX \
-        #                                 - (2.0 * (self.millRadius + self.tolerance) * self.inch_to_mm)
+                                        - self.baseFlangeThickness - self.HMS_topFlangeThickness
 
-        # # Calculations for 40K shield Lid
-        # self.LidMillRadius = (self.RearAndFrontTopFlangeBendRadius * self.inch_to_mm) - self.lidInsetFromInnerWalls
-        # self.LidRearFrontLen = self.RearAndFrontTopFlangeLenX - (2.0 * self.lidInsetFromInnerWalls)
-        # self.LidLeftRightLen = self.LeftAndRightTopFlangeLen \
-        #                        + (2.0 * self.RearAndFrontTopFlangeBendRadius * self.inch_to_mm) \
-        #                        - (2.0 * self.lidInsetFromInnerWalls)
-        # self.LidHoles_InsetDist = (self.shieldsTopFlangeWidth / 2.0) - self.lidInsetFromInnerWalls
-        #
-        # """
-        # 4K shield
-        # """
-        # # Calculations for Left Bottom Flange
-        # self.leftBottomFlangeCornerReferenceScrewInsetX_4K = self.shieldExtensionDistance_4K \
-        #                                                      + self.smallSideRefHole_to_edgeX_4K
-        # self.leftBottomFlangeCornerReferenceScrewInsetZ_4K = self.expected_edgeOverLap_4K \
-        #                                                      - self.smallSideRefHole_to_edgeZ_4K
-        # self.leftBottomFlange_lengthX_4K = (self.workingLen * self.inch_to_mm) \
-        #                                     - (2.0 * self.shieldSpace_40K_300K) \
-        #                                     - (2.0 * self.shieldThickness) \
-        #                                     - (2.0 * self.shieldSpace_4K_40K)
-        # self.leftBottomFlange_widthZ_4K = self.expected_edgeOverLap_4K + self.shieldExtensionDistance_4K
-        #
-        # # Calculations for Rear Bottom Flange
-        # self.rearBottomFlangeCornerReferenceScrewInsetX_4K = self.shieldExtensionDistance_4K \
-        #                                                      + self.largeSideRefHole_to_edgeX_4K
-        # self.rearBottomFlangeCornerReferenceScrewInsetZ_4K = abs(self.expected_edgeOverLap_4K - self.largeSideRefHole_to_edgeZ_4K)
-        # self.rearBottomFlange_lengthX_4K = self.shieldExtensionDistance_4K + self.expected_edgeOverLap_4K
-        # self.rearBottomFlange_widthZ_4K = self.insert4K_Z - (2.0 * self.expected_edgeOverLap_4K)
-        #
-        # Flange Thicknesses
-        self.bottomFlangeThickness_4K = self.shieldThickness_4K  # inches
-        self.lid_shieldThickness_4K = self.shieldThickness_4K  # inches
-        self.totalShieldThickness_4K = (self.bottomFlangeThickness_4K + self.lid_shieldThickness_4K) * self.inch_to_mm
 
-        # # Calculations for 40K wall
-        # self.Wall4K_halfWidthZ = (self.rearBottomFlange_widthZ_4K / 2.0) + self.leftBottomFlange_widthZ_4K
-        #
-        # # calculations for 40 Half moon
-        # shellFloor_To40KInsertTop = self.cryoFloorTo40K_InsertBottom + self.insert_40KThickness
-        # shellFloor_To40KColdheadTop = self.topOf300KFlange_toTopOf40KFlange - (self.collar_height * self.inch_to_mm) \
-        #                               - (self.bottomWallShellThickness * self.inch_to_mm)
-        # self.halfMoonHeight = shellFloor_To40KInsertTop - shellFloor_To40KColdheadTop
-        # self.halfMoon_OD = self.coldhead40K_OD + self.coldhead40K_OD_overshoot
-        #
-        # # calculations for 40k Heat Plate
-        # self.fortyK_heatPlate_ID = self.coldhead_40Kto4K_shaft_OD + self.coldhead40K_clearanceForID
-        # self.halfMoonConductionArea = pi * (((self.halfMoon_OD / 2.0)**2.0)
-        #                                      - ((self.coldhead40K_ID / 2.0) + self.coldhead40K_clearanceForID)**2.0)
-        # forty_k_edge_to_three_hundred_k_edge_insert = (self.vacuumInsertWidth - self.insert40K_X) / 2.0
-        # forty_k_edge_to_three_hundred_k_edge_coldhead = (self.collar_OD * self.inch_to_mm - self.halfMoon_OD) / 2.0
-        # # This is calculation to make the heat plate have the same conducive area as the half moon
-        # self.fortyK_heatPlate_height = self.halfMoonConductionArea / self.halfMoon_OD
-        #
-        # self.fortyK_heatPlate_extensionDistance = forty_k_edge_to_three_hundred_k_edge_coldhead \
-        #                                            + (self.coldhead_insert_clearance * self.inch_to_mm) \
-        #                                            + forty_k_edge_to_three_hundred_k_edge_insert \
-        #                                            + self.heatStrappingInset40K
-        # self.forty_heatPlate_widening \
-        #     = max(self.coldhead40K_clearanceForID,
-        #           self.coldhead40K_clearanceForID + ((self.halfMoonConductionArea
-        #                                               / (self.heatStrappingInset40K - self.MLI_inset40K)) / 2.0)
-        #                                               - ((self.halfMoon_OD / 2.0) - self.coldhead40K_clearanceForID))
-        # # Calculations for 4K shield Wall height
-        # self.shield_4K_workingHeight = ((self.workingDepthBottom + self.workingDepthTop) * self.inch_to_mm) \
-        #                                - self.cryoFloorTo40K_InsertBottom - self.insert_40KThickness \
-        #                                - self.workingDist_40K_4K - self.insert_4KThickness \
-        #                                - self.totalShieldThickness_4K - self.totalShieldThickness \
-        #                                - self.shieldSpace_40K_300K - self.shieldSpace_4K_40K
-        #
-        # # Calculations for 4K shield Top flanges
-        # self.RearAndFrontTopFlangeBendRadius_4K = self.millRadius - self.shieldThickness_4K
-        # self.RearAndFrontTopFlangeLenX_4K = self.rearBottomFlange_widthZ_4K + (2.0 *self.leftBottomFlange_widthZ_4K) \
-        #                                     - (2.0 * self.shieldThickness_4K * self.inch_to_mm)
-        # self.LeftAndRightTopFlangeLen_4K = self.leftBottomFlange_lengthX_4K \
-        #                                    - (2.0 * (self.millRadius + self.tolerance) * self.inch_to_mm)
-        #
-        # # Calculations for 4K shield Lid
-        # self.LidMillRadius_4K = (self.RearAndFrontTopFlangeBendRadius_4K * self.inch_to_mm) - self.lidInsetFromInnerWalls_4K
-        # self.LidRearFrontLen_4K = self.RearAndFrontTopFlangeLenX_4K - (2.0 * self.lidInsetFromInnerWalls_4K)
-        # self.LidLeftRightLen_4K = self.LeftAndRightTopFlangeLen_4K \
-        #                           + (2.0 * self.RearAndFrontTopFlangeBendRadius_4K * self.inch_to_mm) \
-        #                           - (2.0 * self.lidInsetFromInnerWalls_4K)
-        # self.LidHoles_InsetDist_4K = (self.shieldsTopFlangeWidth_4K / 2.0) - self.lidInsetFromInnerWalls_4K
-        #
-        # # calculations for 4k heat strapping
-        # self.heatStrap4K_OD = (self.heatStrap4K_overshoot * 2.0) + self.coldhead4K_OD
-        # coldhead_conduction_area = pi * ((self.heatStrap4K_OD / 2.0)**2.0)
-        # self.heatStrappingHeight4K = 28.0  # coldhead_conduction_area / (2.0 * self.heatStrap4K_OD)
-        #
-        # self.fourK_heatPlate_lengthX = 192.05 + self.expected_edgeOverLap_4K
-        # self.fourK_heatPlate_refScrewX = self.expected_edgeOverLap_4K - self.largeSideRefHole_to_edgeX_4K
-        #
-        # baseline_of_extention_dist_for_4K_plate = self.heatPlate_leftOffsetFromRefScrew \
-        #                                           + self.heatPlate_rightOffsetFromRefScrew \
-        #                                           + 4.0 * self.largeSideHole_CenterToCenter_4K
-        #
-        #
-        #
-        #
-        # self.fourK_plateHeight =  (3.0 / 8.0) * self.inch_to_mm  # max(3.0 * self.inch_to_mm / 8.0,
-        #                              # coldhead_conduction_area / self.rearBottomFlange_widthZ_4K)
-        # shellFloor_To4KInsertTop = shellFloor_To40KInsertTop + self.workingDist_40K_4K + self.insert_4KThickness
-        # shellFloor_To4KColdheadTop = shellFloor_To40KColdheadTop + self.topOf40KFlange_toTopOf4KFlange
-        # self.heatStrappingLowerExtensionDistance = shellFloor_To4KColdheadTop - shellFloor_To4KInsertTop \
-        #                                            - self.fourK_plateHeight
+        """
+        4K Calculations
+        """
+
+        # 4K Bottom plate calculations
+        self.shieldOffset_4K = self.shieldsFlangeWidth + self.shieldSpace_4K_40K  # Updated Variable for shields version2
+        self.total4K_flangeWidth = self.total40K_FlangeWidth - (2.0 * self.shieldOffset_4K)  # Updated Variable for shields version2
+        self.total4K_flangeLength = self.leftBottomFlange_lengthX - (2.0 * self.shieldOffset_4K)  # Updated Variable for shields version2
+
+        self.shieldExtensionFromColdHeadCenter = 56.0 - self.shieldSpace_4K_40K  # Updated Variable for shields version2
+
+        self.shieldsFlangeWidth_4K = 12.0 + self.shieldThickness
+        self.shieldsFlange_holeInset_4K = ((self.shieldsFlangeWidth_4K - self.shieldThickness) / 2.0) \
+                                          + self.shieldThickness
+        # # Flange Thicknesses
+        # self.bottomFlangeThickness_4K = self.shieldThickness_4K  # inches
+        # self.lid_shieldThickness_4K = self.shieldThickness_4K  # inches
+        # self.totalShieldThickness_4K = (self.bottomFlangeThickness_4K + self.lid_shieldThickness_4K) * self.inch_to_mm
+
