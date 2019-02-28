@@ -60,7 +60,6 @@ class PhysicalParams:
         self.leftExtensionDistance = self.rearExtensionDistance  # Updated Variable for shields version 2
         self.rightExtensionDistance = self.rearExtensionDistance  # Updated Variable for shields version 2
 
-
         self.shieldsFlangeThickness = 10.00  # Updated Variable for shields version 2
         self.shieldsFlangeWidth = 24  # Updated Variable for shields version 2
         self.shieldsFlange_holeInset = 8.128  # Updated Variable for shields version 2
@@ -78,6 +77,8 @@ class PhysicalParams:
         self.heatStrap4K_OD = 72.0  # Updated Variable for shields version 2
         self.heatStrappingLowerExtensionDistance = 57.675  # Updated Variable for shields version 2
 
+        self.rear_shellClearance_4K_heatStrapping = 2.0
+        self.shield_connection_holes_large_spacing_4K = 130.0
 
         """
         measured values (in millimeters)
@@ -182,7 +183,7 @@ class PhysicalParams:
         self.total40K_FlangeWidth = self.rearBottomFlange_widthZ + (2.0 * self.leftBottomFlange_widthZ)
         #
         # Flange Thicknesses
-        self.baseFlangeThickness = (1.0 / 8.0)  * self.inch_to_mm  # updated for version 2
+        self.baseFlangeThickness = (1.0 / 8.0) * self.inch_to_mm  # updated for version 2
         self.lid_shieldThickness = self.shieldThickness
         self.totalShieldThickness = (self.baseFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
 
@@ -215,6 +216,15 @@ class PhysicalParams:
         self.shieldsFlangeWidth_4K = 12.0 + self.shieldThickness
         self.shieldsFlange_holeInset_4K = ((self.shieldsFlangeWidth_4K - self.shieldThickness) / 2.0) \
                                           + self.shieldThickness
+
+        self.inset_to_clear_4K_flanges = self.shieldsFlangeWidth_4K + self.rear_shellClearance_4K_heatStrapping
+
+        self.heat_strapping_from_coldHead_center = 46.0 - self.inset_to_clear_4K_flanges
+        self.heat_plate_4K_width = self.total4K_flangeWidth - (2.0 * self.inset_to_clear_4K_flanges)
+        self.heat_plate_4K_corner_radius = (self.millRadius * self.inch_to_mm) - self.inset_to_clear_4K_flanges
+
+        self.width_for_heat_plate_at_fullDepth = self.heat_plate_4K_width - 60
+
         # # Flange Thicknesses
         # self.bottomFlangeThickness_4K = self.shieldThickness_4K  # inches
         # self.lid_shieldThickness_4K = self.shieldThickness_4K  # inches

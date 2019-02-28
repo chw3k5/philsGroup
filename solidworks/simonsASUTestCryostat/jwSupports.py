@@ -9,7 +9,8 @@ parentDir = params.base_directory + "GrabCAD\\SO\\" + \
 Universal Driving Values
 """
 # Driving Values for both 4K and 40K
-required_support_height = 100.65
+required_support_height_40K = 100.65
+required_support_height_4K = 107.175
 
 base_and_ceiling_height = 15
 
@@ -37,15 +38,27 @@ ceiling_shield_hole_distance = 60.0
 # Calculations -> 40K supports
 base_mounting_holes_offset_from_edge = (base_depth_40K_cryo_side / 2.0) + base_mounting_holes_offset_from_center
 
-fiberglass_height_40K = required_support_height - (2.0 * fiberglass_ground_clearance)
+fiberglass_height_40K = required_support_height_40K - (2.0 * fiberglass_ground_clearance)
 x_leg_overshoot_radius = x_leg_overshoot + (x_leg_width / 2.0)
 
 ceiling_length_40K = base_and_ceiling_hole_distance + (2.0 * x_leg_overshoot_radius)
 
-base_to_ceiling_hole_height = required_support_height - base_and_ceiling_height
+base_to_ceiling_hole_height_40K = required_support_height_40K - base_and_ceiling_height
 
 cryo_side_ceiling_base_hole_offset = ((base_depth_40K_cryo_side - ceiling_depth_40K) / 2.0) \
                                       + base_mounting_holes_offset_from_center
+
+
+"""
+4K Supports 
+"""
+# Driving Values -> 40 K supports
+fiberglass_thickness_4K = fiberglass_thickness_40K
+
+# Calculations -> 40K supports
+fiberglass_height_4K = required_support_height_4K - (2.0 * fiberglass_ground_clearance)
+base_to_ceiling_hole_height_4K = required_support_height_4K - base_and_ceiling_height
+
 
 """
 Commands to write the SolidWorks text files. 
@@ -82,7 +95,7 @@ base_fiberglass_40K_far.writeFile(verbose=True)
 # Equations file -> 40K - G10 sheet - Fiber Glass Supports
 fiberglass_sheet_40K = SolidWorksPart("equations_40_fiberglass_sheet.txt", units="mm", parent_directory=parentDir)
 
-fiberglass_sheet_40K.addVariableLine("D1@sketch1", base_to_ceiling_hole_height)
+fiberglass_sheet_40K.addVariableLine("D1@sketch1", base_to_ceiling_hole_height_40K)
 fiberglass_sheet_40K.addVariableLine("D2@sketch1", base_and_ceiling_hole_distance)
 fiberglass_sheet_40K.addVariableLine("D3@sketch1", x_leg_width)
 fiberglass_sheet_40K.addVariableLine("D4@sketch1", fiberglass_height_40K)
@@ -108,3 +121,19 @@ ceiling_fiberglass_40K.addVariableLine("D1@sketch6", ceiling_shield_hole_distanc
 
 ceiling_fiberglass_40K.writeFile(verbose=True)
 
+"""
+4K supports, equations files
+"""
+# Equations file -> 4K - G10 sheet - Fiber Glass Supports
+fiberglass_sheet_4K = SolidWorksPart("equations_4K_fiberglass_sheet.txt", units="mm", parent_directory=parentDir)
+
+fiberglass_sheet_4K.addVariableLine("D1@sketch1", base_to_ceiling_hole_height_4K)
+fiberglass_sheet_4K.addVariableLine("D2@sketch1", base_and_ceiling_hole_distance)
+fiberglass_sheet_4K.addVariableLine("D3@sketch1", x_leg_width)
+fiberglass_sheet_4K.addVariableLine("D4@sketch1", fiberglass_height_4K)
+
+fiberglass_sheet_4K.addVariableLine("D1@Boss-Extrude1", fiberglass_thickness_4K)
+
+fiberglass_sheet_4K.addVariableLine("D1@sketch4", x_leg_overshoot_radius)
+
+fiberglass_sheet_4K.writeFile(verbose=True)

@@ -153,7 +153,7 @@ HMS_lid_40K = SolidWorksPart("HMS_lid_40K.txt", units="mm", parent_directory=par
 
 HMS_lid_40K.addVariableLine("D1@sketch2", params.total40K_FlangeWidth)
 HMS_lid_40K.addVariableLine("D2@sketch2", params.leftBottomFlange_lengthX)
-HMS_lid_40K.addVariableLine("D1@Boss-Extrude1", params.shieldThickness)
+HMS_lid_40K.addVariableLine("D1@Boss-Extrude1", params.lid_shieldThickness)
 
 HMS_lid_40K.addVariableLine("D1@Fillet1", params.millRadius, units="in")
 
