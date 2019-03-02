@@ -1,5 +1,4 @@
 import sys
-from solidworks.swVariables import equationsFile
 from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 from solidworks.solidWorksVariables import SolidWorksPart
 from solidworks.simonsASUTestCryostat.jwSupports import ceiling_shield_hole_distance, \
@@ -109,7 +108,7 @@ HMS_bottom_weld_flange_40K.addVariableLine("D1@sketch3", params.shieldsFlangeWid
 
 HMS_bottom_weld_flange_40K.addVariableLine("D1@sketch4", params.shieldsFlange_holeInset)
 
-HMS_bottom_weld_flange_40K.addVariableLine("D1@sketch5", 0.42, units="in")
+HMS_bottom_weld_flange_40K.addVariableLine("D1@sketch5", 12.0)
 
 HMS_bottom_weld_flange_40K.writeFile(verbose=True)
 
