@@ -52,32 +52,19 @@ assem8_32RivetsWithFasteners.writeFile(verbose=True)
 """
 coldhead flange at 40K
 """
-coldhead_flangeFront_40K = SolidWorksPart("coldhead_flangeFront_40K.txt", units="mm", parent_directory=parentDir)
-coldhead_flangeFront_40K.addVariableLine("D1@Boss-Extrude1", params.coldhead40K_flange_thickness)
+coldhead_flange_40K = SolidWorksPart("coldhead_flange_40K.txt", units="mm", parent_directory=parentDir)
+coldhead_flange_40K.addVariableLine("D1@Boss-Extrude1", params.coldhead40K_flange_thickness)
 
-coldhead_flangeFront_40K.addVariableLine("D5@sketch1", coldhead_edge_offset)
-coldhead_flangeFront_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
-coldhead_flangeFront_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
+coldhead_flange_40K.addVariableLine("D5@sketch1", coldhead_edge_offset)
+coldhead_flange_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
+coldhead_flange_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
 
-coldhead_flangeFront_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
+coldhead_flange_40K.addVariableLine("D1@fillet1", params.millRadius, units="in")
 
-coldhead_flangeFront_40K.addVariableLine("D1@sketch6", params.coldhead_flangeScrewInset)
-coldhead_flangeFront_40K.writeFile(verbose=True)
+coldhead_flange_40K.addVariableLine("D1@sketch7", params.shield_clamp_spacing)
 
-"""
-coldhead Ring Flanges
-"""
-coldhead_ringFlange_40K = SolidWorksPart("coldhead_ringFlange_40K.txt", units="mm", parent_directory=parentDir)
-coldhead_ringFlange_40K.addVariableLine("D1@Extrude-Thin1", params.shieldsFlangeThickness)
-coldhead_ringFlange_40K.addVariableLine("D5@Extrude-Thin1", params.shieldsFlangeWidth)
 
-coldhead_ringFlange_40K.addVariableLine("D5@sketch1", coldhead_edge_offset)
-coldhead_ringFlange_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_Z)
-coldhead_ringFlange_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
-coldhead_ringFlange_40K.addVariableLine("D8@sketch1", params.millRadius, units="in")
-
-coldhead_ringFlange_40K.addVariableLine("D1@3Dsketch1", params.coldhead_flangeScrewInset)
-coldhead_ringFlange_40K.writeFile(verbose=True)
+coldhead_flange_40K.writeFile(verbose=True)
 
 
 """
@@ -92,6 +79,21 @@ coldhead_shieldwall_40K.addVariableLine("D6@sketch1", params.coldhead40K_flange_
 coldhead_shieldwall_40K.addVariableLine("D7@sketch1", params.total40K_FlangeWidth)
 coldhead_shieldwall_40K.addVariableLine("D8@sketch1", params.millRadius, units="in")
 coldhead_shieldwall_40K.writeFile(verbose=True)
+
+
+"""
+coldhead_shield_clamps
+"""
+coldhead_shield_clamps_40K = SolidWorksPart("Heat strapping\\coldhead_shield_clamps_40K.txt",
+                                            units="mm", parent_directory=parentDir)
+coldhead_shield_clamps_40K.addVariableLine("D1@sketch1", params.coldhead40K_flange_Z
+                                    - (4.0 * params.shieldThickness_heatConduction))
+
+coldhead_shield_clamps_40K.addVariableLine("D1@sketch5", params.shield_clamp_spacing)
+coldhead_shield_clamps_40K.addVariableLine("D3@LPattern1", params.shield_clamp_spacing)
+coldhead_shield_clamps_40K.addVariableLine("D4@LPattern1", params.shield_clamp_spacing)
+
+coldhead_shield_clamps_40K.writeFile(verbose=True)
 
 """
 Harness main Shield - Bottom Weld Flange - 40K

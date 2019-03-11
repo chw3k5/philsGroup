@@ -60,14 +60,17 @@ class PhysicalParams:
         self.leftExtensionDistance = self.rearExtensionDistance  # Updated Variable for shields version 2
         self.rightExtensionDistance = self.rearExtensionDistance  # Updated Variable for shields version 2
 
-        self.shieldsFlangeThickness = 10.00  # Updated Variable for shields version 2
+        self.shieldsFlangeThickness = (1.0 / 8.0) * self.inch_to_mm  # Updated Variable for shields version 2
         self.shieldsFlangeWidth = 24  # Updated Variable for shields version 2
         self.shieldsFlange_holeInset = 8.128  # Updated Variable for shields version 2
 
         self.HMS_bottomFlangeThickness = (3.0 / 16.0) * self.inch_to_mm  # Updated Variable for shields version 2
         self.HMS_topFlangeThickness = (3.0 / 16.0) * self.inch_to_mm  # Updated Variable for shields version 2
-        self.coldhead40K_flange_thickness = 10.0  # Updated Variable for shields version 2
+        self.coldhead40K_flange_thickness = (1.0 / 4.0) * self.inch_to_mm  # Updated Variable for shields version 2
         self.coldhead40K_flange_Z = 185.0 - self.shieldSpace_40K_300K  # Updated Variable for shields version 2
+
+        self.coldheadShieldWall_height = 78.475
+        self.shield_clamp_spacing = 15.5
 
         # 4 K shield (in millimeters)
         self.shieldSpace_4K_40K = 10.0  # Updated Variable for shields version 2
@@ -187,8 +190,8 @@ class PhysicalParams:
         self.lid_shieldThickness = self.shieldThickness
         self.totalShieldThickness = (self.baseFlangeThickness + self.lid_shieldThickness) * self.inch_to_mm
 
-        # 40 K coldhead shielding in g flanges
-        self.coldheadShieldWall_height = 65.45 - self.shieldsFlangeThickness
+        # 40 K coldhead shielding flanges
+
         self.coldhead_flangeScrewInset = (self.shieldsFlangeWidth
          + self.shieldThickness_heatConduction) / 2.0
 
@@ -201,11 +204,9 @@ class PhysicalParams:
                                         - self.totalShieldThickness - self.shieldSpace_40K_300K \
                                         - self.baseFlangeThickness - self.HMS_topFlangeThickness
 
-
         """
         4K Calculations
         """
-
         # 4K Bottom plate calculations
         self.shieldOffset_4K = self.shieldsFlangeWidth + self.shieldSpace_4K_40K  # Updated Variable for shields version2
         self.total4K_flangeWidth = self.total40K_FlangeWidth - (2.0 * self.shieldOffset_4K)  # Updated Variable for shields version2

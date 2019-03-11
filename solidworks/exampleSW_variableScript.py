@@ -1,12 +1,49 @@
-from solidworks.solidWorksVariables import SolidWorksPart
 import getpass
 import os
+
+# I like this function so that I can make user specific modifications
+user_name = getpass.getuser()
+
+"""
+The Class the generates the text files in the format Solidworks is expecting. 
+
+This is mostly made for reduce the repetitive requirements of writing a correctly formatted file.
+The Author of this class is a very poor speller.
+"""
+
+
+class SolidWorksPart:
+    def __init__(self, file_name, units="in", parent_directory=None):
+        if parent_directory is None:
+                parent_directory = os.path.join("C:\\Users", user_name,
+                                                "Documents\\GrabCAD\\SO\\Universal Readout Harness\\" +
+                                                "ASU Test Harness\\ASU Test Cryostat\\4 K")
+
+        self.fullFileName = os.path.join(parent_directory, file_name)
+        self.units = units
+        self.fileContent = ""
+
+    def addVariableLine(self, solidworks_variable, a_number, units=None):
+
+        temporary_string = "\"" + solidworks_variable + "\"=" + str(a_number)
+        if units is None:
+            temporary_string += self.units + "\n"
+        else:
+            temporary_string += units + "\n"
+        self.fileContent += temporary_string
+
+    def writeFile(self, verbose=False):
+        file_handle = open(self.fullFileName, "w")
+        file_handle.write(self.fileContent)
+        file_handle.close()
+        if verbose:
+            print("Wrote file:\n ", self.fullFileName, "\n")
+
 
 """
 User specific Variables:
 parent_dir is the location on you computer where the equations files will be generated.
 """
-user_name = getpass.getuser()
 parent_dir = os.path.join("C:\\Users", user_name,
                           "Documents\\GrabCAD\\SO\\Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\4 K")
 

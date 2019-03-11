@@ -34,6 +34,8 @@ bottom_flange_4K.addVariableLine("D1@fillet2", relief_cut_corner_radius_4k_shiel
 bottom_flange_4K.addVariableLine("D1@sketch15", params.shieldsFlange_holeInset_4K)
 bottom_flange_4K.addVariableLine("D3@sketch15", params.shield_connection_holes_large_spacing_4K)
 
+bottom_flange_4K.addVariableLine("D2@sketch19", params.shieldsFlangeWidth_4K)
+
 bottom_flange_4K.writeFile(verbose=True)
 
 
@@ -83,8 +85,6 @@ plate_to_cold_head_strap_4K.writeFile(verbose=True)
 """
 4K Bottom Weld Flange
 """
-
-
 bottom_weld_flange_4K = SolidWorksPart("bottom_weld_flange_4K.txt", units="mm", parent_directory=parentDir)
 
 bottom_weld_flange_4K.addVariableLine("D1@sketch2", params.total4K_flangeWidth)
