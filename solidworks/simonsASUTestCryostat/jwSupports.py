@@ -5,6 +5,7 @@ params = PhysicalParams()
 valuesDict = {}
 parentDir = params.base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\supports"
+parentDir = params.base_directory + "Simon's Observartory\\Machine Shop Pack and Go\\SO Order2 - Full Cryostat\\supports"
 """
 Universal Driving Values
 """

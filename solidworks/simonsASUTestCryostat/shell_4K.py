@@ -4,9 +4,9 @@ from solidworks.simonsASUTestCryostat.cryostatParams import PhysicalParams
 
 params = PhysicalParams()
 valuesDict = {}
-parentDir = params.base_directory + "GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\4 K"
-
+# parentDir = params.base_directory + "GrabCAD\\SO\\" + \
+#             "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\4 K"
+parentDir = params.base_directory + "Simon's Observartory\\Machine Shop Pack and Go\\SO Order2 - Full Cryostat\\4 K"
 
 relief_cut_4k_shield_and_heat_strap = 260.0
 relief_cut_corner_radius_4k_shield_and_heat_strap = 12.7
@@ -42,7 +42,8 @@ bottom_flange_4K.writeFile(verbose=True)
 """
 4 K Plate and Heat Strap
 """
-pate_and_heat_strap_4K = SolidWorksPart("Heat Strapping\\pate_and_heat_strap_4K.txt", units="mm",
+# pate_and_heat_strap_4K = SolidWorksPart("Heat Strapping\\pate_and_heat_strap_4K.txt", units="mm",
+pate_and_heat_strap_4K = SolidWorksPart("pate_and_heat_strap_4K.txt", units="mm",
                                         parent_directory=parentDir)
 pate_and_heat_strap_4K.addVariableLine("D5@Sketch1", params.heat_strapping_from_coldHead_center)
 pate_and_heat_strap_4K.addVariableLine("D6@Sketch1", params.heat_plate_4K_width)
@@ -66,7 +67,8 @@ Plate to cold head heat strap - 4K
 The heat strapping as it attached to the top of the 40K cold head.
 """
 
-plate_to_cold_head_strap_4K = SolidWorksPart("Heat Strapping\\plate_to_cold_head_strap_4K.txt", units="mm",
+# plate_to_cold_head_strap_4K = SolidWorksPart("Heat Strapping\\plate_to_cold_head_strap_4K.txt", units="mm",
+plate_to_cold_head_strap_4K = SolidWorksPart("plate_to_cold_head_strap_4K.txt", units="mm",
                                         parent_directory=parentDir)
 
 plate_to_cold_head_strap_4K.addVariableLine("D1@sketch1", params.coldhead4K_boltCircle)

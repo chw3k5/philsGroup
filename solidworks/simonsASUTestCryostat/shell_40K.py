@@ -6,9 +6,9 @@ from solidworks.simonsASUTestCryostat.jwSupports import ceiling_shield_hole_dist
 
 params = PhysicalParams()
 valuesDict = {}
-parentDir = params.base_directory + "GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\40 K"
-
+# parentDir = params.base_directory + "GrabCAD\\SO\\" + \
+#             "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\40 K"
+parentDir = params.base_directory + "Simon's Observartory\\Machine Shop Pack and Go\\SO Order2 - Full Cryostat\\40 K"
 coldhead_edge_offset = 27.5 - params.shieldSpace_40K_300K
 
 """
