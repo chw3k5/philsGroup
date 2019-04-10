@@ -5,7 +5,7 @@ params = PhysicalParams()
 valuesDict = {}
 parentDir = params.base_directory + "GrabCAD\\SO\\" + \
             "Universal Readout Harness\\ASU Test Harness\\ASU Test Cryostat\\supports"
-parentDir = params.base_directory + "Simon's Observartory\\Machine Shop Pack and Go\\SO Order2 - Full Cryostat\\supports"
+
 """
 Universal Driving Values
 """
@@ -19,6 +19,8 @@ x_leg_width = 15
 x_leg_overshoot = 1.5
 
 base_and_ceiling_hole_distance = 80
+
+
 
 
 """
@@ -62,21 +64,40 @@ base_to_ceiling_hole_height_4K = required_support_height_4K - base_and_ceiling_h
 
 
 """
+Additions for the the orthogonal leg that was add last minute
+"""
+
+ortho_leg_negative_extension = 2.4
+ortho_leg_depth = ceiling_depth_40K
+ortho_leg_length = 110.0
+ortho_leg_fillet = 0.25 * params.inch_to_mm
+ortho_leg_hole_offset = 9.0
+
+
+"""
 Commands to write the SolidWorks text files. 
 """
-# Equations file -> 40K - Base - Fiber Glass Supports - Cryostat Side
-base_fiberglass_40K_cryo = SolidWorksPart("equations_40_base_fiberglass_cryoSide.txt",
+# Equations file -> 40K - Base - Fiber Glass Supports - Cryostat Side - right side
+equations_40_base_fiberglass_cryo_right = SolidWorksPart("equations_40_base_fiberglass_cryoSide_right.txt",
                                           units="mm", parent_directory=parentDir)
 
-base_fiberglass_40K_cryo.addVariableLine("D1@sketch1", base_length_40K)  # base length
-base_fiberglass_40K_cryo.addVariableLine("D2@sketch1", base_depth_40K_cryo_side)  # base depth (short dimension)
-base_fiberglass_40K_cryo.addVariableLine("D1@Boss-Extrude1", base_and_ceiling_height)  # base thickness
+equations_40_base_fiberglass_cryo_right.addVariableLine("D1@sketch1", base_length_40K)  # base length
+equations_40_base_fiberglass_cryo_right.addVariableLine("D2@sketch1", base_depth_40K_cryo_side)  # base depth (short dimension)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D3@sketch1", ortho_leg_negative_extension)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D4@sketch1", ortho_leg_depth)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D5@sketch1", ortho_leg_length)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D1@Boss-Extrude1", base_and_ceiling_height)  # base thickness
 
-base_fiberglass_40K_cryo.addVariableLine("D2@sketch2", base_mounting_holes_offset_from_edge)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D2@sketch2", base_mounting_holes_offset_from_edge)
 
-base_fiberglass_40K_cryo.addVariableLine("D1@sketch5", base_and_ceiling_hole_distance)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D1@sketch5", base_and_ceiling_hole_distance)
 
-base_fiberglass_40K_cryo.writeFile(verbose=True)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D1@fillet1", ortho_leg_fillet)
+
+equations_40_base_fiberglass_cryo_right.addVariableLine("D1@sketch10", base_and_ceiling_hole_distance)
+equations_40_base_fiberglass_cryo_right.addVariableLine("D2@sketch10", ortho_leg_hole_offset)
+
+equations_40_base_fiberglass_cryo_right.writeFile(verbose=True)
 
 
 # Equations file -> 40K - Base - Fiber Glass Supports - Far Side
@@ -118,9 +139,30 @@ ceiling_fiberglass_40K.addVariableLine("D1@Boss-Extrude1", base_and_ceiling_heig
 ceiling_fiberglass_40K.addVariableLine("D1@sketch3", base_and_ceiling_hole_distance)
 
 ceiling_fiberglass_40K.addVariableLine("D1@sketch6", ceiling_shield_hole_distance)
-
-
 ceiling_fiberglass_40K.writeFile(verbose=True)
+
+
+# Equations file -> 40K - ceiling ortho leg - Fiber Glass Supports
+ceiling_orthoLeg_fiberglass_40K = SolidWorksPart("equations_40_ceiling_orthoLeg_fiberglass.txt", units="mm", parent_directory=parentDir)
+
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D1@sketch1", ceiling_length_40K)  # ceiling length
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D2@sketch1", ceiling_depth_40K)  # ceiling depth (short dimension)
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D3@sketch1", 125 - ortho_leg_negative_extension)
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D4@sketch1", ortho_leg_depth)
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D5@sketch1", ortho_leg_length - 11.0)
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D1@Boss-Extrude1", base_and_ceiling_height)  # ceiling thickness
+
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D1@sketch3", base_and_ceiling_hole_distance)
+
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D1@sketch6", ceiling_shield_hole_distance)
+
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D1@fillet1", ortho_leg_fillet)
+
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D1@sketch8", base_and_ceiling_hole_distance)
+ceiling_orthoLeg_fiberglass_40K.addVariableLine("D2@sketch8", ortho_leg_hole_offset)
+
+
+ceiling_orthoLeg_fiberglass_40K.writeFile(verbose=True)
 
 """
 4K supports, equations files
