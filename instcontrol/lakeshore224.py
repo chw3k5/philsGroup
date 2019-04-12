@@ -9,7 +9,7 @@ You can look up the port name using Windows device manager. Type 'device manager
 the application. The Lake Shore 336 temperature controller will be listed under 'Ports (COM & LPT)' then 
 'Lake Shore Model 224 Temperature Controller Port (COM?)
 """
-portName = "COM17"
+portName = "COM3"
 baudrate = 57600
 bytesize = 7
 startbits = 1

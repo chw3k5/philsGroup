@@ -1,7 +1,8 @@
 import numpy as np
 from solidworks.solidWorksVariables import SolidWorksPart
 from sys import platform
-
+import getpass
+import os
 
 def numFormat(testNum, format_str="%2.1f"):
     try:
@@ -13,12 +14,18 @@ def numFormat(testNum, format_str="%2.1f"):
 """
 Measured Variables (in millimeters)
 """
-base_directory = "C:\\Users\\chw3k5\\Documents\\"
+user_name = getpass.getuser()
+base_directory = "C:\\Users\\" + user_name + "\\Documents\\"
+if user_name == "jemoor15":
+    harness_name = "SAT 1"
+else:
+    harness_name = "ASU Test Harness"
+
 electrical_plane_to_coax_tip = 2.794
 
 bulkhead_sma_short_side_flange_bottom_to_electrical_plane = 14.224
 bulkhead_sma_long_side_to_electrical_plane = 12.7
-bulkhead_plus_40K_attenuator = 37.338
+bulkhead_plus_40K_attenuator = 37.338 - 4.064
 fortyK_plate_thickness = 8.0
 sma_weld_to_electrical_plane = 8.382
 amp_center_pin_to_40K_plate = 16.157
@@ -52,9 +59,9 @@ These are the variable that you can change (in millimeters)
 """
 
 parent_directory = base_directory + "GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\Coax Cables"
+            "Universal Readout Harness\\" + harness_name + "\\Coax Cables"
 port_parent_directory = base_directory + "GrabCAD\\SO\\" + \
-            "Universal Readout Harness\\ASU Test Harness\\Ports"
+            "Universal Readout Harness\\" + harness_name + "\\Ports"
 standard_helix_radius = 20.0
 standard_helix_pitch = 10.0
 strait_distance_to_amplifier = 5.0
@@ -97,7 +104,7 @@ for dict in list_of_cable_dictionaries:
     dict["pitch"] = standard_helix_pitch
     dict["helixRadius"] = standard_helix_radius
     dict["thermal_len"] = 0.0
-    dict["numberToOrder"] = 15.0
+    dict["numberToOrder"] = 8.0 #15.0
     dict["cableMaterial"] = "Cupronickel/PTFE/Cupronickel"
 
 for dict in list_of_port1_cable_dictionaries:
@@ -458,35 +465,37 @@ for cable_dict in list_of_cable_dictionaries:
     cable_dict["loss_at_10GHz"] = cable_dict["electrical_len"] * cable_dict["loss_dB_per_mm_10Ghz"]
 
 # header_keys = ["name", "cable_len", "thermal_len", "surface_area", "loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz", "helixRadius"]
-header_keys = ["name", "electrical_len", "thermal_len", "cable_len", "cableDiameter", "cableMaterial", "helixRadius", "helix_chirality", "numberToOrder"]
-if platform != "win32":
-    f = open("/Users/chw3k5/Documents/ASUpostdoc/SimonsObs/ASU Cryostat/cable_properties.csv", "w")
+header_keys = ["name", "cable_len", "cableDiameter", "cableMaterial", "helixRadius", "helix_chirality", "numberToOrder"]
+if user_name == "jemoor15":
+    f = open(os.path.join(base_directory, "cable_properties.csv"), "w")
+else:
+    f = open("/Users/" + user_name + " /Documents/ASUpostdoc/SimonsObs/ASU Cryostat/cable_properties.csv", "w")
+write_line = ""
+for header_key in header_keys:
+    if header_key in ["cable_len", "thermal_len", "cableDiameter", "helixRadius"]:
+        write_line += header_key + " (mm),"
+    elif header_key in ["surface_area"]:
+        write_line += header_key + " (mm^2),"
+    elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
+        write_line += header_key + " (dB),"
+    else:
+        write_line += header_key + ","
+write_line = write_line[:-1] + "\n"
+f.write(write_line)
+
+for cable_dict in list_of_cable_dictionaries:
     write_line = ""
     for header_key in header_keys:
-        if header_key in ["cable_len", "thermal_len", "cableDiameter", "helixRadius"]:
-            write_line += header_key + " (mm),"
+        if header_key in ["cable_len", "thermal_len", "helixRadius"]:
+            write_line += numFormat(cable_dict[header_key], "%3.1f") + ","
         elif header_key in ["surface_area"]:
-            write_line += header_key + " (mm^2),"
+            write_line += numFormat(cable_dict[header_key], "%4.0f") + ","
         elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
-            write_line += header_key + " (dB),"
+            write_line += numFormat(cable_dict[header_key], "%02.1f") + ","
+        elif header_key in ["cableDiameter"]:
+            write_line += numFormat(cable_dict[header_key], "%1.2f") + ","
         else:
-            write_line += header_key + ","
+            write_line += numFormat(cable_dict[header_key]) + ","
     write_line = write_line[:-1] + "\n"
     f.write(write_line)
-
-    for cable_dict in list_of_cable_dictionaries:
-        write_line = ""
-        for header_key in header_keys:
-            if header_key in ["cable_len", "thermal_len", "helixRadius"]:
-                write_line += numFormat(cable_dict[header_key], "%3.1f") + ","
-            elif header_key in ["surface_area"]:
-                write_line += numFormat(cable_dict[header_key], "%4.0f") + ","
-            elif header_key in ["loss_at_1GHz", "loss_at_5GHz", "loss_at_10GHz"]:
-                write_line += numFormat(cable_dict[header_key], "%02.1f") + ","
-            elif header_key in ["cableDiameter"]:
-                write_line += numFormat(cable_dict[header_key], "%1.2f") + ","
-            else:
-                write_line += numFormat(cable_dict[header_key]) + ","
-        write_line = write_line[:-1] + "\n"
-        f.write(write_line)
-    f.close()
+f.close()
